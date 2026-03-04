@@ -1,0 +1,30 @@
+{
+  "name": "clarity-audit",
+  "version": "0.1.0",
+  "description": "Security audit CLI for Clarity smart contracts on Stacks/Bitcoin L2",
+  "main": "src/index.js",
+  "bin": {
+    "clarity-audit": "./src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "clarity",
+    "stacks",
+    "bitcoin",
+    "smart-contract",
+    "audit",
+    "security",
+    "blockchain",
+    "cli",
+    "linter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {}
+}
