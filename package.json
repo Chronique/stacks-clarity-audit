@@ -1,6 +1,6 @@
 {
   "name": "stacks-clarity-audit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Security audit CLI for Clarity smart contracts on Stacks/Bitcoin L2",
   "main": "src/index.js",
   "bin": {
