@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// index.js — CLI entry point for clarity-audit
+// index.js — CLI entry point for stacks-clarity-audit
 
 const { parseContract, findClarityFiles } = require("./parser");
 const { runAudit } = require("./auditor");
@@ -16,22 +16,22 @@ const flags = new Set(args.slice(2));
 // ─── Help ────────────────────────────────────────────────────────────────────
 function printHelp() {
   console.log(`
-  \x1b[1mclarity-audit\x1b[0m — Security audit CLI for Clarity smart contracts
+  \x1b[1mstacks-clarity-audit\x1b[0m — Security audit CLI for Clarity smart contracts
 
   \x1b[36mUsage:\x1b[0m
-    clarity-audit scan <file.clar>       Scan a single contract
-    clarity-audit scan <directory>       Scan all .clar files in directory
-    clarity-audit rules                  List all available rules
-    clarity-audit help                   Show this help
+    stacks-clarity-audit scan <file.clar>       Scan a single contract
+    stacks-clarity-audit scan <directory>       Scan all .clar files in directory
+    stacks-clarity-audit rules                  List all available rules
+    stacks-clarity-audit help                   Show this help
 
   \x1b[36mFlags:\x1b[0m
     --json          Output results as JSON (piping-friendly)
     --no-banner     Skip the ASCII banner
 
   \x1b[36mExamples:\x1b[0m
-    clarity-audit scan ./contracts/token.clar
-    clarity-audit scan ./contracts --json
-    npx clarity-audit scan ./contracts
+    stacks-clarity-audit scan ./contracts/token.clar
+    stacks-clarity-audit scan ./contracts --json
+    npx stacks-clarity-audit scan ./contracts
 
   \x1b[36mExit codes:\x1b[0m
     0  — No critical issues found
@@ -57,7 +57,7 @@ if (!command || command === "help" || command === "--help" || command === "-h") 
 if (command === "scan") {
   if (!target) {
     console.error("\x1b[31mError: Please provide a file or directory to scan.\x1b[0m");
-    console.error("  Usage: clarity-audit scan <file.clar|directory>");
+    console.error("  Usage: stacks-clarity-audit scan <file.clar|directory>");
     process.exit(1);
   }
 

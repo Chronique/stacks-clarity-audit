@@ -1,14 +1,14 @@
-# clarity-audit 🔍
+# stacks-clarity-audit 🔍
 
 > Security audit CLI for **Clarity smart contracts** on Stacks / Bitcoin L2
 
-[![npm version](https://img.shields.io/npm/v/clarity-audit)](https://www.npmjs.com/package/clarity-audit)
+[![npm version](https://img.shields.io/npm/v/stacks-clarity-audit)](https://www.npmjs.com/package/stacks-clarity-audit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Scan your Clarity contracts for common security vulnerabilities and best practice violations — directly from your terminal.
 
 ```bash
-npx clarity-audit scan ./contracts
+npx stacks-clarity-audit scan ./contracts
 ```
 
 ---
@@ -17,16 +17,16 @@ npx clarity-audit scan ./contracts
 
 ```bash
 # Scan a single contract
-npx clarity-audit scan ./contracts/token.clar
+npx stacks-clarity-audit scan ./contracts/token.clar
 
 # Scan all contracts in a directory
-npx clarity-audit scan ./contracts
+npx stacks-clarity-audit scan ./contracts
 
 # Output as JSON (for CI/CD pipelines)
-npx clarity-audit scan ./contracts --json
+npx stacks-clarity-audit scan ./contracts --json
 
 # List all available rules
-npx clarity-audit rules
+npx stacks-clarity-audit rules
 ```
 
 ---
@@ -61,10 +61,10 @@ Deductions: **-25** per critical · **-10** per warning · **-3** per info
 ## 🔧 Install Locally
 
 ```bash
-npm install -g clarity-audit
+npm install -g stacks-clarity-audit
 
 # Then use anywhere:
-clarity-audit scan ./contracts
+stacks-clarity-audit scan ./contracts
 ```
 
 ---
@@ -75,10 +75,10 @@ Add to your GitHub Actions workflow:
 
 ```yaml
 - name: Audit Clarity contracts
-  run: npx clarity-audit scan ./contracts --json > audit-report.json
+  run: npx stacks-clarity-audit scan ./contracts --json > audit-report.json
 
 - name: Fail on critical issues
-  run: npx clarity-audit scan ./contracts
+  run: npx stacks-clarity-audit scan ./contracts
   # Exits with code 1 if any critical issues are found
 ```
 
@@ -87,7 +87,7 @@ Add to your GitHub Actions workflow:
 ## 🛠️ Project Structure
 
 ```
-clarity-audit/
+stacks-clarity-audit/
 ├── src/
 │   ├── index.js          ← CLI entry point
 │   ├── parser.js         ← .clar file reader
@@ -137,3 +137,10 @@ const myRule = {
 ## 📄 License
 
 MIT — Built for the Stacks ecosystem 🟠
+
+---
+
+## 🔗 Links
+
+- **GitHub**: https://github.com/Chronique/stacks-clarity-audit
+- **npm**: https://www.npmjs.com/package/stacks-clarity-audit

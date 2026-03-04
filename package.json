@@ -1,10 +1,10 @@
 {
-  "name": "clarity-audit",
+  "name": "stacks-clarity-audit",
   "version": "0.1.0",
   "description": "Security audit CLI for Clarity smart contracts on Stacks/Bitcoin L2",
   "main": "src/index.js",
   "bin": {
-    "clarity-audit": "./src/index.js"
+    "stacks-clarity-audit": "./src/index.js"
   },
   "scripts": {
     "start": "node src/index.js",
@@ -21,8 +21,16 @@
     "cli",
     "linter"
   ],
-  "author": "",
+  "author": "Chronique",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chronique/stacks-clarity-audit.git"
+  },
+  "homepage": "https://github.com/Chronique/stacks-clarity-audit#readme",
+  "bugs": {
+    "url": "https://github.com/Chronique/stacks-clarity-audit/issues"
+  },
   "engines": {
     "node": ">=16.0.0"
   },
