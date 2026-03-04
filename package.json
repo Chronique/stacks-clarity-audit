@@ -4,7 +4,7 @@
   "description": "Security audit CLI for Clarity smart contracts on Stacks/Bitcoin L2",
   "main": "src/index.js",
   "bin": {
-    "stacks-clarity-audit": "./src/index.js"
+    "stacks-clarity-audit": "src/index.js"
   },
   "scripts": {
     "start": "node src/index.js",
