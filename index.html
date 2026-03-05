@@ -26,15 +26,74 @@
     .wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
     header{position:sticky;top:0;z-index:100;background:rgba(8,8,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
     .topbar{display:flex;align-items:center;justify-content:space-between;height:56px}
-    .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);text-decoration:none}
-    .logo-icon{width:28px;height:28px;background:var(--orange);border-radius:6px;display:grid;place-items:center;font-size:14px;color:#000;font-weight:700}
-    .logo span{color:var(--orange)}
+
+    /* ── Logo ── */
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);text-decoration:none;line-height:1}
+    .logo-icon{width:32px;height:32px;flex-shrink:0}
+    .logo-text{display:flex;flex-direction:column;gap:1px}
+    .logo-word{letter-spacing:.12em}
+    .logo-word-top{color:#fff}
+    .logo-word-bot{color:var(--orange)}
+    .logo-sep{color:rgba(255,107,43,.4);margin:0 1px}
+
     .nav-pills{display:flex;gap:4px}
     .nav-pill{font-family:var(--mono);font-size:11px;padding:6px 14px;border-radius:4px;color:var(--muted2);cursor:pointer;border:none;background:transparent;transition:all .15s}
     .nav-pill:hover{color:var(--text);background:var(--surface)}
     .nav-pill.active{color:var(--orange);background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2)}
     .header-right{display:flex;align-items:center;gap:10px}
-    .network-badge{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:3px;background:rgba(0,217,126,.1);color:var(--green);border:1px solid rgba(0,217,126,.2)}
+
+    /* ── Network Selector ── */
+    .net-sel{position:relative;font-family:var(--mono);font-size:10px;user-select:none}
+    .net-trigger{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:4px;border:1px solid;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;transition:opacity .15s,transform .1s;white-space:nowrap}
+    .net-trigger:hover{opacity:.8}
+    .net-trigger:active{transform:scale(.97)}
+    .net-trigger.testnet{background:rgba(255,209,102,.07);border-color:rgba(255,209,102,.25);color:#ffd166}
+    .net-trigger.mainnet{background:rgba(0,217,126,.07);border-color:rgba(0,217,126,.25);color:#00d97e}
+    .dot-wrap{position:relative;width:7px;height:7px;flex-shrink:0}
+    .dot-ring{position:absolute;inset:0;border-radius:50%;animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite;opacity:.55}
+    .dot-core{position:absolute;inset:0;border-radius:50%}
+    .net-trigger.testnet .dot-ring,.net-trigger.testnet .dot-core{background:#ffd166}
+    .net-trigger.mainnet .dot-ring,.net-trigger.mainnet .dot-core{background:#00d97e}
+    @keyframes ping{75%,100%{transform:scale(2.2);opacity:0}}
+    .chev{width:9px;height:9px;transition:transform .2s;opacity:.6}
+    .net-trigger.open .chev{transform:rotate(180deg)}
+
+    .net-drop{display:none;position:absolute;right:0;top:calc(100% + 6px);width:230px;background:#0c0c18;border:1px solid var(--border2);border-radius:7px;box-shadow:0 16px 48px rgba(0,0,0,.7);overflow:hidden;z-index:200;animation:dropIn .12s ease}
+    .net-drop.show{display:block}
+    @keyframes dropIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+    .drop-hd{padding:7px 12px;font-size:9px;letter-spacing:.22em;color:var(--muted);border-bottom:1px solid var(--border);text-transform:uppercase}
+    .net-opt{display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.12em;transition:background .12s}
+    .net-opt:hover{background:rgba(255,255,255,.04)}
+    .net-opt.is-active{background:rgba(255,255,255,.03)}
+    .net-opt.testnet-opt{color:#ffd166}
+    .net-opt.mainnet-opt{color:#00d97e}
+    .net-opt.inactive-opt{color:var(--muted2)}
+    .opt-dot-wrap{position:relative;width:7px;height:7px;flex-shrink:0}
+    .opt-dot-ring{position:absolute;inset:0;border-radius:50%;opacity:.5}
+    .opt-dot-core{position:absolute;inset:0;border-radius:50%}
+    .net-opt.testnet-opt .opt-dot-ring,.net-opt.testnet-opt .opt-dot-core{background:#ffd166}
+    .net-opt.mainnet-opt .opt-dot-ring,.net-opt.mainnet-opt .opt-dot-core{background:#00d97e}
+    .net-opt.inactive-opt .opt-dot-ring,.net-opt.inactive-opt .opt-dot-core{background:var(--muted2);opacity:.4}
+    .net-opt.is-active .opt-dot-ring{animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite}
+    .opt-check{margin-left:auto;opacity:0}
+    .net-opt.is-active .opt-check{opacity:1}
+    .drop-ft{padding:6px 12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.03em}
+
+    /* Confirm panel */
+    .confirm-panel{padding:12px;display:flex;flex-direction:column;gap:10px}
+    .confirm-hd{padding:7px 12px;font-size:9px;letter-spacing:.22em;color:#ffd166;border-bottom:1px solid var(--border);text-transform:uppercase}
+    .confirm-txt{font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.6}
+    .confirm-txt strong{color:#00d97e}
+    .confirm-btns{display:flex;gap:7px}
+    .confirm-btns button{flex:1;padding:7px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:opacity .12s}
+    .confirm-btns button:hover{opacity:.8}
+    .btn-yes{background:rgba(0,217,126,.12);border:1px solid rgba(0,217,126,.3);color:#00d97e}
+    .btn-no{background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--muted2)}
+
+    /* Mainnet warning banner */
+    .mainnet-banner{display:none;background:rgba(0,217,126,.06);border-bottom:1px solid rgba(0,217,126,.15);padding:6px 0;text-align:center;font-family:var(--mono);font-size:10px;color:#00d97e;letter-spacing:.08em}
+    .mainnet-banner.show{display:block}
+
     .connect-btn{font-family:var(--mono);font-size:11px;padding:7px 14px;background:var(--orange);color:#000;border:none;border-radius:4px;cursor:pointer;font-weight:700;transition:background .15s}
     .connect-btn:hover{background:var(--orange2)}
     .connect-btn.connected{background:rgba(0,217,126,.15);color:var(--green);border:1px solid rgba(0,217,126,.3)}
@@ -144,17 +203,78 @@
 <div class="glow-orb g1"></div>
 <div class="glow-orb g2"></div>
 
+<!-- Mainnet warning banner -->
+<div class="mainnet-banner" id="mainnetBanner">
+  ⚡ MAINNET — transactions use real STX. Make sure your wallet is on mainnet.
+</div>
+
 <header>
   <div class="wrap topbar">
-    <a class="logo" href="#"><div class="logo-icon">⬡</div>clarity<span>.</span>audit</a>
+
+    <!-- ── Logo ── -->
+    <a class="logo" href="#" onclick="showPage('home');return false">
+      <!-- SVG Icon: hexagonal shield with C scan mark -->
+      <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer hex glow fill -->
+        <polygon points="16,2 27,8 27,20 16,28 5,20 5,8"
+                 fill="#ff6b2b" opacity="0.10"/>
+        <!-- Outer hex border -->
+        <polygon points="16,2 27,8 27,20 16,28 5,20 5,8"
+                 fill="none" stroke="#ff6b2b" stroke-width="1.1" opacity="0.45"/>
+        <!-- Inner hex -->
+        <polygon points="16,6 24,10.5 24,19.5 16,24 8,19.5 8,10.5"
+                 fill="none" stroke="#ff6b2b" stroke-width="0.7" opacity="0.25"/>
+        <!-- Center circle -->
+        <circle cx="16" cy="15" r="6.2" fill="#ff6b2b" opacity="0.10"/>
+        <circle cx="16" cy="15" r="6.2" fill="none" stroke="#ff6b2b" stroke-width="1.4"/>
+        <!-- C mark -->
+        <path d="M19.2 11.5 A5 5 0 1 0 19.2 18.5"
+              stroke="#ff6b2b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <!-- Scan tick marks left -->
+        <line x1="5" y1="13.5" x2="8" y2="13.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.5"/>
+        <line x1="5" y1="16.5" x2="8" y2="16.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.25"/>
+        <!-- Scan tick marks right -->
+        <line x1="24" y1="13.5" x2="27" y2="13.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.5"/>
+        <line x1="24" y1="16.5" x2="27" y2="16.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.25"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-word logo-word-top">clarity<span class="logo-sep"> ·</span></span>
+        <span class="logo-word logo-word-bot">audit</span>
+      </div>
+    </a>
+
     <div class="nav-pills">
       <button class="nav-pill active" onclick="showPage('home')">Registry</button>
       <button class="nav-pill" onclick="showPage('verify')">Verify</button>
       <button class="nav-pill" onclick="showPage('submit')">Submit Audit</button>
       <button class="nav-pill" onclick="showPage('badge')">Badge</button>
     </div>
+
     <div class="header-right">
-      <div class="network-badge">● TESTNET</div>
+      <!-- ── Network Selector ── -->
+      <div class="net-sel" id="netSel">
+        <div class="net-trigger testnet" id="netTrigger" onclick="toggleNetDrop()">
+          <div class="dot-wrap">
+            <div class="dot-ring"></div>
+            <div class="dot-core"></div>
+          </div>
+          <span id="netLabel">TESTNET</span>
+          <svg class="chev" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polyline points="1,3 5,7 9,3"/>
+          </svg>
+        </div>
+
+        <div class="net-drop" id="netDrop">
+          <div class="drop-hd">Select Network</div>
+
+          <div id="netDropInner">
+            <!-- Options injected by JS -->
+          </div>
+
+          <div class="drop-ft" id="netDropFt">https://api.testnet.hiro.so</div>
+        </div>
+      </div>
+
       <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
     </div>
   </div>
@@ -323,7 +443,7 @@
         </div>
         <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
           <button class="btn btn-primary" onclick="submitAudit()" style="width:100%;justify-content:center" id="submitBtn">↑ Submit to Stacks Blockchain</button>
-          <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px;text-align:center">Requires Hiro Wallet · Testnet STX for gas</p>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px;text-align:center" id="submitHint">Requires Hiro Wallet · Testnet STX for gas</p>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
@@ -389,53 +509,200 @@
     <div class="footer-links">
       <a href="https://github.com/Chronique/stacks-clarity-audit" target="_blank">GitHub</a>
       <a href="https://www.npmjs.com/package/stacks-clarity-audit" target="_blank">npm</a>
-      <a href="https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry?chain=testnet" target="_blank">Contract</a>
+      <a id="footerContractLink" href="https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry?chain=testnet" target="_blank">Contract</a>
       <a href="https://stacks.co" target="_blank">Stacks</a>
     </div>
   </div>
 </footer>
 
 <script>
-const CONTRACT_ADDRESS='ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2';
-const CONTRACT_NAME='audit-registry';
-const API_BASE='https://api.testnet.hiro.so';
-let walletAddress=null;
-let registryData=[
+// ── Network config ────────────────────────────────────────────────────────────
+const NETWORKS = {
+  testnet: {
+    label: 'TESTNET',
+    apiBase: 'https://api.testnet.hiro.so',
+    explorerChain: 'testnet',
+    explorerQuery: '?chain=testnet',
+  },
+  mainnet: {
+    label: 'MAINNET',
+    apiBase: 'https://api.hiro.so',
+    explorerChain: 'mainnet',
+    explorerQuery: '',
+  },
+};
+
+let currentNetwork = 'testnet';
+
+function getNetCfg() { return NETWORKS[currentNetwork]; }
+
+function applyNetwork(net) {
+  currentNetwork = net;
+  const cfg = getNetCfg();
+
+  // Update trigger button style + label
+  const trigger = document.getElementById('netTrigger');
+  trigger.className = `net-trigger ${net}`;
+  document.getElementById('netLabel').textContent = cfg.label;
+
+  // Update footer API hint
+  document.getElementById('netDropFt').textContent = cfg.apiBase;
+
+  // Update footer contract explorer link
+  const CONTRACT_ADDR = 'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry';
+  document.getElementById('footerContractLink').href =
+    `https://explorer.hiro.so/address/${CONTRACT_ADDR}${cfg.explorerQuery}`;
+
+  // Update submit hint text
+  const hint = document.getElementById('submitHint');
+  if (hint) hint.textContent =
+    net === 'mainnet'
+      ? 'Requires Hiro Wallet · Real STX for gas ⚡'
+      : 'Requires Hiro Wallet · Testnet STX for gas';
+
+  // Mainnet banner
+  document.getElementById('mainnetBanner').classList.toggle('show', net === 'mainnet');
+
+  // Re-render dropdown options
+  renderDropOptions();
+}
+
+function renderDropOptions(confirming = false, pendingNet = null) {
+  const inner = document.getElementById('netDropInner');
+
+  if (confirming && pendingNet) {
+    inner.innerHTML = `
+      <div class="confirm-hd">⚠ Switch to MAINNET?</div>
+      <div class="confirm-panel">
+        <div class="confirm-txt">Switching to <strong>MAINNET</strong> — real STX transactions will be broadcast to the live network.</div>
+        <div class="confirm-btns">
+          <button class="btn-yes" onclick="confirmNetSwitch('mainnet')">Confirm</button>
+          <button class="btn-no"  onclick="cancelNetSwitch()">Cancel</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const nets = ['testnet','mainnet'];
+  inner.innerHTML = nets.map(net => {
+    const cfg = NETWORKS[net];
+    const isActive = net === currentNetwork;
+    const colorClass = net === 'testnet' ? 'testnet-opt' : 'mainnet-opt';
+    const activeClass = isActive ? 'is-active' : 'inactive-opt';
+    const onclick = isActive
+      ? `closeNetDrop()`
+      : net === 'mainnet'
+        ? `askMainnetConfirm()`
+        : `switchNet('${net}')`;
+
+    return `
+      <div class="net-opt ${colorClass} ${activeClass}" onclick="${onclick}">
+        <div class="opt-dot-wrap">
+          <div class="opt-dot-ring"></div>
+          <div class="opt-dot-core"></div>
+        </div>
+        ${cfg.label}
+        <svg class="opt-check" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="2,6 5,9 10,3"/>
+        </svg>
+      </div>`;
+  }).join('');
+}
+
+function toggleNetDrop() {
+  const drop = document.getElementById('netDrop');
+  const trigger = document.getElementById('netTrigger');
+  const isOpen = drop.classList.contains('show');
+  if (isOpen) {
+    closeNetDrop();
+  } else {
+    renderDropOptions();
+    drop.classList.add('show');
+    trigger.classList.add('open');
+  }
+}
+
+function closeNetDrop() {
+  document.getElementById('netDrop').classList.remove('show');
+  document.getElementById('netTrigger').classList.remove('open');
+}
+
+function switchNet(net) {
+  applyNetwork(net);
+  closeNetDrop();
+  loadRegistry();
+  showToast(`Switched to ${NETWORKS[net].label}`, 'success');
+}
+
+function askMainnetConfirm() {
+  renderDropOptions(true, 'mainnet');
+}
+
+function confirmNetSwitch(net) {
+  applyNetwork(net);
+  closeNetDrop();
+  loadRegistry();
+  showToast(`Switched to ${NETWORKS[net].label} ⚡`, 'success');
+}
+
+function cancelNetSwitch() {
+  renderDropOptions();
+}
+
+// Close dropdown on outside click
+document.addEventListener('mousedown', e => {
+  const sel = document.getElementById('netSel');
+  if (!sel.contains(e.target)) closeNetDrop();
+});
+
+// ── App state ─────────────────────────────────────────────────────────────────
+const CONTRACT_ADDRESS = 'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2';
+const CONTRACT_NAME = 'audit-registry';
+let walletAddress = null;
+let registryData = [
   {address:'ST3CM...audit-registry',full:'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry',score:91,critical:0,warning:1,info:2,block:187432,passed:true}
 ];
 
-function showPage(id){
+function showPage(id) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   const map={home:0,verify:1,submit:2,badge:3};
   document.querySelectorAll('.nav-pill')[map[id]]?.classList.add('active');
-  if(id==='home')loadRegistry();
+  if (id==='home') loadRegistry();
+  closeNetDrop();
 }
 
-async function connectWallet(){
-  const btn=document.getElementById('connectBtn');
-  if(walletAddress){walletAddress=null;btn.textContent='Connect Wallet';btn.classList.remove('connected');return;}
+async function connectWallet() {
+  const btn = document.getElementById('connectBtn');
+  if (walletAddress) {
+    walletAddress = null;
+    btn.textContent = 'Connect Wallet';
+    btn.classList.remove('connected');
+    return;
+  }
   showToast('Install Hiro Wallet from wallet.hiro.so','error');
   setTimeout(()=>window.open('https://wallet.hiro.so','_blank'),1500);
 }
 
-function loadRegistry(){
-  const loading=document.getElementById('registryLoading');
-  const table=document.getElementById('registryTable');
-  const empty=document.getElementById('registryEmpty');
-  loading.style.display='flex';loading.style.justifyContent='center';
-  table.style.display='none';empty.style.display='none';
+function loadRegistry() {
+  const loading = document.getElementById('registryLoading');
+  const table   = document.getElementById('registryTable');
+  const empty   = document.getElementById('registryEmpty');
+  loading.style.display='flex'; loading.style.justifyContent='center';
+  table.style.display='none'; empty.style.display='none';
   setTimeout(()=>{
     loading.style.display='none';
-    if(registryData.length===0){empty.style.display='block';return;}
-    const certified=registryData.filter(r=>r.passed).length;
-    document.getElementById('statTotal').textContent=registryData.length;
-    document.getElementById('statCertified').textContent=certified;
-    const tbody=document.getElementById('registryBody');
-    tbody.innerHTML=registryData.map(r=>{
-      const sc=r.score>=70?'score-safe':r.score>=40?'score-warn':'score-fail';
-      const si=r.score>=70?'✅':r.score>=40?'⚠️':'❌';
+    if (registryData.length===0) { empty.style.display='block'; return; }
+    const certified = registryData.filter(r=>r.passed).length;
+    document.getElementById('statTotal').textContent = registryData.length;
+    document.getElementById('statCertified').textContent = certified;
+    const cfg = getNetCfg();
+    const tbody = document.getElementById('registryBody');
+    tbody.innerHTML = registryData.map(r=>{
+      const sc = r.score>=70?'score-safe':r.score>=40?'score-warn':'score-fail';
+      const si = r.score>=70?'✅':r.score>=40?'⚠️':'❌';
+      const explorerUrl = `https://explorer.hiro.so/address/${r.full}${cfg.explorerQuery}`;
       return `<tr>
         <td><span class="addr-short" onclick="quickVerify('${r.full}')">${r.address}</span></td>
         <td><span class="score-pill ${sc}">${si} ${r.score}/100</span></td>
@@ -450,23 +717,25 @@ function loadRegistry(){
   },800);
 }
 
-function quickVerify(addr){showPage('verify');document.getElementById('verifyInput').value=addr;verifyContract();}
+function quickVerify(addr) { showPage('verify'); document.getElementById('verifyInput').value=addr; verifyContract(); }
 
-async function verifyContract(){
-  const addr=document.getElementById('verifyInput').value.trim();
-  const container=document.getElementById('verifyResult');
-  if(!addr){showToast('Enter a contract address','error');return;}
+async function verifyContract() {
+  const addr = document.getElementById('verifyInput').value.trim();
+  const container = document.getElementById('verifyResult');
+  if (!addr) { showToast('Enter a contract address','error'); return; }
   container.innerHTML='<div style="padding:20px;text-align:center"><div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div></div>';
   await new Promise(r=>setTimeout(r,800));
-  const mock=registryData.find(r=>r.full===addr||addr.includes(r.full.split('.')[1]));
-  if(mock){renderVerifyResult(addr,mock);return;}
+  const mock = registryData.find(r=>r.full===addr||addr.includes(r.full.split('.')[1]));
+  if (mock) { renderVerifyResult(addr,mock); return; }
   renderNotFound(addr,container);
 }
 
-function renderVerifyResult(addr,data){
-  const container=document.getElementById('verifyResult');
-  const c=data.score>=70?'var(--green)':data.score>=40?'var(--yellow)':'var(--red)';
-  const lbl=data.score>=90?'EXCELLENT':data.score>=70?'SAFE ✅':data.score>=40?'MODERATE RISK ⚠️':'HIGH RISK ❌';
+function renderVerifyResult(addr,data) {
+  const container = document.getElementById('verifyResult');
+  const cfg = getNetCfg();
+  const explorerUrl = `https://explorer.hiro.so/address/${addr}${cfg.explorerQuery}`;
+  const c   = data.score>=70?'var(--green)':data.score>=40?'var(--yellow)':'var(--red)';
+  const lbl = data.score>=90?'EXCELLENT':data.score>=70?'SAFE ✅':data.score>=40?'MODERATE RISK ⚠️':'HIGH RISK ❌';
   container.innerHTML=`
     <div class="result-card" style="margin-top:16px">
       <div class="result-header">
@@ -491,11 +760,11 @@ function renderVerifyResult(addr,data){
     </div>
     <div style="margin-top:12px;display:flex;gap:8px">
       <button class="btn btn-green btn-sm" onclick="showPage('badge')">Get Badge →</button>
-      <a class="btn btn-outline btn-sm" href="https://explorer.hiro.so/address/${addr}?chain=testnet" target="_blank">Explorer ↗</a>
+      <a class="btn btn-outline btn-sm" href="${explorerUrl}" target="_blank">Explorer ↗</a>
     </div>`;
 }
 
-function renderNotFound(addr,container){
+function renderNotFound(addr,container) {
   container.innerHTML=`
     <div class="result-card" style="margin-top:16px;padding:32px;text-align:center">
       <div style="font-size:32px;margin-bottom:12px">🔍</div>
@@ -505,50 +774,55 @@ function renderNotFound(addr,container){
     </div>`;
 }
 
-async function submitAudit(){
-  if(!walletAddress){showToast('Connect your Hiro Wallet first','error');return;}
-  const contract=document.getElementById('f-contract').value.trim();
-  const score=parseInt(document.getElementById('f-score').value);
-  const critical=parseInt(document.getElementById('f-critical').value)||0;
-  const warning=parseInt(document.getElementById('f-warning').value)||0;
-  const info=parseInt(document.getElementById('f-info').value)||0;
-  if(!contract){showToast('Enter contract address','error');return;}
-  const btn=document.getElementById('submitBtn');
-  btn.textContent='⏳ Broadcasting...';btn.disabled=true;
+async function submitAudit() {
+  if (!walletAddress) { showToast('Connect your Hiro Wallet first','error'); return; }
+  const contract  = document.getElementById('f-contract').value.trim();
+  const score     = parseInt(document.getElementById('f-score').value);
+  const critical  = parseInt(document.getElementById('f-critical').value)||0;
+  const warning   = parseInt(document.getElementById('f-warning').value)||0;
+  const info      = parseInt(document.getElementById('f-info').value)||0;
+  if (!contract)  { showToast('Enter contract address','error'); return; }
+  const btn = document.getElementById('submitBtn');
+  btn.textContent='⏳ Broadcasting...'; btn.disabled=true;
   await new Promise(r=>setTimeout(r,1500));
-  const short=contract.length>20?contract.slice(0,12)+'...'+contract.slice(-8):contract;
+  const short = contract.length>20?contract.slice(0,12)+'...'+contract.slice(-8):contract;
   registryData.unshift({address:short,full:contract,score,critical,warning,info,block:187500+Math.floor(Math.random()*100),passed:score>=70});
-  btn.textContent='↑ Submit to Stacks Blockchain';btn.disabled=false;
+  btn.textContent='↑ Submit to Stacks Blockchain'; btn.disabled=false;
   showToast(`Audit submitted! Score: ${score}/100 ${score>=70?'✅':'❌'}`,'success');
   setTimeout(()=>showPage('home'),1500);
 }
 
-function updateScore(val){
-  val=parseInt(val);
-  const c=val>=70?'var(--green)':val>=40?'var(--yellow)':'var(--red)';
-  document.getElementById('scoreVal').textContent=val;document.getElementById('scoreVal').style.color=c;
-  document.getElementById('scoreDisp').textContent=val;document.getElementById('scoreDisp').style.color=c;
+function updateScore(val) {
+  val = parseInt(val);
+  const c = val>=70?'var(--green)':val>=40?'var(--yellow)':'var(--red)';
+  document.getElementById('scoreVal').textContent=val; document.getElementById('scoreVal').style.color=c;
+  document.getElementById('scoreDisp').textContent=val; document.getElementById('scoreDisp').style.color=c;
 }
 
-function updateBadge(){
-  const score=parseInt(document.getElementById('badge-score').value);
-  const c=score>=70?'#00d97e':score>=40?'#ffd166':'#ff3b5c';
-  const cn=score>=70?'green':score>=40?'yellow':'red';
-  document.getElementById('badge-score-val').textContent=score;document.getElementById('badge-score-val').style.color=c;
-  document.getElementById('badgeScoreText').textContent=`${score}/100`;document.getElementById('badgeScoreText').style.color=c;
+function updateBadge() {
+  const score = parseInt(document.getElementById('badge-score').value);
+  const c  = score>=70?'#00d97e':score>=40?'#ffd166':'#ff3b5c';
+  const cn = score>=70?'green':score>=40?'yellow':'red';
+  const label = score>=70?'✅ SAFE':score>=40?'⚠️ MODERATE':'❌ HIGH RISK';
+  document.getElementById('badge-score-val').textContent=score; document.getElementById('badge-score-val').style.color=c;
+  document.getElementById('badgeScoreText').textContent=`${score}/100`; document.getElementById('badgeScoreText').style.color=c;
   document.getElementById('badgeDot').style.background=c;
-  document.getElementById('badgeMarkdown').textContent=`[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${score}%2F100-${cn}?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)`;
+  document.getElementById('badgeMarkdown').textContent=
+    `[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${score}%2F100-${cn}?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)`;
 }
 
-function copyBadge(){navigator.clipboard.writeText(document.getElementById('badgeMarkdown').textContent);showToast('Badge copied!','success');}
+function copyBadge() { navigator.clipboard.writeText(document.getElementById('badgeMarkdown').textContent); showToast('Badge copied!','success'); }
 
-function showToast(msg,type='success'){
+function showToast(msg,type='success') {
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className=`toast ${type} show`;
+  t.textContent=msg; t.className=`toast ${type} show`;
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-loadRegistry();updateBadge();
+// Init
+applyNetwork('testnet');
+loadRegistry();
+updateBadge();
 </script>
 </body>
 </html>
