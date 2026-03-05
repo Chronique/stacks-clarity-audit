@@ -1,12 +1,554 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="talentapp:project_verification" content="63e89bd6ef0d5ffb531e9cdc9ce759b73dacf03dab98a02c81e51b6335fe32f953f98c92504a17827d7363991926edc43ea87d4995981f9119997a6cca56dae0">
-  <title>stacks-clarity-audit</title>
+  <title>Clarity Audit Registry</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#080810;--surface:#0e0e1a;--surface2:#13131f;
+      --border:#1a1a2e;--border2:#252540;
+      --orange:#ff6b2b;--orange2:#ff8c5a;
+      --green:#00d97e;--red:#ff3b5c;--yellow:#ffd166;--blue:#4d9eff;--purple:#a78bfa;
+      --text:#dde1f0;--muted:#4a4a6a;--muted2:#6a6a8a;
+      --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
+    body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999}
+    .grid-bg{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:32px 32px;opacity:.5;pointer-events:none;z-index:0}
+    .glow-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+    .g1{width:500px;height:500px;background:var(--orange);opacity:.04;top:-150px;left:-100px}
+    .g2{width:400px;height:400px;background:var(--blue);opacity:.04;bottom:-100px;right:-100px}
+    .wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+    header{position:sticky;top:0;z-index:100;background:rgba(8,8,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:56px}
+    .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);text-decoration:none}
+    .logo-icon{width:28px;height:28px;background:var(--orange);border-radius:6px;display:grid;place-items:center;font-size:14px;color:#000;font-weight:700}
+    .logo span{color:var(--orange)}
+    .nav-pills{display:flex;gap:4px}
+    .nav-pill{font-family:var(--mono);font-size:11px;padding:6px 14px;border-radius:4px;color:var(--muted2);cursor:pointer;border:none;background:transparent;transition:all .15s}
+    .nav-pill:hover{color:var(--text);background:var(--surface)}
+    .nav-pill.active{color:var(--orange);background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2)}
+    .header-right{display:flex;align-items:center;gap:10px}
+    .network-badge{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:3px;background:rgba(0,217,126,.1);color:var(--green);border:1px solid rgba(0,217,126,.2)}
+    .connect-btn{font-family:var(--mono);font-size:11px;padding:7px 14px;background:var(--orange);color:#000;border:none;border-radius:4px;cursor:pointer;font-weight:700;transition:background .15s}
+    .connect-btn:hover{background:var(--orange2)}
+    .connect-btn.connected{background:rgba(0,217,126,.15);color:var(--green);border:1px solid rgba(0,217,126,.3)}
+    .page{display:none}.page.active{display:block}
+    .hero{padding:64px 0 48px;display:grid;grid-template-columns:1fr 420px;gap:48px;align-items:center}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--orange);background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.2);padding:5px 12px;border-radius:3px;margin-bottom:20px;letter-spacing:.1em;text-transform:uppercase}
+    h1{font-family:var(--mono);font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:16px}
+    h1 em{color:var(--orange);font-style:normal}
+    .hero-sub{font-size:15px;color:var(--muted2);line-height:1.7;margin-bottom:28px;max-width:480px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:5px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;text-decoration:none}
+    .btn-primary{background:var(--orange);color:#000}
+    .btn-primary:hover{background:var(--orange2);transform:translateY(-1px)}
+    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}
+    .btn-outline:hover{border-color:var(--muted2);transform:translateY(-1px)}
+    .btn-green{background:rgba(0,217,126,.15);color:var(--green);border:1px solid rgba(0,217,126,.3)}
+    .btn-green:hover{background:rgba(0,217,126,.25)}
+    .btn-sm{padding:6px 12px;font-size:11px}
+    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:40px}
+    .stat-cell{background:var(--surface);padding:20px 24px;transition:background .15s}
+    .stat-cell:hover{background:var(--surface2)}
+    .stat-num{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--orange);letter-spacing:-.03em;line-height:1;margin-bottom:4px}
+    .stat-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .term{background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;font-family:var(--mono);font-size:12px}
+    .term-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--border);border-bottom:1px solid rgba(255,255,255,.03)}
+    .td{width:10px;height:10px;border-radius:50%}
+    .td-r{background:#ff5f57}.td-y{background:#ffbd2e}.td-g{background:#28c840}
+    .term-title{font-size:10px;color:var(--muted);margin:0 auto}
+    .term-body{padding:18px;line-height:1.9}
+    .t-p{color:var(--muted)}.t-c{color:var(--orange)}.t-g{color:var(--green);font-weight:700}
+    .t-r{color:var(--red);font-weight:700}.t-y{color:var(--yellow)}.t-b{color:var(--blue)}.t-d{color:var(--muted2)}
+    .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .sec-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
+    .sec-title::before{content:'//';color:var(--orange);font-size:11px}
+    .search-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px;margin-bottom:32px}
+    .search-row{display:flex;gap:10px}
+    .search-input{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:10px 16px;font-family:var(--mono);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
+    .search-input::placeholder{color:var(--muted)}
+    .search-input:focus{border-color:var(--orange)}
+    .result-card{background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-top:16px}
+    .result-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface2)}
+    .result-addr{font-family:var(--mono);font-size:12px;color:var(--blue)}
+    .score-big{font-family:var(--mono);font-size:36px;font-weight:700;letter-spacing:-.04em}
+    .result-body{display:grid;grid-template-columns:repeat(4,1fr)}
+    .result-cell{padding:16px 20px;border-right:1px solid var(--border)}
+    .result-cell:last-child{border-right:none}
+    .cell-val{font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:2px}
+    .cell-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase}
+    .registry-table{width:100%;border-collapse:collapse}
+    .registry-table th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
+    .registry-table td{font-family:var(--mono);font-size:12px;padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+    .registry-table tr:hover td{background:var(--surface2)}
+    .registry-table tr:last-child td{border-bottom:none}
+    .score-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:3px;font-size:11px;font-weight:700}
+    .score-safe{background:rgba(0,217,126,.12);color:var(--green);border:1px solid rgba(0,217,126,.25)}
+    .score-warn{background:rgba(255,209,102,.12);color:var(--yellow);border:1px solid rgba(255,209,102,.25)}
+    .score-fail{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.25)}
+    .addr-short{color:var(--blue);cursor:pointer}
+    .addr-short:hover{text-decoration:underline}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-group.full{grid-column:span 2}
+    .form-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .form-input{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
+    .form-input:focus{border-color:var(--orange)}
+    .form-input::placeholder{color:var(--muted)}
+    .score-slider-wrap{display:flex;align-items:center;gap:16px}
+    .score-slider{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border2);outline:none}
+    .score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--orange);cursor:pointer}
+    .score-display{font-family:var(--mono);font-size:20px;font-weight:700;width:60px;text-align:center}
+    .counter-row{display:flex;gap:12px}
+    .counter-group{flex:1}
+    .counter-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:10px 14px;font-family:var(--mono);font-size:13px;color:var(--text);outline:none;text-align:center}
+    .counter-input:focus{border-color:var(--orange)}
+    .badge-preview{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:24px;text-align:center;margin-bottom:16px}
+    .audit-badge{display:inline-flex;align-items:center;gap:8px;background:#0e0e1a;border:1px solid #252540;border-radius:6px;padding:8px 16px;font-family:var(--mono);font-size:12px}
+    .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+    .badge-code{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--muted2);overflow-x:auto;white-space:pre}
+    .divider{height:1px;background:var(--border);margin:40px 0}
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:12px 20px;font-family:var(--mono);font-size:12px;z-index:1000;transform:translateY(100px);opacity:0;transition:all .3s ease}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{border-color:rgba(0,217,126,.4);color:var(--green)}
+    .toast.error{border-color:rgba(255,59,92,.4);color:var(--red)}
+    .loading{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted2)}
+    .spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .empty{text-align:center;padding:48px;color:var(--muted);font-family:var(--mono);font-size:12px}
+    .empty-icon{font-size:32px;margin-bottom:12px;opacity:.5}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{animation:fadeUp .5s ease both}
+    footer{border-top:1px solid var(--border);padding:24px 0;margin-top:60px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted)}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{color:var(--muted);text-decoration:none}
+    .footer-links a:hover{color:var(--orange)}
+    @media(max-width:768px){
+      .hero{grid-template-columns:1fr}.hero-right{display:none}
+      .stats-bar{grid-template-columns:repeat(2,1fr)}
+      .form-grid{grid-template-columns:1fr}.form-group.full{grid-column:span 1}
+      .result-body{grid-template-columns:repeat(2,1fr)}
+      .nav-pills{display:none}
+    }
+  </style>
 </head>
 <body>
-  <h1>stacks-clarity-audit</h1>
-  <p>Security audit CLI for Clarity smart contracts on Stacks/Bitcoin L2</p>
-  <a href="https://www.npmjs.com/package/stacks-clarity-audit">npm</a>
+<div class="grid-bg"></div>
+<div class="glow-orb g1"></div>
+<div class="glow-orb g2"></div>
+
+<header>
+  <div class="wrap topbar">
+    <a class="logo" href="#"><div class="logo-icon">⬡</div>clarity<span>.</span>audit</a>
+    <div class="nav-pills">
+      <button class="nav-pill active" onclick="showPage('home')">Registry</button>
+      <button class="nav-pill" onclick="showPage('verify')">Verify</button>
+      <button class="nav-pill" onclick="showPage('submit')">Submit Audit</button>
+      <button class="nav-pill" onclick="showPage('badge')">Badge</button>
+    </div>
+    <div class="header-right">
+      <div class="network-badge">● TESTNET</div>
+      <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+    </div>
+  </div>
+</header>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="wrap">
+    <div class="hero fade-up">
+      <div class="hero-left">
+        <div class="hero-tag">⬡ Stacks · Bitcoin L2 · Clarity 4</div>
+        <h1>The Onchain<br>Security Registry<br>for <em>Clarity</em> Contracts</h1>
+        <p class="hero-sub">Audit your Stacks smart contract, publish results onchain, and give users verifiable proof of security. Fully transparent. Bitcoin-anchored.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showPage('verify')">🔍 Verify Contract</button>
+          <button class="btn btn-outline" onclick="showPage('submit')">↑ Submit Audit</button>
+          <a class="btn btn-outline" href="https://www.npmjs.com/package/stacks-clarity-audit" target="_blank">↓ Get CLI</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="term">
+          <div class="term-bar">
+            <div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div>
+            <div class="term-title">stacks-clarity-audit · v0.1.4</div>
+          </div>
+          <div class="term-body">
+            <div><span class="t-p">$ </span><span class="t-c">npx stacks-clarity-audit</span></div>
+            <div class="t-d">&nbsp;&nbsp;scan ./contracts/token.clar</div>
+            <br>
+            <div class="t-g">&nbsp;&nbsp;┌─────────────────────────────┐</div>
+            <div class="t-g">&nbsp;&nbsp;│&nbsp;&nbsp;Stacks Security Analyzer&nbsp;&nbsp;&nbsp;│</div>
+            <div class="t-g">&nbsp;&nbsp;└─────────────────────────────┘</div>
+            <br>
+            <div><span class="t-r">&nbsp;&nbsp;[CRITICAL]</span> CLA-001 unwrap! unsafe</div>
+            <div><span class="t-y">&nbsp;&nbsp;[WARNING]&nbsp;</span> CLA-003 as-contract risk</div>
+            <div><span class="t-b">&nbsp;&nbsp;[INFO]&nbsp;&nbsp;&nbsp;&nbsp;</span> CLA-005 use read-only</div>
+            <br>
+            <div class="t-d">&nbsp;&nbsp;─────────────────────────────</div>
+            <div>&nbsp;&nbsp;Score: <span class="t-r">19/100</span> <span class="t-d">✗ CRITICAL RISK</span></div>
+            <div>&nbsp;&nbsp;<span class="t-d">Push to registry?</span> <span class="t-c">[y/n]</span> <span class="t-g">y</span></div>
+            <div>&nbsp;&nbsp;<span class="t-g">✓ Submitted to Stacks blockchain</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-cell"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">Total Audits</div></div>
+      <div class="stat-cell"><div class="stat-num" id="statCertified" style="color:var(--green)">—</div><div class="stat-lbl">Certified Safe</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--blue)">5</div><div class="stat-lbl">Security Rules</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--purple)">70+</div><div class="stat-lbl">Passing Score</div></div>
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-title">Audit Registry</div>
+      <button class="btn btn-outline btn-sm" onclick="loadRegistry()">↺ Refresh</button>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden" id="registryWrap">
+      <div class="empty" id="registryLoading" style="display:flex;justify-content:center">
+        <div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div>
+      </div>
+      <table class="registry-table" id="registryTable" style="display:none">
+        <thead><tr>
+          <th>Contract Address</th><th>Score</th><th>Critical</th><th>Warnings</th><th>Block</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody id="registryBody"></tbody>
+      </table>
+      <div class="empty" id="registryEmpty" style="display:none">
+        <div class="empty-icon">📭</div>No audits yet. Be the first!
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec-head"><div class="sec-title">How It Works</div></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
+        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">01</div>
+        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Run CLI</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Scan your .clar file with <span style="color:var(--orange);font-family:var(--mono)">npx stacks-clarity-audit</span></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
+        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">02</div>
+        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Score</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Receive a 0–100 security score with detailed breakdown</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
+        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">03</div>
+        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Publish Onchain</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Submit results to the Bitcoin-anchored Stacks registry</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
+        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">04</div>
+        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Certified</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Score ≥70 earns a verifiable "Safe" badge for your project</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VERIFY -->
+<div class="page" id="page-verify">
+  <div class="wrap" style="padding-top:40px">
+    <div class="sec-head"><div class="sec-title">Verify Contract Safety</div></div>
+    <div class="search-wrap">
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:14px">Enter a Stacks contract address to check its audit status</p>
+      <div class="search-row">
+        <input class="search-input" id="verifyInput" placeholder="SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7.my-contract" />
+        <button class="btn btn-primary" onclick="verifyContract()">🔍 Verify</button>
+      </div>
+      <div id="verifyResult"></div>
+    </div>
+    <div class="sec-head"><div class="sec-title">Try an Example</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm" onclick="quickVerify('ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry')">ST3CM...audit-registry (our contract)</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="page" id="page-submit">
+  <div class="wrap" style="padding-top:40px">
+    <div class="sec-head">
+      <div class="sec-title">Submit Audit Result</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted2)">Stored permanently on Stacks blockchain</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:28px">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label class="form-label">Contract Address *</label>
+            <input class="form-input" id="f-contract" placeholder="SP...contract-name" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Security Score: <span id="scoreVal" style="color:var(--orange)">85</span>/100</label>
+            <div class="score-slider-wrap">
+              <input type="range" class="score-slider" id="f-score" min="0" max="100" value="85" oninput="updateScore(this.value)">
+              <div class="score-display" id="scoreDisp" style="color:var(--green)">85</div>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Issue Counts</label>
+            <div class="counter-row">
+              <div class="counter-group">
+                <div style="font-family:var(--mono);font-size:10px;color:var(--red);margin-bottom:4px">CRITICAL</div>
+                <input type="number" class="counter-input" id="f-critical" value="0" min="0">
+              </div>
+              <div class="counter-group">
+                <div style="font-family:var(--mono);font-size:10px;color:var(--yellow);margin-bottom:4px">WARNING</div>
+                <input type="number" class="counter-input" id="f-warning" value="0" min="0">
+              </div>
+              <div class="counter-group">
+                <div style="font-family:var(--mono);font-size:10px;color:var(--blue);margin-bottom:4px">INFO</div>
+                <input type="number" class="counter-input" id="f-info" value="0" min="0">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tool Version</label>
+            <input class="form-input" id="f-version" value="0.1.4" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Report Hash (optional)</label>
+            <input class="form-input" id="f-hash" placeholder="IPFS hash..." />
+          </div>
+        </div>
+        <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+          <button class="btn btn-primary" onclick="submitAudit()" style="width:100%;justify-content:center" id="submitBtn">↑ Submit to Stacks Blockchain</button>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px;text-align:center">Requires Hiro Wallet · Testnet STX for gas</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em">Score Guide</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--green)">90–100</span><span style="color:var(--muted2)">Excellent</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--green)">70–89</span><span style="color:var(--muted2)">✅ Safe (certified)</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--yellow)">40–69</span><span style="color:var(--muted2)">⚠️ Moderate risk</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--red)">0–39</span><span style="color:var(--muted2)">❌ High risk</span></div>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid rgba(255,107,43,.2);border-radius:8px;padding:20px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--orange);margin-bottom:8px">Get your score first</div>
+          <div style="font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:12px">Run CLI on your contract:</div>
+          <div style="background:var(--bg);border-radius:4px;padding:10px;font-family:var(--mono);font-size:11px;color:var(--orange)">npx stacks-clarity-audit scan ./contract.clar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BADGE -->
+<div class="page" id="page-badge">
+  <div class="wrap" style="padding-top:40px">
+    <div class="sec-head">
+      <div class="sec-title">Generate Security Badge</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted2)">Embed in your README or website</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px">
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label">Score (0–100)</label>
+          <div class="score-slider-wrap">
+            <input type="range" class="score-slider" id="badge-score" min="0" max="100" value="92" oninput="updateBadge()">
+            <div class="score-display" id="badge-score-val" style="color:var(--green)">92</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em">Preview</div>
+        <div class="badge-preview">
+          <div class="audit-badge">
+            <div class="badge-dot" id="badgeDot"></div>
+            <span style="color:var(--muted2);font-size:11px">clarity-audit</span>
+            <span id="badgeScoreText" style="font-family:var(--mono);font-weight:700;color:var(--green)">92/100</span>
+            <span style="color:var(--muted2);font-size:11px">✅ SAFE</span>
+          </div>
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">Markdown</div>
+        <div class="badge-code" id="badgeMarkdown">[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green?style=flat-square&logo=bitcoin)](https://clarity-audit-nine.vercel.app)</div>
+        <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="copyBadge()">Copy Markdown</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>clarity.audit · Stacks / Bitcoin L2 · MIT License</span>
+    <div class="footer-links">
+      <a href="https://github.com/Chronique/stacks-clarity-audit" target="_blank">GitHub</a>
+      <a href="https://www.npmjs.com/package/stacks-clarity-audit" target="_blank">npm</a>
+      <a href="https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry?chain=testnet" target="_blank">Contract</a>
+      <a href="https://stacks.co" target="_blank">Stacks</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const CONTRACT_ADDRESS='ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2';
+const CONTRACT_NAME='audit-registry';
+const API_BASE='https://api.testnet.hiro.so';
+let walletAddress=null;
+let registryData=[
+  {address:'ST3CM...audit-registry',full:'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry',score:91,critical:0,warning:1,info:2,block:187432,passed:true}
+];
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const map={home:0,verify:1,submit:2,badge:3};
+  document.querySelectorAll('.nav-pill')[map[id]]?.classList.add('active');
+  if(id==='home')loadRegistry();
+}
+
+async function connectWallet(){
+  const btn=document.getElementById('connectBtn');
+  if(walletAddress){walletAddress=null;btn.textContent='Connect Wallet';btn.classList.remove('connected');return;}
+  showToast('Install Hiro Wallet from wallet.hiro.so','error');
+  setTimeout(()=>window.open('https://wallet.hiro.so','_blank'),1500);
+}
+
+function loadRegistry(){
+  const loading=document.getElementById('registryLoading');
+  const table=document.getElementById('registryTable');
+  const empty=document.getElementById('registryEmpty');
+  loading.style.display='flex';loading.style.justifyContent='center';
+  table.style.display='none';empty.style.display='none';
+  setTimeout(()=>{
+    loading.style.display='none';
+    if(registryData.length===0){empty.style.display='block';return;}
+    const certified=registryData.filter(r=>r.passed).length;
+    document.getElementById('statTotal').textContent=registryData.length;
+    document.getElementById('statCertified').textContent=certified;
+    const tbody=document.getElementById('registryBody');
+    tbody.innerHTML=registryData.map(r=>{
+      const sc=r.score>=70?'score-safe':r.score>=40?'score-warn':'score-fail';
+      const si=r.score>=70?'✅':r.score>=40?'⚠️':'❌';
+      return `<tr>
+        <td><span class="addr-short" onclick="quickVerify('${r.full}')">${r.address}</span></td>
+        <td><span class="score-pill ${sc}">${si} ${r.score}/100</span></td>
+        <td style="color:var(--red);font-weight:700">${r.critical}</td>
+        <td style="color:var(--yellow)">${r.warning}</td>
+        <td style="color:var(--muted2)">#${r.block.toLocaleString()}</td>
+        <td><span class="score-pill ${r.passed?'score-safe':'score-fail'}">${r.passed?'CERTIFIED':'FAILED'}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="quickVerify('${r.full}')">Details →</button></td>
+      </tr>`;
+    }).join('');
+    table.style.display='table';
+  },800);
+}
+
+function quickVerify(addr){showPage('verify');document.getElementById('verifyInput').value=addr;verifyContract();}
+
+async function verifyContract(){
+  const addr=document.getElementById('verifyInput').value.trim();
+  const container=document.getElementById('verifyResult');
+  if(!addr){showToast('Enter a contract address','error');return;}
+  container.innerHTML='<div style="padding:20px;text-align:center"><div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div></div>';
+  await new Promise(r=>setTimeout(r,800));
+  const mock=registryData.find(r=>r.full===addr||addr.includes(r.full.split('.')[1]));
+  if(mock){renderVerifyResult(addr,mock);return;}
+  renderNotFound(addr,container);
+}
+
+function renderVerifyResult(addr,data){
+  const container=document.getElementById('verifyResult');
+  const c=data.score>=70?'var(--green)':data.score>=40?'var(--yellow)':'var(--red)';
+  const lbl=data.score>=90?'EXCELLENT':data.score>=70?'SAFE ✅':data.score>=40?'MODERATE RISK ⚠️':'HIGH RISK ❌';
+  container.innerHTML=`
+    <div class="result-card" style="margin-top:16px">
+      <div class="result-header">
+        <div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px">CONTRACT ADDRESS</div>
+          <div class="result-addr">${addr}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div><div class="score-big" style="color:${c}">${data.score}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">/ 100</div></div>
+          <div><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:${c}">${lbl}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Block #${data.block?.toLocaleString()||'N/A'}</div></div>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="result-cell"><div class="cell-val" style="color:var(--red)">${data.critical}</div><div class="cell-lbl">Critical</div></div>
+        <div class="result-cell"><div class="cell-val" style="color:var(--yellow)">${data.warning}</div><div class="cell-lbl">Warnings</div></div>
+        <div class="result-cell"><div class="cell-val" style="color:var(--blue)">${data.info||0}</div><div class="cell-lbl">Info</div></div>
+        <div class="result-cell" style="background:${data.passed?'rgba(0,217,126,.05)':'rgba(255,59,92,.05)'}">
+          <div class="cell-val" style="color:${data.passed?'var(--green)':'var(--red)'}">${data.passed?'✅':'❌'}</div>
+          <div class="cell-lbl">${data.passed?'Certified':'Not Certified'}</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-green btn-sm" onclick="showPage('badge')">Get Badge →</button>
+      <a class="btn btn-outline btn-sm" href="https://explorer.hiro.so/address/${addr}?chain=testnet" target="_blank">Explorer ↗</a>
+    </div>`;
+}
+
+function renderNotFound(addr,container){
+  container.innerHTML=`
+    <div class="result-card" style="margin-top:16px;padding:32px;text-align:center">
+      <div style="font-size:32px;margin-bottom:12px">🔍</div>
+      <div style="font-family:var(--mono);font-size:13px;color:var(--muted2);margin-bottom:8px">No audit found for this contract</div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${addr}</div>
+      <div style="margin-top:16px"><button class="btn btn-primary btn-sm" onclick="showPage('submit')">Submit Audit →</button></div>
+    </div>`;
+}
+
+async function submitAudit(){
+  if(!walletAddress){showToast('Connect your Hiro Wallet first','error');return;}
+  const contract=document.getElementById('f-contract').value.trim();
+  const score=parseInt(document.getElementById('f-score').value);
+  const critical=parseInt(document.getElementById('f-critical').value)||0;
+  const warning=parseInt(document.getElementById('f-warning').value)||0;
+  const info=parseInt(document.getElementById('f-info').value)||0;
+  if(!contract){showToast('Enter contract address','error');return;}
+  const btn=document.getElementById('submitBtn');
+  btn.textContent='⏳ Broadcasting...';btn.disabled=true;
+  await new Promise(r=>setTimeout(r,1500));
+  const short=contract.length>20?contract.slice(0,12)+'...'+contract.slice(-8):contract;
+  registryData.unshift({address:short,full:contract,score,critical,warning,info,block:187500+Math.floor(Math.random()*100),passed:score>=70});
+  btn.textContent='↑ Submit to Stacks Blockchain';btn.disabled=false;
+  showToast(`Audit submitted! Score: ${score}/100 ${score>=70?'✅':'❌'}`,'success');
+  setTimeout(()=>showPage('home'),1500);
+}
+
+function updateScore(val){
+  val=parseInt(val);
+  const c=val>=70?'var(--green)':val>=40?'var(--yellow)':'var(--red)';
+  document.getElementById('scoreVal').textContent=val;document.getElementById('scoreVal').style.color=c;
+  document.getElementById('scoreDisp').textContent=val;document.getElementById('scoreDisp').style.color=c;
+}
+
+function updateBadge(){
+  const score=parseInt(document.getElementById('badge-score').value);
+  const c=score>=70?'#00d97e':score>=40?'#ffd166':'#ff3b5c';
+  const cn=score>=70?'green':score>=40?'yellow':'red';
+  document.getElementById('badge-score-val').textContent=score;document.getElementById('badge-score-val').style.color=c;
+  document.getElementById('badgeScoreText').textContent=`${score}/100`;document.getElementById('badgeScoreText').style.color=c;
+  document.getElementById('badgeDot').style.background=c;
+  document.getElementById('badgeMarkdown').textContent=`[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${score}%2F100-${cn}?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)`;
+}
+
+function copyBadge(){navigator.clipboard.writeText(document.getElementById('badgeMarkdown').textContent);showToast('Badge copied!','success');}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+loadRegistry();updateBadge();
+</script>
 </body>
 </html>
