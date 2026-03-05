@@ -199,6 +199,315 @@
   </style>
 </head>
 <body>
+<!-- ── Onboarding Modal ─────────────────────────────────────────────────────── -->
+<div id="onboardOverlay" style="
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(5,5,14,.88);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  animation:fadeIn .25s ease;
+">
+  <div id="onboardModal" style="
+    width:100%;max-width:760px;
+    background:#0c0c1a;
+    border:1px solid #252540;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 32px 80px rgba(0,0,0,.8);
+    animation:slideUp .3s ease;
+    max-height:92vh;
+    display:flex;flex-direction:column;
+  ">
+
+    <!-- Modal header -->
+    <div style="padding:28px 32px 0;flex-shrink:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <polygon points="16,2 27,8 27,20 16,28 5,20 5,8" fill="#ff6b2b" opacity="0.12"/>
+            <polygon points="16,2 27,8 27,20 16,28 5,20 5,8" fill="none" stroke="#ff6b2b" stroke-width="1.2" opacity="0.5"/>
+            <circle cx="16" cy="15" r="6.2" fill="#ff6b2b" opacity="0.1"/>
+            <circle cx="16" cy="15" r="6.2" fill="none" stroke="#ff6b2b" stroke-width="1.5"/>
+            <path d="M19.2 11.5 A5 5 0 1 0 19.2 18.5" stroke="#ff6b2b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:#fff;letter-spacing:.08em">clarity<span style="color:rgba(255,107,43,.5)"> ·</span> <span style="color:#ff6b2b">audit</span></span>
+        </div>
+        <button onclick="closeOnboard()" style="background:none;border:none;color:#4a4a6a;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#4a4a6a'">✕</button>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:#4a4a6a;text-transform:uppercase;margin-bottom:20px">The Onchain Security Registry for Clarity Contracts</div>
+
+      <!-- Persona selector tabs -->
+      <div style="display:flex;gap:4px;background:#080810;border-radius:7px;padding:4px;border:1px solid #1a1a2e">
+        <button id="tab-dev" onclick="switchPersona('dev')" style="
+          flex:1;padding:9px;border:none;border-radius:5px;
+          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;
+          cursor:pointer;transition:all .2s;
+          background:#ff6b2b;color:#000;
+        ">👨‍💻 I'm a Developer</button>
+        <button id="tab-user" onclick="switchPersona('user')" style="
+          flex:1;padding:9px;border:none;border-radius:5px;
+          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;
+          cursor:pointer;transition:all .2s;
+          background:transparent;color:#4a4a6a;
+        ">🔍 I'm Verifying a Contract</button>
+      </div>
+    </div>
+
+    <!-- Modal body — scrollable -->
+    <div style="overflow-y:auto;flex:1;padding:24px 32px 0">
+
+      <!-- ── DEVELOPER FLOW ── -->
+      <div id="flow-dev">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">
+          Deploy your Clarity contract to Stacks, get it audited, and publish the results onchain so users can verify your security.
+        </div>
+
+        <div id="ob-steps-dev"></div>
+      </div>
+
+      <!-- ── USER/INVESTOR FLOW ── -->
+      <div id="flow-user" style="display:none">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">
+          Before interacting with any Stacks smart contract, verify its security audit status — directly from onchain data.
+        </div>
+
+        <div id="ob-steps-user"></div>
+      </div>
+
+    </div>
+
+    <!-- Modal footer -->
+    <div style="padding:20px 32px;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:#0a0a16">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#4a4a6a;letter-spacing:.06em">
+        <input type="checkbox" id="dontShowAgain" style="accent-color:#ff6b2b;width:13px;height:13px">
+        Don't show again
+      </label>
+      <div style="display:flex;gap:8px">
+        <button onclick="closeOnboard()" style="
+          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
+          padding:9px 20px;border-radius:5px;cursor:pointer;transition:all .15s;
+          background:transparent;color:#6a6a8a;border:1px solid #252540;
+        " onmouseover="this.style.borderColor='#6a6a8a'" onmouseout="this.style.borderColor='#252540'">
+          Skip
+        </button>
+        <button id="ob-cta" onclick="onboardCTA()" style="
+          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
+          padding:9px 22px;border-radius:5px;cursor:pointer;transition:all .15s;
+          background:#ff6b2b;color:#000;border:none;
+        " onmouseover="this.style.background='#ff8c5a'" onmouseout="this.style.background='#ff6b2b'">
+          Get Started →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Onboard step card ── */
+.ob-step{
+  display:flex;gap:16px;padding:16px;
+  background:#0e0e1a;border:1px solid #1a1a2e;border-radius:9px;
+  margin-bottom:10px;cursor:default;
+  transition:border-color .2s, background .2s;
+  animation:fadeUp .35s ease both;
+}
+.ob-step:hover{border-color:#252540;background:#111122}
+.ob-step-num{
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
+  flex-shrink:0;margin-top:1px;
+}
+.ob-step-body{flex:1;min-width:0}
+.ob-step-title{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#dde1f0;margin-bottom:4px}
+.ob-step-desc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6a6a8a;line-height:1.65}
+.ob-step-desc code{color:#ff6b2b;background:rgba(255,107,43,.08);padding:1px 5px;border-radius:3px}
+.ob-step-desc a{color:#4d9eff;text-decoration:none}
+.ob-step-desc a:hover{text-decoration:underline}
+.ob-step-action{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:8px;padding:4px 10px;border-radius:4px;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;
+  border:1px solid;cursor:pointer;background:transparent;transition:opacity .15s;
+}
+.ob-step-action:hover{opacity:.75}
+
+/* Connector dot between steps */
+.ob-connector{
+  display:flex;align-items:center;gap:0;margin:0 0 0 30px;height:12px;
+}
+.ob-connector::before{content:'';display:block;width:2px;height:12px;background:#1a1a2e;border-radius:1px}
+
+/* Outcome badge */
+.ob-outcome{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;margin-bottom:16px;
+  border-radius:8px;
+  background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.2);
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:#00d97e;
+  animation:fadeUp .4s .2s ease both;opacity:0;animation-fill-mode:both;
+}
+</style>
+
+<script>
+// ── Onboarding data ───────────────────────────────────────────────────────────
+const OB_PERSONA = {
+  dev: {
+    cta: 'Open Deploy Guide →',
+    ctaAction: () => { closeOnboard(); showPage('deploy'); },
+    outcome: '🏆 Your contract gets a certified badge — embedded in README and verifiable by anyone onchain.',
+    steps: [
+      {
+        num: '01', color: '#ff6b2b', bg: 'rgba(255,107,43,.12)',
+        title: 'Write & Test Your Contract',
+        desc: 'Use <code>clarinet new my-project</code> to scaffold, write your Clarity contract, then run <code>clarinet test</code> locally.',
+        action: null,
+      },
+      {
+        num: '02', color: '#4d9eff', bg: 'rgba(77,158,255,.12)',
+        title: 'Run Security Audit',
+        desc: 'Scan with <code>npx stacks-clarity-audit scan ./contracts</code> — get a 0–100 score + list of critical/warning/info findings.',
+        action: null,
+      },
+      {
+        num: '03', color: '#ffd166', bg: 'rgba(255,209,102,.12)',
+        title: 'Fix Issues & Deploy',
+        desc: 'Fix until score ≥ 70. Deploy to testnet first via Clarinet or <a href="https://platform.hiro.so" target="_blank">platform.hiro.so</a>, then mainnet.',
+        action: null,
+      },
+      {
+        num: '04', color: '#a78bfa', bg: 'rgba(167,139,250,.12)',
+        title: 'Submit Audit Onchain',
+        desc: 'Go to <strong style="color:#dde1f0">Submit Audit</strong> tab → enter contract address + score → confirm with Hiro Wallet. Results stored on Stacks forever.',
+        action: { label: 'Submit Audit →', page: 'submit', color: '#a78bfa', border: 'rgba(167,139,250,.3)' },
+      },
+      {
+        num: '05', color: '#00d97e', bg: 'rgba(0,217,126,.12)',
+        title: 'Get Your Badge',
+        desc: 'Score ≥ 70 earns a certified badge. Grab the Markdown snippet from the <strong style="color:#dde1f0">Badge</strong> tab and embed it in your README.',
+        action: { label: 'Generate Badge →', page: 'badge', color: '#00d97e', border: 'rgba(0,217,126,.3)' },
+      },
+    ],
+  },
+  user: {
+    cta: 'Verify a Contract →',
+    ctaAction: () => { closeOnboard(); showPage('verify'); },
+    outcome: '✅ You\'ll know exactly whether a contract has been audited and what its security score is — before you interact with real funds.',
+    steps: [
+      {
+        num: '01', color: '#4d9eff', bg: 'rgba(77,158,255,.12)',
+        title: 'Find the Contract Address',
+        desc: 'Get the Stacks contract address from the project\'s website, README, or Discord. It looks like <code>SP...contractname</code>.',
+        action: null,
+      },
+      {
+        num: '02', color: '#ff6b2b', bg: 'rgba(255,107,43,.12)',
+        title: 'Paste it in Verify Tab',
+        desc: 'Open the <strong style="color:#dde1f0">Verify</strong> tab, paste the address, and click Verify. We query the onchain registry instantly.',
+        action: { label: 'Go to Verify →', page: 'verify', color: '#ff6b2b', border: 'rgba(255,107,43,.3)' },
+      },
+      {
+        num: '03', color: '#ffd166', bg: 'rgba(255,209,102,.12)',
+        title: 'Read the Audit Result',
+        desc: 'You\'ll see the security score, number of critical/warning issues, the block it was submitted, and certification status.',
+        action: null,
+      },
+      {
+        num: '04', color: '#00d97e', bg: 'rgba(0,217,126,.12)',
+        title: 'Make an Informed Decision',
+        desc: 'Score ≥ 70 = <code style="color:#00d97e">CERTIFIED SAFE</code>. Score below that means the developer hasn\'t fully secured the contract — proceed with caution.',
+        action: null,
+      },
+    ],
+  },
+};
+
+let currentPersona = 'dev';
+
+function renderObSteps(persona) {
+  const data = OB_PERSONA[persona];
+  const container = document.getElementById(`ob-steps-${persona}`);
+  if (container.dataset.rendered) return;
+  container.dataset.rendered = '1';
+
+  let html = '';
+  data.steps.forEach((s, i) => {
+    html += `
+      <div class="ob-step" style="animation-delay:${i * 0.06}s">
+        <div class="ob-step-num" style="background:${s.bg};color:${s.color}">${s.num}</div>
+        <div class="ob-step-body">
+          <div class="ob-step-title">${s.title}</div>
+          <div class="ob-step-desc">${s.desc}</div>
+          ${s.action ? `
+            <button class="ob-step-action" onclick="closeOnboard();showPage('${s.action.page}')"
+              style="color:${s.action.color};border-color:${s.action.border}">
+              ${s.action.label}
+            </button>` : ''}
+        </div>
+      </div>
+      ${i < data.steps.length - 1 ? '<div class="ob-connector"></div>' : ''}`;
+  });
+
+  html += `<div class="ob-outcome" style="margin-top:14px">${data.outcome}</div>`;
+  container.innerHTML = html;
+}
+
+function switchPersona(p) {
+  currentPersona = p;
+  // Tabs
+  const devTab  = document.getElementById('tab-dev');
+  const userTab = document.getElementById('tab-user');
+  if (p === 'dev') {
+    devTab.style.cssText  += ';background:#ff6b2b;color:#000';
+    userTab.style.cssText += ';background:transparent;color:#4a4a6a';
+  } else {
+    userTab.style.cssText += ';background:#ff6b2b;color:#000';
+    devTab.style.cssText  += ';background:transparent;color:#4a4a6a';
+  }
+  // Panels
+  document.getElementById('flow-dev').style.display  = p === 'dev'  ? 'block' : 'none';
+  document.getElementById('flow-user').style.display = p === 'user' ? 'block' : 'none';
+  // CTA label
+  document.getElementById('ob-cta').textContent = OB_PERSONA[p].cta;
+  // Render steps lazily
+  renderObSteps(p);
+}
+
+function onboardCTA() {
+  OB_PERSONA[currentPersona].ctaAction();
+}
+
+function closeOnboard() {
+  const overlay = document.getElementById('onboardOverlay');
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity .2s ease';
+  setTimeout(() => overlay.style.display = 'none', 200);
+  if (document.getElementById('dontShowAgain').checked) {
+    try { localStorage.setItem('clarity_audit_onboarded','1'); } catch(e) {}
+  }
+}
+
+// Auto-show on load (unless dismissed before)
+window.addEventListener('load', () => {
+  let skip = false;
+  try { skip = localStorage.getItem('clarity_audit_onboarded') === '1'; } catch(e) {}
+  if (skip) {
+    document.getElementById('onboardOverlay').style.display = 'none';
+  } else {
+    renderObSteps('dev');
+  }
+});
+
+// Close on overlay click (not modal)
+document.getElementById('onboardOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeOnboard();
+});
+</script>
+
 <div class="grid-bg"></div>
 <div class="glow-orb g1"></div>
 <div class="glow-orb g2"></div>
