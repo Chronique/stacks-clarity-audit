@@ -514,7 +514,7 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 
 <!-- Mainnet warning banner -->
 <div class="mainnet-banner" id="mainnetBanner">
-  ⚡ MAINNET — transactions use real STX. Make sure your wallet is on mainnet.
+  ⚡ MAINNET — transactions use real STX. Ensure your wallet is set to mainnet.
 </div>
 
 <header>
@@ -941,7 +941,7 @@ let currentStep = 0;
 const STEP_CONTENT = {
   env: `
     <div class="step-title">⚙️ Install Clarinet &amp; Wallet</div>
-    <div class="step-subtitle">Clarinet adalah official dev tool dari Hiro untuk menulis, test, dan deploy Clarity contracts. Install ini dulu sebelum yang lain.</div>
+    <div class="step-subtitle">Clarinet is the official dev tool from Hiro for writing, testing, and deploying Clarity contracts. Install this before anything else.</div>
 
     <div class="card-grid cols2" style="margin-bottom:20px">
       <div class="info-card">
@@ -972,26 +972,26 @@ const STEP_CONTENT = {
     </div>`,
 
   write: `
-    <div class="step-title">✍️ Buat Project &amp; Tulis Contract</div>
-    <div class="step-subtitle">Clarinet menyediakan project scaffold lengkap. Satu perintah langsung ada struktur folder, config, dan contoh test.</div>
+    <div class="step-title">✍️ Create Project &amp; Write Contract</div>
+    <div class="step-subtitle">Clarinet provides a complete project scaffold. One command gives you a full folder structure, config, and example tests.</div>
 
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash — buat project baru</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> new my-token-project
+    <div class="code-block"><div class="code-bar"><span class="code-lang">bash — create new project</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> new my-token-project
 <span class="ck">cd</span> my-token-project
 
-<span class="cm"># tambah contract baru</span>
+<span class="cm"># add a new contract</span>
 <span class="cv">clarinet</span> contract new token</div></div>
 
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Struktur folder hasil scaffold</div>
+    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Scaffolded folder structure</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">tree</span></div><div class="code-body">my-token-project/
 ├── <span class="cv">contracts/</span>
-│   └── <span class="cs">token.clar</span>         <span class="cm">← tulis contract di sini</span>
+│   └── <span class="cs">token.clar</span>         <span class="cm">← write your contract here</span>
 ├── <span class="cv">tests/</span>
 │   └── <span class="cs">token_test.ts</span>      <span class="cm">← unit tests (Deno)</span>
 ├── <span class="cv">deployments/</span>           <span class="cm">← deployment plans</span>
 └── <span class="cs">Clarinet.toml</span>          <span class="cm">← project config</span></div></div>
 
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Contoh contract sederhana (contracts/token.clar)</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">clarity</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm">;; Fungible token sederhana</span>
+    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Example contract (contracts/token.clar)</div>
+    <div class="code-block"><div class="code-bar"><span class="code-lang">clarity</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm">;; Simple fungible token</span>
 <span class="ck">(define-fungible-token)</span> my-token)
 
 <span class="ck">(define-constant)</span> CONTRACT-OWNER tx-sender)
@@ -1012,22 +1012,22 @@ const STEP_CONTENT = {
   (<span class="cv">ok</span> (<span class="cs">ft-get-balance</span> my-token addr)))</div></div>
 
     <div class="info-card warn" style="margin-top:16px">
-      <div class="card-title">💡 Tips Clarity</div>
+      <div class="card-title">💡 Clarity Tips</div>
       <div class="card-body">
-        • Gunakan <code style="color:var(--orange)">define-read-only</code> untuk getter — gratis dipanggil off-chain<br>
-        • Hindari <code style="color:var(--red)">unwrap!</code> tanpa error handling — gunakan <code style="color:var(--green)">match</code> atau <code style="color:var(--green)">try!</code><br>
-        • Semua admin function wajib cek <code style="color:var(--orange)">tx-sender</code> dulu
+        • Use <code style="color:var(--orange)">define-read-only</code> for getters — free to call off-chain<br>
+        • Avoid <code style="color:var(--red)">unwrap!</code> without error handling — use <code style="color:var(--green)">match</code> or <code style="color:var(--green)">try!</code> instead<br>
+        • All admin functions must validate <code style="color:var(--orange)">tx-sender</code> first
       </div>
     </div>`,
 
   test: `
-    <div class="step-title">🧪 Test Lokal dengan Clarinet</div>
-    <div class="step-subtitle">Test contract sebelum deploy — hemat gas dan hindari bug di production. Clarinet menyediakan simnet (local blockchain) dan unit test runner.</div>
+    <div class="step-title">🧪 Test Locally with Clarinet</div>
+    <div class="step-subtitle">Test your contract before deploying — save gas and catch bugs before production. Clarinet provides a simnet (local blockchain) and a unit test runner.</div>
 
     <div class="card-grid cols3" style="margin-bottom:20px">
       <div class="info-card">
         <div class="card-title">clarinet check</div>
-        <div class="card-body">Syntax + type check semua contract di project</div>
+        <div class="card-body">Syntax + type check for all contracts in the project</div>
       </div>
       <div class="info-card">
         <div class="card-title">clarinet test</div>
@@ -1067,17 +1067,17 @@ Clarinet.test({
 });</div></div>
 
     <div class="info-card green" style="margin-top:16px">
-      <div class="card-title">✅ Coverage yang disarankan</div>
+      <div class="card-title">✅ Recommended Coverage</div>
       <div class="card-body">
-        • Happy path semua public function<br>
-        • Auth rejection — panggil admin fn dari non-owner, expect <code style="color:var(--red)">(err u401)</code><br>
-        • Edge cases — amount 0, transfer lebih dari balance
+        • Happy path for all public functions<br>
+        • Auth rejection — call admin fn from non-owner, expect <code style="color:var(--red)">(err u401)</code><br>
+        • Edge cases — amount 0, transfer exceeding balance
       </div>
     </div>`,
 
   audit: `
-    <div class="step-title">🔍 Audit Sebelum Deploy</div>
-    <div class="step-subtitle">Langkah kritis sebelum deploy ke mainnet. Jalankan clarity-audit CLI, review semua findings, dan submit hasil ke onchain registry.</div>
+    <div class="step-title">🔍 Audit Before Deploying</div>
+    <div class="step-subtitle">Critical step before deploying to mainnet. Run the clarity-audit CLI, review all findings, and submit the results to the onchain registry.</div>
 
     <div class="flow-arrow">
       <div class="flow-box">contracts/token.clar</div>
@@ -1086,25 +1086,25 @@ Clarinet.test({
       <div class="flow-sep">→</div>
       <div class="flow-box">Score 0–100</div>
       <div class="flow-sep">→</div>
-      <div class="flow-box green">Submit ke Registry</div>
+      <div class="flow-box green">Submit to Registry</div>
     </div>
 
     <div class="code-block"><div class="code-bar"><span class="code-lang">bash — scan contract</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">npx</span> stacks-clarity-audit scan ./contracts/token.clar
 
-<span class="cm"># Atau scan seluruh folder</span>
+<span class="cm"># Or scan an entire directory</span>
 <span class="cv">npx</span> stacks-clarity-audit scan ./contracts
 
-<span class="cm"># Output JSON untuk CI/CD</span>
+<span class="cm"># Output as JSON for CI/CD pipelines</span>
 <span class="cv">npx</span> stacks-clarity-audit scan ./contracts --json > audit.json</div></div>
 
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Score threshold sebelum deploy</div>
+    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Score threshold before deploying</div>
     <table class="cmp-table">
-      <thead><tr><th>Score</th><th>Status</th><th>Boleh Deploy?</th><th>Rekomendasi</th></tr></thead>
+      <thead><tr><th>Score</th><th>Status</th><th>Deploy?</th><th>Recommendation</th></tr></thead>
       <tbody>
-        <tr><td style="color:var(--green)">90–100</td><td><span class="tag tag-green">EXCELLENT</span></td><td>✅ Mainnet</td><td>Submit ke registry, pasang badge</td></tr>
-        <tr><td style="color:var(--green)">70–89</td><td><span class="tag tag-green">SAFE</span></td><td>✅ Mainnet</td><td>Certified — dapat badge resmi</td></tr>
-        <tr><td style="color:var(--yellow)">40–69</td><td><span class="tag tag-yellow">MODERATE</span></td><td>⚠️ Testnet only</td><td>Fix semua critical dulu</td></tr>
-        <tr><td style="color:var(--red)">0–39</td><td><span class="tag tag-red">CRITICAL</span></td><td>❌ Jangan deploy</td><td>Rework contract</td></tr>
+        <tr><td style="color:var(--green)">90–100</td><td><span class="tag tag-green">EXCELLENT</span></td><td>✅ Mainnet</td><td>Submit to registry, add badge</td></tr>
+        <tr><td style="color:var(--green)">70–89</td><td><span class="tag tag-green">SAFE</span></td><td>✅ Mainnet</td><td>Certified — earns official badge</td></tr>
+        <tr><td style="color:var(--yellow)">40–69</td><td><span class="tag tag-yellow">MODERATE</span></td><td>⚠️ Testnet only</td><td>Fix all critical issues first</td></tr>
+        <tr><td style="color:var(--red)">0–39</td><td><span class="tag tag-red">CRITICAL</span></td><td>❌ Do not deploy</td><td>Rework contract</td></tr>
       </tbody>
     </table>
 
@@ -1122,15 +1122,15 @@ Clarinet.test({
         <span class="cm"># Exits 1 if any CRITICAL found — blocks merge</span></div></div>
 
     <div class="info-card accent" style="margin-top:16px">
-      <div class="card-title">📋 Setelah audit lolos ≥ 70</div>
-      <div class="card-body">Kunjungi tab <strong style="color:var(--orange)">Submit Audit</strong> di atas → masukkan contract address + score → submit ke Stacks blockchain. Hasilnya akan muncul di Registry dan kamu bisa embed badge di README.</div>
+      <div class="card-title">📋 After audit passes ≥ 70</div>
+      <div class="card-body">Visit the <strong style="color:var(--orange)">Submit Audit</strong> tab above → enter your contract address + score → submit to the Stacks blockchain. Results will appear in the Registry and you can embed the badge in your README.</div>
     </div>`,
 
   testnet: `
-    <div class="step-title">🌐 Deploy ke Testnet</div>
-    <div class="step-subtitle">Testnet adalah lingkungan staging gratis — STX tidak punya nilai. Selalu test di sini dulu sebelum mainnet.</div>
+    <div class="step-title">🌐 Deploy to Testnet</div>
+    <div class="step-subtitle">Testnet is a free staging environment — STX has no real value here. Always test here first before going to mainnet.</div>
 
-    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Cara 1 — Clarinet CLI (recommended)</div>
+    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 1 — Clarinet CLI (recommended)</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate deployment plan</span>
 <span class="cv">clarinet</span> deployments generate --testnet
 
@@ -1139,49 +1139,49 @@ Clarinet.test({
   -p deployments/default.testnet-plan.yaml \
   --stacks-node https://api.testnet.hiro.so</div></div>
 
-    <div style="margin-top:20px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Cara 2 — Hiro Platform (GUI)</div>
+    <div style="margin-top:20px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 2 — Hiro Platform (GUI)</div>
     <div class="card-grid cols3" style="margin-bottom:16px">
       <div class="info-card">
         <div class="card-icon">1️⃣</div>
-        <div class="card-title">Buka Platform</div>
-        <div class="card-body"><a href="https://platform.hiro.so" target="_blank">platform.hiro.so ↗</a><br>Connect wallet Leather/Xverse</div>
+        <div class="card-title">Open Platform</div>
+        <div class="card-body"><a href="https://platform.hiro.so" target="_blank">platform.hiro.so ↗</a><br>Connect your Leather or Xverse wallet</div>
       </div>
       <div class="info-card">
         <div class="card-icon">2️⃣</div>
         <div class="card-title">Upload Contract</div>
-        <div class="card-body">Drag &amp; drop file <code style="color:var(--orange)">.clar</code>, atau paste kode langsung di editor</div>
+        <div class="card-body">Drag &amp; drop your <code style="color:var(--orange)">.clar</code> file, or paste the code directly in the editor</div>
       </div>
       <div class="info-card">
         <div class="card-icon">3️⃣</div>
         <div class="card-title">Deploy</div>
-        <div class="card-body">Pilih <span class="tag tag-yellow">TESTNET</span>, konfirmasi di wallet, tunggu tx confirmed (~10 detik)</div>
+        <div class="card-body">Select <span class="tag tag-yellow">TESTNET</span>, confirm in your wallet, wait for tx confirmed (~10 seconds)</div>
       </div>
     </div>
 
-    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Dapatkan testnet STX gratis</div>
+    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Get free testnet STX</div>
     <div class="code-block"><div class="code-bar"><span class="code-lang">bash — via CLI</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -X POST https://api.testnet.hiro.so/extended/v1/faucets/stx \
   -d '{"address":"ST_YOUR_ADDRESS_HERE"}'</div></div>
     <div class="card-body" style="font-size:12px;color:var(--muted2);margin-top:6px">Atau via GUI: <a href="https://explorer.hiro.so/sandbox/faucet?chain=testnet" target="_blank" style="color:var(--orange)">explorer.hiro.so/sandbox/faucet ↗</a></div>
 
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Checklist testnet</div>
+    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Testnet checklist</div>
     <div class="checklist" id="testnetChecklist">
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Contract deploy berhasil — ada tx ID <div class="check-sub">Cek di Hiro Explorer dengan contract address kamu</div></div></div>
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Semua fungsi bisa dipanggil dari wallet / REPL <div class="check-sub">Test read-only dan public functions</div></div></div>
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Error handling bekerja sesuai ekspektasi <div class="check-sub">Coba trigger kondisi error — pastikan return err code yang benar</div></div></div>
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Audit score ≥ 70 sudah disubmit ke clarity.audit registry <div class="check-sub">Pakai tab Submit Audit di atas</div></div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Contract deployed successfully — tx ID confirmed <div class="check-sub">Check in Hiro Explorer with your contract address</div></div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">All functions callable from wallet / REPL <div class="check-sub">Test both read-only and public functions</div></div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Error handling works as expected <div class="check-sub">Try triggering error conditions — verify correct error codes are returned</div></div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Audit score ≥ 70 submitted to clarity.audit registry <div class="check-sub">Use the Submit Audit tab above</div></div></div>
     </div>`,
 
   mainnet: `
-    <div class="step-title">⚡ Deploy ke Mainnet</div>
-    <div class="step-subtitle">Final step — deploy ke Stacks mainnet yang Bitcoin-anchored. Gunakan STX asli. Contract bersifat permanen dan tidak bisa dihapus.</div>
+    <div class="step-title">⚡ Deploy to Mainnet</div>
+    <div class="step-subtitle">Final step — deploy to the Bitcoin-anchored Stacks mainnet. Uses real STX. Contracts are permanent and cannot be deleted.</div>
 
     <div class="info-card danger" style="margin-bottom:20px">
-      <div class="card-title">⚠️ Sebelum deploy mainnet — pastikan:</div>
+      <div class="card-title">⚠️ Before deploying to mainnet — make sure:</div>
       <div class="card-body">
-        • Testnet deployment sudah berhasil dan terverifikasi<br>
-        • Audit score <strong style="color:var(--green)">≥ 70</strong> dari stacks-clarity-audit<br>
-        • Wallet sudah ada STX mainnet (estimasi gas ~0.01–0.05 STX per deploy)<br>
-        • Code sudah di-review — contract tidak bisa diupdate setelah deploy
+        • Testnet deployment succeeded and verified<br>
+        • Audit score <strong style="color:var(--green)">≥ 70</strong> from stacks-clarity-audit<br>
+        • Wallet has mainnet STX (estimated gas ~0.01–0.05 STX per deploy)<br>
+        • Code has been reviewed — contracts cannot be updated after deployment
       </div>
     </div>
 
@@ -1194,13 +1194,13 @@ Clarinet.test({
   -p deployments/default.mainnet-plan.yaml \
   --stacks-node https://api.hiro.so</div></div>
 
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Setelah deploy berhasil</div>
+    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">After successful deployment</div>
     <div class="flow-arrow">
       <div class="flow-box green">Contract onchain ✅</div>
       <div class="flow-sep">→</div>
-      <div class="flow-box orange">Submit ke clarity.audit</div>
+      <div class="flow-box orange">Submit to clarity.audit</div>
       <div class="flow-sep">→</div>
-      <div class="flow-box">Dapatkan Badge</div>
+      <div class="flow-box">Get Badge</div>
       <div class="flow-sep">→</div>
       <div class="flow-box green">Embed di README</div>
     </div>
@@ -1208,9 +1208,9 @@ Clarinet.test({
     <table class="cmp-table" style="margin-top:20px">
       <thead><tr><th>Aspek</th><th>Testnet</th><th>Mainnet</th></tr></thead>
       <tbody>
-        <tr><td>STX</td><td><span class="tag tag-green">Gratis (faucet)</span></td><td><span class="tag tag-yellow">Beli di exchange</span></td></tr>
+        <tr><td>STX</td><td><span class="tag tag-green">Free (faucet)</span></td><td><span class="tag tag-yellow">Buy on exchange</span></td></tr>
         <tr><td>Gas per deploy</td><td><span class="tag tag-green">~0</span></td><td><span class="tag tag-yellow">~0.01–0.05 STX</span></td></tr>
-        <tr><td>Contract permanen</td><td><span class="tag tag-blue">Bisa reset</span></td><td><span class="tag tag-red">Permanent ⚡</span></td></tr>
+        <tr><td>Contract permanent</td><td><span class="tag tag-blue">Resettable</span></td><td><span class="tag tag-red">Permanent ⚡</span></td></tr>
         <tr><td>Bitcoin anchored</td><td>Setiap ~10 blok</td><td>Setiap Bitcoin block</td></tr>
         <tr><td>Explorer</td><td><a href="https://explorer.hiro.so/?chain=testnet" target="_blank" style="color:var(--blue)">explorer.hiro.so (testnet) ↗</a></td><td><a href="https://explorer.hiro.so" target="_blank" style="color:var(--blue)">explorer.hiro.so ↗</a></td></tr>
       </tbody>
@@ -1219,9 +1219,9 @@ Clarinet.test({
     <div class="info-card green" style="margin-top:20px">
       <div class="card-title">🎉 Done! Langkah terakhir</div>
       <div class="card-body">
-        1. Submit audit result ke <strong style="color:var(--orange)">clarity.audit Registry</strong> via tab Submit Audit<br>
-        2. Generate badge di tab <strong style="color:var(--orange)">Badge</strong><br>
-        3. Embed badge Markdown di README project kamu<br><br>
+        1. Submit audit result to the <strong style="color:var(--orange)">clarity.audit Registry</strong> via the Submit Audit tab<br>
+        2. Generate your badge in the <strong style="color:var(--orange)">Badge</strong> tab<br>
+        3. Embed the Markdown badge in your project README<br><br>
         <code style="color:var(--green)">[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green...)](https://clarity-audit-nine.vercel.app)</code>
       </div>
     </div>`,
