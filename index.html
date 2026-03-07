@@ -31,7 +31,7 @@
 
     /* ── Logo ── */
     .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);text-decoration:none;line-height:1}
-    .logo-icon{width:32px;height:32px;flex-shrink:0}
+    .logo-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
     .logo-text{display:flex;flex-direction:column;gap:1px}
     .logo-word{letter-spacing:.12em}
     .logo-word-top{color:#fff}
@@ -523,34 +523,13 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 
     <!-- ── Logo ── -->
     <a class="logo" href="#" onclick="showPage('home');return false">
-      <!-- SVG Icon: hexagonal shield with C scan mark -->
-      <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Outer hex glow fill -->
-        <polygon points="16,2 27,8 27,20 16,28 5,20 5,8"
-                 fill="#ff6b2b" opacity="0.10"/>
-        <!-- Outer hex border -->
-        <polygon points="16,2 27,8 27,20 16,28 5,20 5,8"
-                 fill="none" stroke="#ff6b2b" stroke-width="1.1" opacity="0.45"/>
-        <!-- Inner hex -->
-        <polygon points="16,6 24,10.5 24,19.5 16,24 8,19.5 8,10.5"
-                 fill="none" stroke="#ff6b2b" stroke-width="0.7" opacity="0.25"/>
-        <!-- Center circle -->
-        <circle cx="16" cy="15" r="6.2" fill="#ff6b2b" opacity="0.10"/>
-        <circle cx="16" cy="15" r="6.2" fill="none" stroke="#ff6b2b" stroke-width="1.4"/>
-        <!-- C mark -->
-        <path d="M19.2 11.5 A5 5 0 1 0 19.2 18.5"
-              stroke="#ff6b2b" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-        <!-- Scan tick marks left -->
-        <line x1="5" y1="13.5" x2="8" y2="13.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.5"/>
-        <line x1="5" y1="16.5" x2="8" y2="16.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.25"/>
-        <!-- Scan tick marks right -->
-        <line x1="24" y1="13.5" x2="27" y2="13.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.5"/>
-        <line x1="24" y1="16.5" x2="27" y2="16.5" stroke="#ff6b2b" stroke-width="0.8" opacity="0.25"/>
+      <svg class="logo-icon" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="512" height="512" rx="110" fill="#F7931A"/>
+        <path d="M285 148C233 148 188 186 188 256C188 326 233 364 285 364C311 364 332 355 349 341" stroke="#000" stroke-width="30" stroke-linecap="round" fill="none"/>
+        <path d="M305 364L348 148L391 364" stroke="#000" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <line x1="322" y1="282" x2="374" y2="282" stroke="#000" stroke-width="26" stroke-linecap="round"/>
       </svg>
-      <div class="logo-text">
-        <span class="logo-word logo-word-top">clarity<span class="logo-sep"> ·</span></span>
-        <span class="logo-word logo-word-bot">audit</span>
-      </div>
+      clarity<span>.</span>audit
     </a>
 
     <div class="nav-pills">
