@@ -18,7 +18,7 @@
  *
  * Registry:
  *   testnet   ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry
- *   mainnet   SP3CM1955QMJ712DDV0C0F0KE205XQQT4CSAVV6W4.audit-registry
+ *   mainnet   SP3CM1955QMJ712DDV0C0F0KE205XQQT4CSAVV6W4.audit-registry2
  * ───────────────────────────────────────────────────────────────────────────
  */
 
@@ -85,13 +85,13 @@ const RULES = [
 const REGISTRY = {
   testnet: {
     contractAddress: 'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2',
-    contractName:    'audit-registry',
+    contractName:    'audit-registry2',
     apiUrl:          'https://api.testnet.hiro.so',
     explorerQuery:   '?chain=testnet',
   },
   mainnet: {
-    contractAddress: 'SP3CM1955QMJ712DDV0C0F0KE205XQQT4CSAVV6W4',
-    contractName:    'audit-registry',
+    contractAddress: 'SP3CM1955QMJ712DDV0C0F0KE205XQQT4CSAVV6W4',   // UPDATE after deploy-mainnet.js
+    contractName:    'audit-registry2',
     apiUrl:          'https://api.hiro.so',
     explorerQuery:   '',
   },

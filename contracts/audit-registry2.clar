@@ -1,4 +1,4 @@
-;; audit-registry.clar
+;; audit-registry-v2.clar
 ;; Onchain security registry for Clarity smart contracts.
 ;; Clarity 3 / Stacks 3.0 compatible.
 ;;
@@ -6,7 +6,7 @@
 ;;   Only approved auditors can submit results.
 ;;   The contract owner manages the auditor whitelist.
 ;;   Score must be between 0-100.
-;;   Once submitted, only the original submitter can update their own entry.
+;;   Once submitted, only the original submitter can update their entry.
 
 ;; --- Error codes ---
 (define-constant ERR-NOT-AUTHORIZED  (err u401))
@@ -24,7 +24,7 @@
   { approved: bool }
 )
 
-;; The contract owner is an approved auditor by default.
+;; Deployer is auto-approved as the first auditor.
 (map-set approved-auditors { auditor: CONTRACT-OWNER } { approved: true })
 
 ;; --- Audit data ---
