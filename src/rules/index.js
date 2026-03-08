@@ -1,4 +1,4 @@
-// rules/index.js — All 5 audit rules for Clarity smart contracts
+// rules/index.js — All 7 audit rules for Clarity smart contracts
 
 /**
  * CLA-001: Unsafe unwrap! usage
@@ -238,6 +238,121 @@ const readOnlyCheck = {
   },
 };
 
+/**
+ * CLA-006: Unchecked return value from transfer functions
+ * stx-transfer?, ft-transfer?, nft-transfer? return (response bool uint).
+ * If the result is not checked, failed transfers are silently ignored.
+ */
+const uncheckedTransferCheck = {
+  id: "CLA-006",
+  name: "Unchecked return value from transfer function",
+  severity: "critical",
+  description:
+    "stx-transfer?, ft-transfer?, and nft-transfer? return a response type. " +
+    "Ignoring the result means a failed transfer goes undetected.",
+  check(lines) {
+    const findings = [];
+    const transferFns = ["stx-transfer?", "ft-transfer?", "nft-transfer?", "stx-burn?", "ft-burn?", "ft-mint?"];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+      if (trimmed.startsWith(";")) continue;
+
+      for (const fn of transferFns) {
+        const idx = line.indexOf(fn);
+        if (idx === -1) continue;
+
+        // Check if the result is being used (wrapped in try!, match, unwrap!, let, ok, err)
+        const context = lines
+          .slice(Math.max(0, i - 2), i + 2)
+          .join(" ");
+
+        const isChecked =
+          context.includes("try!") ||
+          context.includes("(match ") ||
+          context.includes("unwrap!") ||
+          context.includes("unwrap-err!") ||
+          // assigned in a let binding
+          /\(let\s*\(\s*\(/.test(context);
+
+        // Also check: is it the last/only expression in a begin or public fn (implicit return is ok)
+        const isDirectReturn =
+          trimmed.startsWith(`(${fn}`) ||
+          trimmed.startsWith(`(ok (${fn}`) ||
+          trimmed === `(${fn}` ||
+          // pattern: (begin ... (transfer?...)) — last line of begin
+          (i > 0 && lines[i + 1]?.trim().startsWith(")"));
+
+        if (!isChecked && !isDirectReturn) {
+          findings.push({
+            line: i + 1,
+            column: idx + 1,
+            message: `Return value of ${fn} is not checked — failed transfer silently ignored`,
+            snippet: trimmed,
+            suggestion:
+              `Wrap with try!: (try! (${fn} ...))\n` +
+              "Or use match to handle both ok and err branches explicitly.",
+          });
+        }
+      }
+    }
+    return findings;
+  },
+};
+
+/**
+ * CLA-007: tx-sender used inside as-contract block
+ * Inside as-contract, tx-sender refers to the CONTRACT, not the original caller.
+ * This is a common mistake that breaks auth checks silently.
+ */
+const txSenderInAsContractCheck = {
+  id: "CLA-007",
+  name: "tx-sender used inside as-contract block",
+  severity: "warning",
+  description:
+    "Inside an as-contract block, tx-sender refers to the contract principal — not the original caller. " +
+    "Auth checks using tx-sender inside as-contract will always compare against the contract itself.",
+  check(lines) {
+    const findings = [];
+    let insideAsContract = 0; // depth counter
+    let asContractStart = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmed = line.trim();
+      if (trimmed.startsWith(";")) continue;
+
+      // Track as-contract block entry
+      if (line.includes("as-contract")) {
+        insideAsContract++;
+        asContractStart = i;
+      }
+
+      // If inside an as-contract block, flag tx-sender usage
+      if (insideAsContract > 0 && line.includes("tx-sender") && !line.includes("as-contract")) {
+        findings.push({
+          line: i + 1,
+          column: line.indexOf("tx-sender") + 1,
+          message: "tx-sender inside as-contract refers to the contract, not the original caller",
+          snippet: trimmed,
+          suggestion:
+            "Save the original caller before entering as-contract:\n" +
+            "  (let ((caller tx-sender)) (as-contract (...use caller...)))",
+        });
+      }
+
+      // Track closing parens to exit as-contract scope (simple heuristic)
+      const opens = (line.match(/\(/g) || []).length;
+      const closes = (line.match(/\)/g) || []).length;
+      if (insideAsContract > 0 && closes > opens) {
+        insideAsContract = Math.max(0, insideAsContract - (closes - opens));
+      }
+    }
+    return findings;
+  },
+};
+
 module.exports = {
   ALL_RULES: [
     unwrapCheck,
@@ -245,5 +360,7 @@ module.exports = {
     asContractCheck,
     hardcodedPrincipalCheck,
     readOnlyCheck,
+    uncheckedTransferCheck,
+    txSenderInAsContractCheck,
   ],
 };

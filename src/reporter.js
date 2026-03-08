@@ -33,15 +33,16 @@ function severityBadge(severity) {
   }
 }
 
+// ── FIX: Aligned with onchain registry — 70+ = SAFE (certified) ──────────────
 function scoreDisplay(score) {
-  const color = score >= 80 ? c.green : score >= 50 ? c.yellow : c.red;
+  const color = score >= 70 ? c.green : score >= 40 ? c.yellow : c.red;
   const label =
     score >= 90
-      ? fmt("✓ SAFE", c.green, c.bold)
+      ? fmt("✓ EXCELLENT", c.green, c.bold)
       : score >= 70
-      ? fmt("⚠  MODERATE RISK", c.yellow, c.bold)
+      ? fmt("✓ SAFE", c.green, c.bold)
       : score >= 40
-      ? fmt("✗ HIGH RISK", c.red, c.bold)
+      ? fmt("⚠  MODERATE RISK", c.yellow, c.bold)
       : fmt("✗ CRITICAL RISK", c.red, c.bold);
   return { score: fmt(`${score}/100`, color, c.bold), label };
 }
@@ -97,6 +98,15 @@ function printResult(result) {
       `  ` +
       fmt(`${result.summary.info} info`, c.blue)
   );
+
+  // Show registry certification hint
+  const certified = result.score >= 70;
+  console.log(
+    `  Registry: ` +
+      (certified
+        ? fmt("✅ CERTIFIED SAFE — eligible to submit to clarity.audit", c.green)
+        : fmt("❌ NOT CERTIFIED — fix issues until score ≥ 70", c.red))
+  );
   console.log();
 }
 
@@ -107,6 +117,7 @@ function printSummaryTable(results) {
   const avgScore = Math.round(
     results.reduce((s, r) => s + r.score, 0) / results.length
   );
+  const certifiedCount = results.filter((r) => r.score >= 70).length;
 
   const { score: scoreStr, label } = scoreDisplay(avgScore);
 
@@ -114,10 +125,13 @@ function printSummaryTable(results) {
   console.log(fmt("  AUDIT COMPLETE", c.bold, c.cyan));
   console.log(fmt("  ══════════════════════════════════════════", c.cyan));
   console.log(`  Files scanned  : ${fmt(String(results.length), c.bold)}`);
+  console.log(`  Certified safe : ${fmt(`${certifiedCount}/${results.length}`, certifiedCount === results.length ? c.green : c.yellow, c.bold)} (score ≥ 70)`);
   console.log(`  Average score  : ${scoreStr}  ${label}`);
   console.log(`  Total critical : ${fmt(String(totalCritical), c.red, c.bold)}`);
   console.log(`  Total warnings : ${fmt(String(totalWarning), c.yellow, c.bold)}`);
   console.log(`  Total info     : ${fmt(String(totalInfo), c.blue, c.bold)}`);
+  console.log();
+  console.log(`  ${fmt("→ Submit results:", c.dim)} https://clarity-audit-nine.vercel.app`);
   console.log();
 }
 

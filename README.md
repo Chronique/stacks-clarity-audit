@@ -55,6 +55,8 @@ npx stacks-clarity-audit rules
 | CLA-003 | 🟡 Warning | `as-contract` used without nearby authorization check |
 | CLA-004 | 🟡 Warning | Hardcoded principal address |
 | CLA-005 | 🔵 Info | Getter function should use `define-read-only` |
+| CLA-006 | 🔴 Critical | Unchecked return value from transfer function (`stx-transfer?`, `ft-transfer?`, etc.) |
+| CLA-007 | 🟡 Warning | `tx-sender` used inside `as-contract` block (always refers to contract, not caller) |
 
 ---
 
@@ -71,6 +73,8 @@ Each contract receives a score from **0 to 100**:
 
 Deductions: **-25** per critical · **-10** per warning · **-3** per info
 
+> Score ≥ 70 = eligible to submit to the onchain registry and receive a certified badge.
+
 ---
 
 ## 🔗 Submit to Onchain Registry
@@ -78,7 +82,7 @@ Deductions: **-25** per critical · **-10** per warning · **-3** per info
 After scanning, publish your audit result to the Stacks blockchain:
 
 1. Visit [clarity-audit-nine.vercel.app](https://clarity-audit-nine.vercel.app)
-2. Connect your Hiro/Leather wallet
+2. Connect your Leather wallet (leather.io) or Xverse wallet
 3. Go to **Submit Audit** tab
 4. Enter contract address + score from CLI output
 5. Confirm transaction → result is stored permanently onchain
@@ -138,7 +142,7 @@ stacks-clarity-audit/
 │   ├── auditor.js              ← Rule runner & scorer
 │   ├── reporter.js             ← Terminal output formatter
 │   └── rules/
-│       └── index.js            ← All audit rules (CLA-001 to CLA-005)
+│       └── index.js            ← All audit rules (CLA-001 to CLA-007)
 ├── examples/
 │   ├── vulnerable-token.clar   ← Example with intentional bugs (score: 19/100)
 │   └── safe-token.clar         ← Clean reference contract (score: 100/100)
@@ -153,7 +157,7 @@ New rules welcome! Each rule is a simple object:
 
 ```js
 const myRule = {
-  id: "CLA-006",
+  id: "CLA-008",
   name: "My rule name",
   severity: "warning",       // "critical" | "warning" | "info"
   description: "...",
@@ -190,3 +194,19 @@ MIT — Built for the Stacks ecosystem 🟠
 - **npm**: https://www.npmjs.com/package/stacks-clarity-audit
 - **Contract**: [Hiro Explorer](https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry?chain=testnet)
 - **Stacks**: https://stacks.co
+
+---
+
+## 📝 Changelog
+
+### v0.1.5
+- **Fix**: Score display now correctly shows 70+ as `✓ SAFE` (aligned with onchain registry certification threshold)
+- **New rule**: CLA-006 — Unchecked return value from `stx-transfer?`, `ft-transfer?`, `nft-transfer?`
+- **New rule**: CLA-007 — `tx-sender` used inside `as-contract` block
+- **CLI**: Registry certification hint now shown after each scan result
+- **CLI**: Summary table now shows certified/total count
+
+### v0.1.4
+- Initial release with 5 rules (CLA-001 to CLA-005)
+- JSON output mode (`--json`)
+- CI/CD exit code support
