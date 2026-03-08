@@ -1,1172 +1,1943 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="talentapp:project_verification" content="63e89bd6ef0d5ffb531e9cdc9ce759b73dacf03dab98a02c81e51b6335fe32f953f98c92504a17827d7363991926edc43ea87d4995981f9119997a6cca56dae0">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 512 512' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='512' height='512' rx='110' fill='%23F7931A'/%3E%3Cpath d='M285 148C233 148 188 186 188 256C188 326 233 364 285 364C311 364 332 355 349 341' stroke='%23000' stroke-width='30' stroke-linecap='round' fill='none'/%3E%3Cpath d='M305 364L348 148L391 364' stroke='%23000' stroke-width='30' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cline x1='322' y1='282' x2='374' y2='282' stroke='%23000' stroke-width='26' stroke-linecap='round'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 512 512' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='512' height='512' rx='110' fill='%23F7931A'/%3E%3Cpath d='M285 148C233 148 188 186 188 256C188 326 233 364 285 364C311 364 332 355 349 341' stroke='%23000' stroke-width='30' stroke-linecap='round' fill='none'/%3E%3Cpath d='M305 364L348 148L391 364' stroke='%23000' stroke-width='30' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cline x1='322' y1='282' x2='374' y2='282' stroke='%23000' stroke-width='26' stroke-linecap='round'/%3E%3C/svg%3E">
-  <title>stacks-clarity-audit — Clarity Smart Contract Security</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg:#080810;--surface:#0e0e1a;--surface2:#13131f;
-      --border:#1a1a2e;--border2:#252540;
-      --orange:#ff6b2b;--orange2:#ff8c5a;
-      --green:#00d97e;--red:#ff3b5c;--yellow:#ffd166;--blue:#4d9eff;--purple:#a78bfa;
-      --text:#dde1f0;--muted:#4a4a6a;--muted2:#6a6a8a;
-      --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
-    }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden}
-    body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999}
-    .grid-bg{position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:32px 32px;opacity:.5;pointer-events:none;z-index:0}
-    .glow-orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
-    .g1{width:500px;height:500px;background:var(--orange);opacity:.04;top:-150px;left:-100px}
-    .g2{width:400px;height:400px;background:var(--blue);opacity:.04;bottom:-100px;right:-100px}
-    .wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
-    header{position:sticky;top:0;z-index:100;background:rgba(8,8,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-    .topbar{display:flex;align-items:center;justify-content:space-between;height:56px}
-    .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);text-decoration:none;line-height:1}
-    .logo-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-    .nav-pills{display:flex;gap:4px}
-    .nav-pill{font-family:var(--mono);font-size:11px;padding:6px 14px;border-radius:4px;color:var(--muted2);cursor:pointer;border:none;background:transparent;transition:all .15s}
-    .nav-pill:hover{color:var(--text);background:var(--surface)}
-    .nav-pill.active{color:var(--orange);background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2)}
-    .header-right{display:flex;align-items:center;gap:10px}
-    .net-sel{position:relative;font-family:var(--mono);font-size:10px;user-select:none}
-    .net-trigger{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:4px;border:1px solid;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;transition:opacity .15s,transform .1s;white-space:nowrap}
-    .net-trigger:hover{opacity:.8}
-    .net-trigger:active{transform:scale(.97)}
-    .net-trigger.testnet{background:rgba(255,209,102,.07);border-color:rgba(255,209,102,.25);color:#ffd166}
-    .net-trigger.mainnet{background:rgba(0,217,126,.07);border-color:rgba(0,217,126,.25);color:#00d97e}
-    .dot-wrap{position:relative;width:7px;height:7px;flex-shrink:0}
-    .dot-ring{position:absolute;inset:0;border-radius:50%;animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite;opacity:.55}
-    .dot-core{position:absolute;inset:0;border-radius:50%}
-    .net-trigger.testnet .dot-ring,.net-trigger.testnet .dot-core{background:#ffd166}
-    .net-trigger.mainnet .dot-ring,.net-trigger.mainnet .dot-core{background:#00d97e}
-    @keyframes ping{75%,100%{transform:scale(2.2);opacity:0}}
-    .chev{width:9px;height:9px;transition:transform .2s;opacity:.6}
-    .net-trigger.open .chev{transform:rotate(180deg)}
-    .net-drop{display:none;position:absolute;right:0;top:calc(100% + 6px);width:230px;background:#0c0c18;border:1px solid var(--border2);border-radius:7px;box-shadow:0 16px 48px rgba(0,0,0,.7);overflow:hidden;z-index:200;animation:dropIn .12s ease}
-    .net-drop.show{display:block}
-    @keyframes dropIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
-    .drop-hd{padding:7px 12px;font-size:9px;letter-spacing:.22em;color:var(--muted);border-bottom:1px solid var(--border);text-transform:uppercase}
-    .net-opt{display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.12em;transition:background .12s}
-    .net-opt:hover{background:rgba(255,255,255,.04)}
-    .net-opt.is-active{background:rgba(255,255,255,.03)}
-    .net-opt.testnet-opt{color:#ffd166}
-    .net-opt.mainnet-opt{color:#00d97e}
-    .net-opt.inactive-opt{color:var(--muted2)}
-    .opt-dot-wrap{position:relative;width:7px;height:7px;flex-shrink:0}
-    .opt-dot-ring{position:absolute;inset:0;border-radius:50%;opacity:.5}
-    .opt-dot-core{position:absolute;inset:0;border-radius:50%}
-    .net-opt.testnet-opt .opt-dot-ring,.net-opt.testnet-opt .opt-dot-core{background:#ffd166}
-    .net-opt.mainnet-opt .opt-dot-ring,.net-opt.mainnet-opt .opt-dot-core{background:#00d97e}
-    .net-opt.inactive-opt .opt-dot-ring,.net-opt.inactive-opt .opt-dot-core{background:var(--muted2);opacity:.4}
-    .net-opt.is-active .opt-dot-ring{animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite}
-    .opt-check{margin-left:auto;opacity:0}
-    .net-opt.is-active .opt-check{opacity:1}
-    .drop-ft{padding:6px 12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.03em}
-    .confirm-panel{padding:12px;display:flex;flex-direction:column;gap:10px}
-    .confirm-hd{padding:7px 12px;font-size:9px;letter-spacing:.22em;color:#ffd166;border-bottom:1px solid var(--border);text-transform:uppercase}
-    .confirm-txt{font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.6}
-    .confirm-txt strong{color:#00d97e}
-    .confirm-btns{display:flex;gap:7px}
-    .confirm-btns button{flex:1;padding:7px;border-radius:4px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:opacity .12s}
-    .confirm-btns button:hover{opacity:.8}
-    .btn-yes{background:rgba(0,217,126,.12);border:1px solid rgba(0,217,126,.3);color:#00d97e}
-    .btn-no{background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--muted2)}
-    .mainnet-banner{display:none;background:rgba(0,217,126,.06);border-bottom:1px solid rgba(0,217,126,.15);padding:6px 0;text-align:center;font-family:var(--mono);font-size:10px;color:#00d97e;letter-spacing:.08em}
-    .mainnet-banner.show{display:block}
-    .connect-btn{font-family:var(--mono);font-size:11px;padding:7px 14px;background:var(--orange);color:#000;border:none;border-radius:4px;cursor:pointer;font-weight:700;transition:background .15s}
-    .connect-btn:hover{background:var(--orange2)}
-    .connect-btn.connected{background:rgba(0,217,126,.15);color:var(--green);border:1px solid rgba(0,217,126,.3)}
-    .page{display:none}.page.active{display:block}
-    .hero{padding:64px 0 48px;display:grid;grid-template-columns:1fr 420px;gap:48px;align-items:center}
-    .hero-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;color:var(--orange);background:rgba(255,107,43,.08);border:1px solid rgba(255,107,43,.2);padding:5px 12px;border-radius:3px;margin-bottom:20px;letter-spacing:.1em;text-transform:uppercase}
-    h1{font-family:var(--mono);font-size:clamp(28px,4vw,42px);font-weight:700;line-height:1.1;letter-spacing:-.02em;margin-bottom:16px}
-    h1 em{color:var(--orange);font-style:normal}
-    .hero-sub{font-size:15px;color:var(--muted2);line-height:1.7;margin-bottom:28px;max-width:480px}
-    .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:5px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s;text-decoration:none}
-    .btn-primary{background:var(--orange);color:#000}
-    .btn-primary:hover{background:var(--orange2);transform:translateY(-1px)}
-    .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2)}
-    .btn-outline:hover{border-color:var(--muted2);transform:translateY(-1px)}
-    .btn-green{background:rgba(0,217,126,.15);color:var(--green);border:1px solid rgba(0,217,126,.3)}
-    .btn-green:hover{background:rgba(0,217,126,.25)}
-    .btn-sm{padding:6px 12px;font-size:11px}
-    .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:40px}
-    .stat-cell{background:var(--surface);padding:20px 24px;transition:background .15s}
-    .stat-cell:hover{background:var(--surface2)}
-    .stat-num{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--orange);letter-spacing:-.03em;line-height:1;margin-bottom:4px}
-    .stat-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-    .term{background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;font-family:var(--mono);font-size:12px}
-    .term-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--border);border-bottom:1px solid rgba(255,255,255,.03)}
-    .td{width:10px;height:10px;border-radius:50%}
-    .td-r{background:#ff5f57}.td-y{background:#ffbd2e}.td-g{background:#28c840}
-    .term-title{font-size:10px;color:var(--muted);margin:0 auto}
-    .term-body{padding:18px;line-height:1.9}
-    .t-p{color:var(--muted)}.t-c{color:var(--orange)}.t-g{color:var(--green);font-weight:700}
-    .t-r{color:var(--red);font-weight:700}.t-y{color:var(--yellow)}.t-b{color:var(--blue)}.t-d{color:var(--muted2)}
-    .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-    .sec-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
-    .sec-title::before{content:'//';color:var(--orange);font-size:11px}
-    .search-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px;margin-bottom:32px}
-    .search-row{display:flex;gap:10px}
-    .search-input{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:10px 16px;font-family:var(--mono);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
-    .search-input::placeholder{color:var(--muted)}
-    .search-input:focus{border-color:var(--orange)}
-    .result-card{background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;margin-top:16px}
-    .result-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface2)}
-    .result-addr{font-family:var(--mono);font-size:12px;color:var(--blue)}
-    .score-big{font-family:var(--mono);font-size:36px;font-weight:700;letter-spacing:-.04em}
-    .result-body{display:grid;grid-template-columns:repeat(4,1fr)}
-    .result-cell{padding:16px 20px;border-right:1px solid var(--border)}
-    .result-cell:last-child{border-right:none}
-    .cell-val{font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:2px}
-    .cell-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase}
-    .registry-table{width:100%;border-collapse:collapse}
-    .registry-table th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
-    .registry-table td{font-family:var(--mono);font-size:12px;padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
-    .registry-table tr:hover td{background:var(--surface2)}
-    .registry-table tr:last-child td{border-bottom:none}
-    .score-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:3px;font-size:11px;font-weight:700}
-    .score-safe{background:rgba(0,217,126,.12);color:var(--green);border:1px solid rgba(0,217,126,.25)}
-    .score-warn{background:rgba(255,209,102,.12);color:var(--yellow);border:1px solid rgba(255,209,102,.25)}
-    .score-fail{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.25)}
-    .addr-short{color:var(--blue);cursor:pointer}
-    .addr-short:hover{text-decoration:underline}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .form-group{display:flex;flex-direction:column;gap:6px}
-    .form-group.full{grid-column:span 2}
-    .form-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-    .form-input{background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
-    .form-input:focus{border-color:var(--orange)}
-    .form-input::placeholder{color:var(--muted)}
-    .score-slider-wrap{display:flex;align-items:center;gap:16px}
-    .score-slider{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--border2);outline:none}
-    .score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--orange);cursor:pointer}
-    .score-display{font-family:var(--mono);font-size:20px;font-weight:700;width:60px;text-align:center}
-    .counter-row{display:flex;gap:12px}
-    .counter-group{flex:1}
-    .counter-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:5px;padding:10px 14px;font-family:var(--mono);font-size:13px;color:var(--text);outline:none;text-align:center}
-    .counter-input:focus{border-color:var(--orange)}
-    .badge-preview{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:24px;text-align:center;margin-bottom:16px}
-    .audit-badge{display:inline-flex;align-items:center;gap:8px;background:#0e0e1a;border:1px solid #252540;border-radius:6px;padding:8px 16px;font-family:var(--mono);font-size:12px}
-    .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
-    .badge-code{background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--muted2);overflow-x:auto;white-space:pre}
-    .divider{height:1px;background:var(--border);margin:40px 0}
-    .toast{position:fixed;bottom:24px;right:24px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:12px 20px;font-family:var(--mono);font-size:12px;z-index:1000;transform:translateY(100px);opacity:0;transition:all .3s ease}
-    .toast.show{transform:translateY(0);opacity:1}
-    .toast.success{border-color:rgba(0,217,126,.4);color:var(--green)}
-    .toast.error{border-color:rgba(255,59,92,.4);color:var(--red)}
-    .loading{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted2)}
-    .spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .empty{text-align:center;padding:48px;color:var(--muted);font-family:var(--mono);font-size:12px}
-    .empty-icon{font-size:32px;margin-bottom:12px;opacity:.5}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .fade-up{animation:fadeUp .5s ease both}
-    footer{border-top:1px solid var(--border);padding:24px 0;margin-top:60px}
-    .footer-inner{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted)}
-    .footer-links{display:flex;gap:20px}
-    .footer-links a{color:var(--muted);text-decoration:none}
-    .footer-links a:hover{color:var(--orange)}
-    @media(max-width:768px){
-      .hero{grid-template-columns:1fr}.hero-right{display:none}
-      .stats-bar{grid-template-columns:repeat(2,1fr)}
-      .form-grid{grid-template-columns:1fr}.form-group.full{grid-column:span 1}
-      .result-body{grid-template-columns:repeat(2,1fr)}
-      .nav-pills{display:none}
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>clarity.audit — Clarity Smart Contract Security</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   THEME TOKENS
+═══════════════════════════════════════════════════════════════ */
+:root, [data-theme="dark"] {
+  /* Backgrounds */
+  --bg:          #07070f;
+  --surface:     #0d0d1c;
+  --surface2:    #121224;
+  --surface3:    #161630;
 
-    /* ── Wallet Modal Styles ── */
-    @keyframes walletFadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes walletSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  /* Borders */
+  --border:      #1c1c38;
+  --border2:     #262650;
 
-    .wallet-row{
-      display:flex;align-items:center;gap:14px;
-      padding:12px 14px;border-radius:10px;
-      border:1px solid var(--border2);
-      background:var(--surface2);
-      margin-bottom:8px;
-      transition:border-color .15s, background .15s;
-    }
-    .wallet-row:hover{border-color:rgba(255,107,43,.3);background:#111122}
-    .wallet-icon{
-      width:40px;height:40px;border-radius:10px;
-      display:grid;place-items:center;
-      flex-shrink:0;overflow:hidden;font-size:20px;
-    }
-    .wallet-info{flex:1;min-width:0}
-    .wallet-name{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);line-height:1.2}
-    .wallet-url{font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px}
-    .wallet-connect-btn{
-      font-family:var(--sans);font-size:12px;font-weight:700;
-      padding:8px 16px;border-radius:7px;cursor:pointer;
-      transition:all .15s;white-space:nowrap;border:1px solid;
-    }
-    .wallet-connect-btn.primary{
-      background:var(--text);color:#080810;border-color:var(--text);
-    }
-    .wallet-connect-btn.primary:hover{background:#fff;border-color:#fff}
-    .wallet-connect-btn.secondary{
-      background:transparent;color:var(--muted2);border-color:var(--border2);
-    }
-    .wallet-connect-btn.secondary:hover{color:var(--text);border-color:var(--muted2)}
-    .wallet-section-label{
-      font-family:var(--mono);font-size:10px;font-weight:700;
-      letter-spacing:.14em;text-transform:uppercase;
-      color:var(--muted);padding:4px 2px 10px;
-    }
-  </style>
+  /* Brand */
+  --orange:      #ff6b2b;
+  --orange-dim:  rgba(255,107,43,.12);
+  --orange-line: rgba(255,107,43,.25);
+
+  /* Status */
+  --green:       #00d97e;
+  --green-dim:   rgba(0,217,126,.1);
+  --green-line:  rgba(0,217,126,.25);
+  --red:         #ff3b5c;
+  --red-dim:     rgba(255,59,92,.1);
+  --yellow:      #ffc84a;
+  --yellow-dim:  rgba(255,200,74,.1);
+  --blue:        #4d9eff;
+  --blue-dim:    rgba(77,158,255,.1);
+  --purple:      #a78bfa;
+
+  /* ── TEXT — full contrast hierarchy for dark mode ── */
+  --text:        #e8eaf6;   /* primary — near white, slight blue tint */
+  --text2:       #b8bcd8;   /* secondary — clearly readable */
+  --muted:       #8890b0;   /* tertiary — labels, timestamps */
+  --muted2:      #6068888;  /* subtle — disabled, hints */
+  --faint:       #404468;   /* very subtle — decorative only */
+
+  /* Components */
+  --header-bg:   rgba(7,7,15,.92);
+  --term-bar:    #0a0a18;
+  --modal-bg:    #0a0a1a;
+  --drop-bg:     #0d0d1c;
+  --code-bg:     #050510;
+  --input-bg:    #0a0a18;
+
+  /* Effects */
+  --shadow:      0 8px 40px rgba(0,0,0,.6);
+  --shadow-sm:   0 2px 12px rgba(0,0,0,.4);
+  --glow:        0 0 40px rgba(255,107,43,.08);
+}
+
+[data-theme="light"] {
+  --bg:          #f2f2ec;
+  --surface:     #ffffff;
+  --surface2:    #f7f7f2;
+  --surface3:    #eeeee8;
+
+  --border:      #ddddd6;
+  --border2:     #c8c8c0;
+
+  --orange:      #d45a18;
+  --orange-dim:  rgba(212,90,24,.08);
+  --orange-line: rgba(212,90,24,.22);
+
+  --green:       #008f55;
+  --green-dim:   rgba(0,143,85,.08);
+  --green-line:  rgba(0,143,85,.22);
+  --red:         #cc2240;
+  --red-dim:     rgba(204,34,64,.08);
+  --yellow:      #9a6c00;
+  --yellow-dim:  rgba(154,108,0,.08);
+  --blue:        #1d5fcc;
+  --blue-dim:    rgba(29,95,204,.08);
+  --purple:      #6d28d9;
+
+  /* ── TEXT — contrast on light cream ── */
+  --text:        #16162a;
+  --text2:       #2e2e50;
+  --muted:       #545478;
+  --muted2:      #767698;
+  --faint:       #aaaac0;
+
+  --header-bg:   rgba(242,242,236,.94);
+  --term-bar:    #e8e8e2;
+  --modal-bg:    #f8f8f2;
+  --drop-bg:     #ffffff;
+  --code-bg:     #f0f0ea;
+  --input-bg:    #f8f8f2;
+
+  --shadow:      0 8px 40px rgba(0,0,0,.12);
+  --shadow-sm:   0 2px 12px rgba(0,0,0,.08);
+  --glow:        0 0 40px rgba(212,90,24,.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background .25s ease, color .25s ease;
+}
+
+/* Scanline texture — dark mode only */
+[data-theme="dark"] body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,.025) 2px, rgba(0,0,0,.025) 4px
+  );
+}
+
+/* Grid background */
+.grid-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: .6;
+  transition: opacity .25s;
+}
+[data-theme="light"] .grid-bg { opacity: .35; }
+
+/* Ambient glows */
+.glow-orb {
+  position: fixed; border-radius: 50%;
+  filter: blur(120px); pointer-events: none; z-index: 0;
+  transition: opacity .3s;
+}
+.g1 { width:600px; height:500px; background:var(--orange); opacity:.03; top:-200px; left:-100px; }
+.g2 { width:500px; height:400px; background:var(--blue);   opacity:.03; bottom:-150px; right:-80px; }
+[data-theme="light"] .g1, [data-theme="light"] .g2 { opacity:.05; }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════════════ */
+header {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--header-bg);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: background .25s, border-color .25s;
+}
+.topbar {
+  display: flex; align-items: center;
+  justify-content: space-between; height: 56px; gap: 16px;
+}
+
+/* Logo */
+.logo {
+  display: flex; align-items: center; gap: 9px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; font-weight: 700; letter-spacing: -.01em;
+  color: var(--text); text-decoration: none;
+  flex-shrink: 0; transition: color .15s;
+}
+.logo:hover { color: var(--orange); }
+.logo-icon { width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0; }
+.logo-dot { color: var(--orange); }
+
+/* Nav pills */
+.nav-pills { display: flex; gap: 2px; }
+.nav-pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500;
+  padding: 6px 14px; border-radius: 5px; border: none; background: transparent;
+  color: var(--muted); cursor: pointer;
+  transition: color .15s, background .15s;
+}
+.nav-pill:hover { color: var(--text2); background: var(--surface2); }
+.nav-pill.active {
+  color: var(--orange); background: var(--orange-dim);
+  border: 1px solid var(--orange-line);
+}
+
+/* Header right cluster */
+.header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* ── Theme Toggle ── */
+.theme-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border2); background: var(--surface);
+  cursor: pointer; display: grid; place-items: center;
+  font-size: 16px; transition: all .15s; color: var(--muted);
+  flex-shrink: 0;
+}
+.theme-btn:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+
+/* ── Network selector ── */
+.net-wrap { position: relative; }
+.net-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 6px; border: 1px solid;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: .12em; cursor: pointer; transition: opacity .15s;
+  white-space: nowrap;
+}
+.net-btn.testnet {
+  background: var(--yellow-dim); border-color: rgba(255,200,74,.3); color: var(--yellow);
+}
+[data-theme="light"] .net-btn.testnet { color: var(--yellow); border-color: rgba(154,108,0,.3); }
+.net-btn.mainnet {
+  background: var(--green-dim); border-color: var(--green-line); color: var(--green);
+}
+.net-btn:hover { opacity: .8; }
+
+/* Pulse dot */
+.dot-wrap { position: relative; width: 7px; height: 7px; flex-shrink: 0; }
+.dot-ring { position: absolute; inset: 0; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
+.dot-core { position: absolute; inset: 1px; border-radius: 50%; }
+.net-btn.testnet .dot-ring, .net-btn.testnet .dot-core { background: var(--yellow); }
+[data-theme="light"] .net-btn.testnet .dot-ring, [data-theme="light"] .net-btn.testnet .dot-core { background: var(--yellow); }
+.net-btn.mainnet .dot-ring, .net-btn.mainnet .dot-core { background: var(--green); }
+@keyframes pulse { 0%,100% { transform:scale(1); opacity:.5; } 50% { transform:scale(2.2); opacity:0; } }
+
+.net-chevron { width: 10px; height: 10px; transition: transform .2s; opacity: .6; }
+.net-btn.open .net-chevron { transform: rotate(180deg); }
+
+/* Dropdown */
+.net-drop {
+  display: none; position: absolute; right: 0; top: calc(100% + 6px);
+  width: 240px; background: var(--drop-bg);
+  border: 1px solid var(--border2); border-radius: 10px;
+  box-shadow: var(--shadow); overflow: hidden; z-index: 300;
+  animation: dropIn .15s ease;
+}
+@keyframes dropIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.net-drop.show { display: block; }
+.drop-section { padding: 6px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+.net-option {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 14px; cursor: pointer; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  transition: background .12s;
+}
+.net-option:hover { background: var(--surface2); }
+.net-option.active { background: var(--surface2); }
+.net-option.testnet-opt { color: var(--yellow); }
+[data-theme="light"] .net-option.testnet-opt { color: var(--yellow); }
+.net-option.mainnet-opt { color: var(--green); }
+.net-option .check { margin-left: auto; opacity: 0; color: currentColor; font-size: 13px; }
+.net-option.active .check { opacity: 1; }
+.drop-footer {
+  padding: 7px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  color: var(--muted); border-top: 1px solid var(--border);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Confirm panel inside dropdown */
+.confirm-hd {
+  padding: 8px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  letter-spacing: .18em; color: var(--yellow); border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+}
+[data-theme="light"] .confirm-hd { color: var(--yellow); }
+.confirm-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.confirm-txt {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  color: var(--text2); line-height: 1.6;
+}
+.confirm-txt strong { color: var(--green); }
+.confirm-btns { display: flex; gap: 7px; }
+.confirm-btns button {
+  flex: 1; padding: 7px; border-radius: 5px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700;
+  cursor: pointer; transition: opacity .12s; border: 1px solid;
+}
+.confirm-btns button:hover { opacity: .8; }
+.btn-yes { background: var(--green-dim); border-color: var(--green-line); color: var(--green); }
+.btn-no  { background: var(--surface2); border-color: var(--border2); color: var(--muted); }
+
+/* Mainnet banner */
+.mainnet-banner {
+  display: none; background: var(--green-dim);
+  border-bottom: 1px solid var(--green-line); padding: 5px 0;
+  text-align: center; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--green); letter-spacing: .08em;
+}
+.mainnet-banner.show { display: block; }
+
+/* Connect wallet button */
+.connect-btn {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700;
+  padding: 7px 15px; background: var(--orange); color: #fff;
+  border: none; border-radius: 5px; cursor: pointer; transition: all .15s;
+  white-space: nowrap;
+}
+[data-theme="dark"] .connect-btn { color: #000; }
+.connect-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.connect-btn.connected {
+  background: var(--green-dim); color: var(--green);
+  border: 1px solid var(--green-line);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED LAYOUT PRIMITIVES
+═══════════════════════════════════════════════════════════════ */
+.page { display: none; }
+.page.active { display: block; animation: fadeUp .35s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
+  cursor: pointer; border: none; text-decoration: none;
+  transition: all .15s; white-space: nowrap;
+}
+.btn-primary { background: var(--orange); color: #fff; }
+[data-theme="dark"] .btn-primary { color: #000; }
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-outline {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-outline:hover { border-color: var(--muted); transform: translateY(-1px); }
+.btn-green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-line); }
+.btn-green:hover { filter: brightness(1.05); }
+.btn-sm { padding: 5px 12px; font-size: 10px; }
+
+/* Section header */
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.sec-title {
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 700;
+  color: var(--text); display: flex; align-items: center; gap: 10px;
+}
+.sec-title::before { content: '//'; color: var(--orange); font-size: 11px; }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 48px 0; }
+
+/* Form elements */
+.form-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+  margin-bottom: 6px; display: block;
+}
+.form-input {
+  width: 100%; background: var(--input-bg); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 10px 14px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text);
+  outline: none; transition: border-color .15s;
+}
+.form-input::placeholder { color: var(--muted); }
+.form-input:focus { border-color: var(--orange); }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group.full { grid-column: span 2; }
+
+/* Score slider */
+.slider-row { display: flex; align-items: center; gap: 14px; }
+.slider {
+  flex: 1; -webkit-appearance: none; height: 4px;
+  border-radius: 2px; background: var(--border2); outline: none; cursor: pointer;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--orange); cursor: pointer;
+  box-shadow: 0 0 0 3px var(--orange-dim);
+}
+.slider::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%; background: var(--orange);
+  border: none; cursor: pointer;
+}
+.score-num {
+  font-family: 'IBM Plex Mono', monospace; font-size: 22px;
+  font-weight: 700; width: 52px; text-align: center; line-height: 1;
+}
+
+/* Status pills */
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700;
+  border: 1px solid;
+}
+.pill-green { background: var(--green-dim); color: var(--green); border-color: var(--green-line); }
+.pill-yellow { background: var(--yellow-dim); color: var(--yellow); border-color: rgba(255,200,74,.3); }
+[data-theme="light"] .pill-yellow { border-color: rgba(154,108,0,.3); }
+.pill-red { background: var(--red-dim); color: var(--red); border-color: rgba(255,59,92,.3); }
+.pill-blue { background: var(--blue-dim); color: var(--blue); border-color: rgba(77,158,255,.3); }
+
+/* Terminal */
+.term {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; overflow: hidden;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.term-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 14px; background: var(--term-bar);
+  border-bottom: 1px solid var(--border);
+}
+.td { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.td-r { background: #ff5f57; }
+.td-y { background: #febc2e; }
+.td-g { background: #28c840; }
+.term-label { font-size: 10px; color: var(--muted); margin: 0 auto; letter-spacing: .05em; }
+.term-body { padding: 18px 20px; line-height: 2; }
+/* Terminal syntax colors — high contrast in both themes */
+.t-p  { color: var(--muted); }
+.t-c  { color: var(--orange); font-weight: 500; }
+.t-g  { color: var(--green); font-weight: 600; }
+.t-r  { color: var(--red); font-weight: 600; }
+.t-y  { color: var(--yellow); }
+.t-b  { color: var(--blue); }
+.t-d  { color: var(--text2); }
+.t-dim { color: var(--muted); }
+
+/* Code block */
+.code-block {
+  background: var(--code-bg); border: 1px solid var(--border2);
+  border-radius: 8px; overflow: hidden; margin: 12px 0;
+}
+.code-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.code-lang { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; }
+.code-copy {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: .08em;
+  color: var(--muted); background: none; border: none; cursor: pointer;
+  padding: 2px 7px; border-radius: 3px; transition: color .15s;
+}
+.code-copy:hover { color: var(--orange); }
+.code-body {
+  padding: 14px 18px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; line-height: 1.9; overflow-x: auto; white-space: pre;
+  color: var(--text2);
+}
+.ck { color: var(--blue); }
+.cv { color: var(--orange); }
+.cs { color: var(--green); }
+.cm { color: var(--muted); font-style: italic; }
+.cp { color: var(--purple); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9990;
+  padding: 12px 20px; background: var(--surface);
+  border: 1px solid var(--border2); border-radius: 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  box-shadow: var(--shadow); transition: all .3s ease;
+  transform: translateY(20px); opacity: 0; pointer-events: none;
+}
+.toast.show { transform: none; opacity: 1; pointer-events: auto; }
+.toast.success { border-color: var(--green-line); color: var(--green); }
+.toast.error   { border-color: rgba(255,59,92,.4); color: var(--red); }
+.toast.info    { border-color: rgba(77,158,255,.4); color: var(--blue); }
+
+/* Loading spinner */
+.loading { display: inline-flex; align-items: center; gap: 9px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); }
+.spin {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--border2); border-top-color: var(--orange);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty { text-align: center; padding: 56px 24px; color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+.empty-icon { font-size: 36px; display: block; margin-bottom: 14px; opacity: .5; }
+
+/* Info cards */
+.card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 20px;
+  transition: border-color .15s, background .15s;
+}
+.card:hover { border-color: var(--border); }
+.card.orange { border-color: var(--orange-line); background: var(--orange-dim); }
+.card.green  { border-color: var(--green-line);  background: var(--green-dim); }
+.card.warn   { border-color: rgba(255,200,74,.3); background: var(--yellow-dim); }
+.card.danger { border-color: rgba(255,59,92,.3);  background: var(--red-dim); }
+.card-icon { font-size: 22px; margin-bottom: 10px; }
+.card-title {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700;
+  color: var(--text); margin-bottom: 6px;
+}
+.card-body { font-size: 12px; color: var(--text2); line-height: 1.65; }
+.card-body a { color: var(--orange); text-decoration: none; }
+.card-body a:hover { text-decoration: underline; }
+
+/* Tables */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+  padding: 10px 16px; text-align: left;
+  border-bottom: 1px solid var(--border); background: var(--surface2);
+}
+.data-table td {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  color: var(--text); vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface2); }
+
+/* Grid layouts */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; }
+
+/* Stats bar */
+.stats-bar {
+  background: var(--border); border: 1px solid var(--border2);
+  border-radius: 10px; overflow: hidden; margin-bottom: 40px;
+}
+.stat-cell {
+  background: var(--surface); padding: 22px 26px;
+  transition: background .15s;
+}
+.stat-cell:hover { background: var(--surface2); }
+.stat-num {
+  font-family: 'IBM Plex Mono', monospace; font-size: 30px;
+  font-weight: 700; color: var(--orange); letter-spacing: -.03em;
+  line-height: 1; margin-bottom: 5px;
+}
+.stat-lbl {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .08em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WALLET MODAL
+═══════════════════════════════════════════════════════════════ */
+@keyframes walletUp { from { opacity:0; transform:translateY(20px) scale(.98); } to { opacity:1; transform:none scale(1); } }
+
+.overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(4,4,12,.82); backdrop-filter: blur(12px);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.overlay.show { display: flex; animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.wallet-modal {
+  width: 100%; max-width: 400px; background: var(--modal-bg);
+  border: 1px solid var(--border2); border-radius: 18px;
+  box-shadow: var(--shadow); overflow: hidden;
+  animation: walletUp .25s ease;
+}
+.wallet-modal-head {
+  padding: 22px 22px 14px;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.wallet-modal-title {
+  font-size: 17px; font-weight: 700; color: var(--text);
+  letter-spacing: -.02em; line-height: 1.2;
+}
+.wallet-modal-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.close-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  cursor: pointer; display: grid; place-items: center;
+  font-size: 12px; color: var(--muted); flex-shrink: 0;
+  transition: all .15s;
+}
+.close-btn:hover { color: var(--text); border-color: var(--border2); }
+
+.wallet-list { padding: 0 14px 18px; }
+.wallet-section-lbl {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--muted); padding: 6px 2px 10px; display: block;
+}
+.wallet-row {
+  display: flex; align-items: center; gap: 13px;
+  padding: 11px 12px; border-radius: 10px;
+  border: 1px solid var(--border2); background: var(--surface2);
+  margin-bottom: 8px; transition: all .15s; cursor: pointer;
+}
+.wallet-row:hover { border-color: var(--orange-line); background: var(--surface); }
+.wallet-icon { width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; overflow: hidden; display: grid; place-items: center; }
+.wallet-info { flex: 1; min-width: 0; }
+.wallet-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.wallet-url { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; }
+.wallet-action {
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 600;
+  padding: 7px 14px; border-radius: 8px; border: 1px solid; cursor: pointer;
+  transition: all .15s; white-space: nowrap;
+}
+.wallet-action.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.wallet-action.primary:hover { opacity: .85; }
+.wallet-action.secondary { background: transparent; color: var(--muted); border-color: var(--border2); }
+.wallet-action.secondary:hover { color: var(--text2); border-color: var(--muted); }
+
+/* ═══════════════════════════════════════════════════════════════
+   ONBOARDING MODAL
+═══════════════════════════════════════════════════════════════ */
+.ob-modal {
+  width: 100%; max-width: 740px; background: var(--modal-bg);
+  border: 1px solid var(--border2); border-radius: 16px;
+  box-shadow: var(--shadow); overflow: hidden; max-height: 92vh;
+  display: flex; flex-direction: column;
+  animation: walletUp .3s ease;
+}
+.ob-head { padding: 26px 30px 0; flex-shrink: 0; }
+.ob-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ob-product { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 15px; color: var(--text); }
+.ob-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: .18em; color: var(--muted); text-transform: uppercase; margin-bottom: 18px; }
+.ob-tabs { display: flex; gap: 4px; background: var(--bg); border-radius: 8px; padding: 4px; border: 1px solid var(--border); margin-bottom: 0; }
+.ob-tab {
+  flex: 1; padding: 9px; border: none; border-radius: 6px; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700;
+  letter-spacing: .06em; transition: all .2s; color: var(--muted); background: transparent;
+}
+.ob-tab.active { background: var(--orange); color: #000; }
+.ob-body { overflow-y: auto; flex: 1; padding: 22px 30px 0; }
+.ob-step {
+  display: flex; gap: 14px; padding: 14px 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 8px; transition: border-color .15s;
+  animation: fadeUp .3s ease both;
+}
+.ob-step:hover { border-color: var(--border2); }
+.ob-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700;
+  flex-shrink: 0; margin-top: 1px;
+}
+.ob-step-content { flex: 1; min-width: 0; }
+.ob-step-title { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.ob-step-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.ob-step-desc code { color: var(--orange); background: var(--orange-dim); padding: 1px 6px; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+.ob-step-desc a { color: var(--blue); text-decoration: none; }
+.ob-step-desc a:hover { text-decoration: underline; }
+.ob-step-link {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 8px;
+  padding: 4px 10px; border-radius: 4px; border: 1px solid;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700;
+  cursor: pointer; background: transparent; transition: opacity .15s;
+}
+.ob-step-link:hover { opacity: .75; }
+.ob-connector { margin: 0 0 0 30px; height: 10px; display: flex; align-items: center; }
+.ob-connector::before { content: ''; display: block; width: 2px; height: 10px; background: var(--border); border-radius: 1px; }
+.ob-outcome {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; margin: 8px 0 16px;
+  border-radius: 8px; background: var(--green-dim); border: 1px solid var(--green-line);
+  font-size: 12px; color: var(--green); line-height: 1.5;
+  animation: fadeUp .4s .15s ease both; opacity: 0; animation-fill-mode: both;
+}
+.ob-foot {
+  padding: 18px 30px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; background: var(--surface2);
+}
+.ob-dont-show { display: flex; align-items: center; gap: 7px; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); }
+.ob-dont-show input { accent-color: var(--orange); width: 13px; height: 13px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   DEPLOY GUIDE — STEPPER
+═══════════════════════════════════════════════════════════════ */
+.stepper { display: flex; align-items: center; gap: 0; overflow-x: auto; padding-bottom: 4px; margin-bottom: 36px; }
+.step-node { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex-shrink: 0; }
+.step-circle {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid var(--border2); background: var(--surface);
+  display: grid; place-items: center;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 700;
+  color: var(--muted); transition: all .2s;
+}
+.step-label {
+  font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+  letter-spacing: .1em; color: var(--muted); text-transform: uppercase;
+  white-space: nowrap; transition: color .2s;
+}
+.step-line { flex: 1; height: 2px; background: var(--border2); margin-bottom: 18px; min-width: 30px; transition: background .3s; flex-shrink: 0; }
+.step-node.done  .step-circle { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.step-node.done  .step-label  { color: var(--green); }
+.step-node.active .step-circle { border-color: var(--orange); background: var(--orange-dim); color: var(--orange); }
+.step-node.active .step-label  { color: var(--orange); }
+.step-line.done  { background: var(--green); }
+.step-line.active { background: var(--orange); }
+
+.step-panel { display: none; }
+.step-panel.active { display: block; animation: fadeUp .3s ease both; }
+.step-big-title { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.step-sub { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 26px; max-width: 640px; }
+
+.checklist { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 12px; padding: 12px 15px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 8px; cursor: pointer; transition: border-color .15s;
+  user-select: none;
+}
+.check-item.checked { border-color: var(--green-line); background: var(--green-dim); }
+.check-box {
+  width: 18px; height: 18px; border: 2px solid var(--border2);
+  border-radius: 4px; flex-shrink: 0; display: grid; place-items: center;
+  margin-top: 1px; transition: all .15s; font-size: 10px; color: transparent;
+}
+.check-item.checked .check-box { background: var(--green); border-color: var(--green); color: #fff; }
+.check-text { flex: 1; }
+.check-main { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text2); }
+.check-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.check-item.checked .check-main { color: var(--text); }
+
+.flow-row { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin: 14px 0; }
+.flow-box {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 5px; padding: 7px 13px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text2);
+  white-space: nowrap;
+}
+.flow-box.orange { border-color: var(--orange-line); color: var(--orange); }
+.flow-box.green  { border-color: var(--green-line);  color: var(--green); }
+.flow-arrow { color: var(--muted); font-size: 16px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+  .hero-right { display: none; }
+  .grid4 { grid-template-columns: 1fr 1fr !important; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: span 1; }
+  .nav-pills { display: none; }
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .how-grid { grid-template-columns: 1fr 1fr !important; }
+  .submit-grid { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 480px) {
+  .grid4 { grid-template-columns: 1fr !important; }
+  .how-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border); padding: 22px 0; margin-top: 64px;
+  background: var(--bg); transition: background .25s;
+}
+.foot-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted);
+}
+.foot-links { display: flex; gap: 20px; }
+.foot-links a { color: var(--muted); text-decoration: none; transition: color .15s; }
+.foot-links a:hover { color: var(--orange); }
+</style>
 </head>
 <body>
 
-<!-- ── Onboarding Modal ─────────────────────────────────────────────────────── -->
-<div id="onboardOverlay" style="
-  position:fixed;inset:0;z-index:9000;
-  background:rgba(5,5,14,.88);
-  backdrop-filter:blur(10px);
-  display:flex;align-items:center;justify-content:center;
-  padding:20px;
-  animation:fadeIn .25s ease;
-">
-  <div id="onboardModal" style="
-    width:100%;max-width:760px;
-    background:#0c0c1a;
-    border:1px solid #252540;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 32px 80px rgba(0,0,0,.8);
-    animation:slideUp .3s ease;
-    max-height:92vh;
-    display:flex;flex-direction:column;
-  ">
-    <div style="padding:28px 32px 0;flex-shrink:0">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <svg viewBox="0 0 512 512" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:7px;flex-shrink:0">
+<!-- ══════════════════════════════════════════════════════════════
+     ONBOARDING MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="overlay show" id="obOverlay">
+  <div class="ob-modal">
+    <div class="ob-head">
+      <div class="ob-title-row">
+        <div class="ob-product">
+          <svg width="30" height="30" viewBox="0 0 512 512" fill="none" style="border-radius:7px;flex-shrink:0">
             <rect width="512" height="512" rx="110" fill="#F7931A"/>
             <path d="M285 148C233 148 188 186 188 256C188 326 233 364 285 364C311 364 332 355 349 341" stroke="#000" stroke-width="30" stroke-linecap="round" fill="none"/>
             <path d="M305 364L348 148L391 364" stroke="#000" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             <line x1="322" y1="282" x2="374" y2="282" stroke="#000" stroke-width="26" stroke-linecap="round"/>
           </svg>
-          <span style="font-weight:700;font-size:1rem">stacks-clarity-audit</span>
+          clarity.audit
         </div>
-        <button onclick="closeOnboard()" style="background:none;border:none;color:#4a4a6a;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#4a4a6a'">✕</button>
+        <button class="close-btn" onclick="closeOnboard()">✕</button>
       </div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:#4a4a6a;text-transform:uppercase;margin-bottom:20px">The Onchain Security Registry for Clarity Contracts</div>
-      <div style="display:flex;gap:4px;background:#080810;border-radius:7px;padding:4px;border:1px solid #1a1a2e">
-        <button id="tab-dev" onclick="switchPersona('dev')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;background:#ff6b2b;color:#000;">👨‍💻 I'm a Developer</button>
-        <button id="tab-user" onclick="switchPersona('user')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;background:transparent;color:#4a4a6a;">🔍 I'm Verifying a Contract</button>
-      </div>
-    </div>
-    <div style="overflow-y:auto;flex:1;padding:24px 32px 0">
-      <div id="flow-dev">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">Deploy your Clarity contract to Stacks, get it audited, and publish the results onchain so users can verify your security.</div>
-        <div id="ob-steps-dev"></div>
-      </div>
-      <div id="flow-user" style="display:none">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">Before interacting with any Stacks smart contract, verify its security audit status — directly from onchain data.</div>
-        <div id="ob-steps-user"></div>
+      <div class="ob-sub">Onchain Security Registry for Clarity Smart Contracts</div>
+      <div class="ob-tabs">
+        <button class="ob-tab active" id="tab-dev" onclick="switchPersona('dev')">👨‍💻 Developer</button>
+        <button class="ob-tab" id="tab-user" onclick="switchPersona('user')">🔍 Verifying a Contract</button>
       </div>
     </div>
-    <div style="padding:20px 32px;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:#0a0a16">
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#4a4a6a;letter-spacing:.06em">
-        <input type="checkbox" id="dontShowAgain" style="accent-color:#ff6b2b;width:13px;height:13px">
-        Don't show again
+    <div class="ob-body">
+      <div id="flow-dev"></div>
+      <div id="flow-user" style="display:none"></div>
+    </div>
+    <div class="ob-foot">
+      <label class="ob-dont-show">
+        <input type="checkbox" id="dontShow"> Don't show again
       </label>
       <div style="display:flex;gap:8px">
-        <button onclick="closeOnboard()" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:9px 20px;border-radius:5px;cursor:pointer;transition:all .15s;background:transparent;color:#6a6a8a;border:1px solid #252540;" onmouseover="this.style.borderColor='#6a6a8a'" onmouseout="this.style.borderColor='#252540'">Skip</button>
-        <button id="ob-cta" onclick="onboardCTA()" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:9px 22px;border-radius:5px;cursor:pointer;transition:all .15s;background:#ff6b2b;color:#000;border:none;" onmouseover="this.style.background='#ff8c5a'" onmouseout="this.style.background='#ff6b2b'">Get Started →</button>
+        <button class="btn btn-outline btn-sm" onclick="closeOnboard()">Skip</button>
+        <button class="btn btn-primary btn-sm" id="ob-cta" onclick="onboardCTA()">Get Started →</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── Wallet Connect Modal ──────────────────────────────────────────────────── -->
-<div id="walletOverlay" style="
-  position:fixed;inset:0;z-index:8500;
-  background:rgba(5,5,14,.78);
-  backdrop-filter:blur(10px);
-  display:none;
-  align-items:center;justify-content:center;
-  padding:20px;
-" onclick="closeWalletModal(event)">
-  <div id="walletModal" style="
-    width:100%;max-width:400px;
-    background:#0e0e1a;
-    border:1px solid #2a2a42;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:0 32px 80px rgba(0,0,0,.9);
-    animation:walletSlideUp .25s ease;
-    font-family:'IBM Plex Sans',sans-serif;
-  ">
-    <!-- Header -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:24px 22px 16px">
+<!-- ══════════════════════════════════════════════════════════════
+     WALLET MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="overlay" id="walletOverlay" onclick="closeWalletOverlay(event)">
+  <div class="wallet-modal">
+    <div class="wallet-modal-head">
       <div>
-        <div style="font-size:18px;font-weight:700;color:#dde1f0;letter-spacing:-.02em;line-height:1.2">Connect a wallet</div>
-        <div style="font-size:12px;color:#6a6a8a;margin-top:5px;line-height:1.4">Select the wallet you want to connect to.</div>
+        <div class="wallet-modal-title">Connect a wallet</div>
+        <div class="wallet-modal-sub">Select your Stacks wallet to continue.</div>
       </div>
-      <button onclick="closeWalletModal()" style="
-        background:rgba(255,255,255,.07);border:none;cursor:pointer;
-        width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;
-        display:grid;place-items:center;
-        color:#6a6a8a;font-size:13px;transition:all .15s;
-      " onmouseover="this.style.background='rgba(255,255,255,.14)';this.style.color='#dde1f0'"
-         onmouseout="this.style.background='rgba(255,255,255,.07)';this.style.color='#6a6a8a'">✕</button>
+      <button class="close-btn" onclick="closeWalletModal()">✕</button>
     </div>
-
-    <!-- Body -->
-    <div style="padding:0 14px 18px" id="walletListContainer">
-      <!-- Injected by JS -->
-    </div>
+    <div class="wallet-list" id="walletList"></div>
   </div>
 </div>
 
-<style>
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-
-.ob-step{display:flex;gap:16px;padding:16px;background:#0e0e1a;border:1px solid #1a1a2e;border-radius:9px;margin-bottom:10px;cursor:default;transition:border-color .2s,background .2s;animation:fadeUp .35s ease both}
-.ob-step:hover{border-color:#252540;background:#111122}
-.ob-step-num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
-.ob-step-body{flex:1;min-width:0}
-.ob-step-title{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#dde1f0;margin-bottom:4px}
-.ob-step-desc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6a6a8a;line-height:1.65}
-.ob-step-desc code{color:#ff6b2b;background:rgba(255,107,43,.08);padding:1px 5px;border-radius:3px}
-.ob-step-desc a{color:#4d9eff;text-decoration:none}
-.ob-step-desc a:hover{text-decoration:underline}
-.ob-step-action{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:4px 10px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;border:1px solid;cursor:pointer;background:transparent;transition:opacity .15s}
-.ob-step-action:hover{opacity:.75}
-.ob-connector{display:flex;align-items:center;gap:0;margin:0 0 0 30px;height:12px}
-.ob-connector::before{content:'';display:block;width:2px;height:12px;background:#1a1a2e;border-radius:1px}
-.ob-outcome{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:16px;border-radius:8px;background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.2);font-family:'IBM Plex Mono',monospace;font-size:11px;color:#00d97e;animation:fadeUp .4s .2s ease both;opacity:0;animation-fill-mode:both}
-</style>
-
-<script>
-const OB_PERSONA = {
-  dev: {
-    cta: 'Open Deploy Guide →',
-    ctaAction: () => { closeOnboard(); showPage('deploy'); },
-    outcome: '🏆 Your contract gets a certified badge — embedded in README and verifiable by anyone onchain.',
-    steps: [
-      {num:'01',color:'#ff6b2b',bg:'rgba(255,107,43,.12)',title:'Write & Test Your Contract',desc:'Use <code>clarinet new my-project</code> to scaffold, write your Clarity contract, then run <code>clarinet test</code> locally.',action:null},
-      {num:'02',color:'#4d9eff',bg:'rgba(77,158,255,.12)',title:'Run Security Audit',desc:'Scan with <code>npx stacks-clarity-audit scan ./contracts</code> — get a 0–100 score + list of critical/warning/info findings.',action:null},
-      {num:'03',color:'#ffd166',bg:'rgba(255,209,102,.12)',title:'Fix Issues & Deploy',desc:'Fix until score ≥ 70. Deploy to testnet first via Clarinet or <a href="https://platform.hiro.so" target="_blank">platform.hiro.so</a>, then mainnet.',action:null},
-      {num:'04',color:'#a78bfa',bg:'rgba(167,139,250,.12)',title:'Submit Audit Onchain',desc:'Go to <strong style="color:#dde1f0">Submit Audit</strong> tab → enter contract address + score → confirm with Leather Wallet. Results stored on Stacks forever.',action:{label:'Submit Audit →',page:'submit',color:'#a78bfa',border:'rgba(167,139,250,.3)'}},
-      {num:'05',color:'#00d97e',bg:'rgba(0,217,126,.12)',title:'Get Your Badge',desc:'Score ≥ 70 earns a certified badge. Grab the Markdown snippet from the <strong style="color:#dde1f0">Badge</strong> tab and embed it in your README.',action:{label:'Generate Badge →',page:'badge',color:'#00d97e',border:'rgba(0,217,126,.3)'}},
-    ],
-  },
-  user: {
-    cta: 'Verify a Contract →',
-    ctaAction: () => { closeOnboard(); showPage('verify'); },
-    outcome: '✅ You\'ll know exactly whether a contract has been audited and what its security score is — before you interact with real funds.',
-    steps: [
-      {num:'01',color:'#4d9eff',bg:'rgba(77,158,255,.12)',title:'Find the Contract Address',desc:'Get the Stacks contract address from the project\'s website, README, or Discord. It looks like <code>SP...contractname</code>.',action:null},
-      {num:'02',color:'#ff6b2b',bg:'rgba(255,107,43,.12)',title:'Paste it in Verify Tab',desc:'Open the <strong style="color:#dde1f0">Verify</strong> tab, paste the address, and click Verify. We query the onchain registry instantly.',action:{label:'Go to Verify →',page:'verify',color:'#ff6b2b',border:'rgba(255,107,43,.3)'}},
-      {num:'03',color:'#ffd166',bg:'rgba(255,209,102,.12)',title:'Read the Audit Result',desc:'You\'ll see the security score, number of critical/warning issues, the block it was submitted, and certification status.',action:null},
-      {num:'04',color:'#00d97e',bg:'rgba(0,217,126,.12)',title:'Make an Informed Decision',desc:'Score ≥ 70 = <code style="color:#00d97e">CERTIFIED SAFE</code>. Score below that means the developer hasn\'t fully secured the contract — proceed with caution.',action:null},
-    ],
-  },
-};
-
-let currentPersona = 'dev';
-function renderObSteps(persona) {
-  const data = OB_PERSONA[persona];
-  const container = document.getElementById(`ob-steps-${persona}`);
-  if (container.dataset.rendered) return;
-  container.dataset.rendered = '1';
-  let html = '';
-  data.steps.forEach((s, i) => {
-    html += `<div class="ob-step" style="animation-delay:${i*.06}s"><div class="ob-step-num" style="background:${s.bg};color:${s.color}">${s.num}</div><div class="ob-step-body"><div class="ob-step-title">${s.title}</div><div class="ob-step-desc">${s.desc}</div>${s.action?`<button class="ob-step-action" onclick="closeOnboard();showPage('${s.action.page}')" style="color:${s.action.color};border-color:${s.action.border}">${s.action.label}</button>`:''}</div></div>${i<data.steps.length-1?'<div class="ob-connector"></div>':''}`;
-  });
-  html += `<div class="ob-outcome" style="margin-top:14px">${data.outcome}</div>`;
-  container.innerHTML = html;
-}
-function switchPersona(p) {
-  currentPersona = p;
-  const devTab = document.getElementById('tab-dev');
-  const userTab = document.getElementById('tab-user');
-  if (p==='dev') { devTab.style.cssText+=';background:#ff6b2b;color:#000'; userTab.style.cssText+=';background:transparent;color:#4a4a6a'; }
-  else { userTab.style.cssText+=';background:#ff6b2b;color:#000'; devTab.style.cssText+=';background:transparent;color:#4a4a6a'; }
-  document.getElementById('flow-dev').style.display = p==='dev'?'block':'none';
-  document.getElementById('flow-user').style.display = p==='user'?'block':'none';
-  document.getElementById('ob-cta').textContent = OB_PERSONA[p].cta;
-  renderObSteps(p);
-}
-function onboardCTA() { OB_PERSONA[currentPersona].ctaAction(); }
-function closeOnboard() {
-  const overlay = document.getElementById('onboardOverlay');
-  overlay.style.opacity='0'; overlay.style.transition='opacity .2s ease';
-  setTimeout(()=>overlay.style.display='none',200);
-  if (document.getElementById('dontShowAgain').checked) { try{localStorage.setItem('clarity_audit_onboarded','1');}catch(e){} }
-}
-window.addEventListener('load', ()=>{
-  let skip=false; try{skip=localStorage.getItem('clarity_audit_onboarded')==='1';}catch(e){}
-  if (skip) document.getElementById('onboardOverlay').style.display='none';
-  else renderObSteps('dev');
-});
-document.getElementById('onboardOverlay').addEventListener('click', function(e){ if(e.target===this)closeOnboard(); });
-</script>
-
+<!-- Background decoration -->
 <div class="grid-bg"></div>
 <div class="glow-orb g1"></div>
 <div class="glow-orb g2"></div>
+<div class="mainnet-banner" id="mainnetBanner">⚡ MAINNET MODE — real STX transactions. Confirm your wallet network matches.</div>
 
-<div class="mainnet-banner" id="mainnetBanner">
-  ⚡ MAINNET — transactions use real STX. Ensure your wallet is set to mainnet.
-</div>
-
+<!-- ══════════════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════════════ -->
 <header>
   <div class="wrap topbar">
     <a class="logo" href="#" onclick="showPage('home');return false">
-      <svg class="logo-icon" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="logo-icon" viewBox="0 0 512 512" fill="none">
         <rect width="512" height="512" rx="110" fill="#F7931A"/>
         <path d="M285 148C233 148 188 186 188 256C188 326 233 364 285 364C311 364 332 355 349 341" stroke="#000" stroke-width="30" stroke-linecap="round" fill="none"/>
         <path d="M305 364L348 148L391 364" stroke="#000" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
         <line x1="322" y1="282" x2="374" y2="282" stroke="#000" stroke-width="26" stroke-linecap="round"/>
       </svg>
-      clarity<span>.</span>audit
+      clarity<span class="logo-dot">.</span>audit
     </a>
-    <div class="nav-pills">
+
+    <nav class="nav-pills">
       <button class="nav-pill active" onclick="showPage('home')">Registry</button>
       <button class="nav-pill" onclick="showPage('verify')">Verify</button>
       <button class="nav-pill" onclick="showPage('submit')">Submit Audit</button>
       <button class="nav-pill" onclick="showPage('badge')">Badge</button>
       <button class="nav-pill" onclick="showPage('deploy')">Deploy Guide</button>
-    </div>
+    </nav>
+
     <div class="header-right">
-      <div class="net-sel" id="netSel">
-        <div class="net-trigger testnet" id="netTrigger" onclick="toggleNetDrop()">
+      <!-- Theme toggle -->
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+
+      <!-- Network selector -->
+      <div class="net-wrap" id="netWrap">
+        <div class="net-btn testnet" id="netBtn" onclick="toggleNetDrop()">
           <div class="dot-wrap"><div class="dot-ring"></div><div class="dot-core"></div></div>
           <span id="netLabel">TESTNET</span>
-          <svg class="chev" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1,3 5,7 9,3"/></svg>
+          <svg class="net-chevron" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polyline points="1,3 5,7 9,3"/>
+          </svg>
         </div>
         <div class="net-drop" id="netDrop">
-          <div class="drop-hd">Select Network</div>
-          <div id="netDropInner"></div>
-          <div class="drop-ft" id="netDropFt">https://api.testnet.hiro.so</div>
+          <div class="drop-section">Select Network</div>
+          <div id="netOptions"></div>
+          <div class="drop-footer" id="netFooter">https://api.testnet.hiro.so</div>
         </div>
       </div>
-      <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+
+      <!-- Connect wallet -->
+      <button class="connect-btn" id="connectBtn" onclick="handleConnectBtn()">Connect Wallet</button>
     </div>
   </div>
 </header>
 
-<!-- HOME -->
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: REGISTRY (HOME)
+══════════════════════════════════════════════════════════════ -->
 <div class="page active" id="page-home">
   <div class="wrap">
-    <div class="hero fade-up">
-      <div class="hero-left">
-        <div class="hero-tag">⬡ Stacks · Bitcoin L2 · Clarity 4</div>
-        <h1>The Onchain<br>Security Registry<br>for <em>Clarity</em> Contracts</h1>
-        <p class="hero-sub">Audit your Stacks smart contract, publish results onchain, and give users verifiable proof of security. Fully transparent. Bitcoin-anchored.</p>
-        <div class="hero-actions">
+    <!-- Hero -->
+    <div class="hero-grid" style="display:grid;grid-template-columns:1fr 400px;gap:52px;align-items:center;padding:60px 0 44px">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--orange);background:var(--orange-dim);border:1px solid var(--orange-line);padding:5px 12px;border-radius:3px;margin-bottom:18px;letter-spacing:.1em;text-transform:uppercase">
+          ⬡ Stacks · Bitcoin L2 · Clarity 4
+        </div>
+        <h1 style="font-family:'IBM Plex Mono',monospace;font-size:clamp(28px,4vw,44px);font-weight:700;line-height:1.08;letter-spacing:-.03em;margin-bottom:18px;color:var(--text)">
+          The Onchain<br>Security Registry<br>for <span style="color:var(--orange)">Clarity</span> Contracts
+        </h1>
+        <p style="font-size:15px;color:var(--text2);line-height:1.72;margin-bottom:28px;max-width:480px">
+          Audit your Stacks smart contract, publish results onchain, and give users verifiable proof of security — permanently anchored to Bitcoin.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onclick="showPage('verify')">🔍 Verify Contract</button>
           <button class="btn btn-outline" onclick="showPage('submit')">↑ Submit Audit</button>
-          <a class="btn btn-outline" href="https://www.npmjs.com/package/stacks-clarity-audit" target="_blank">↓ Get CLI</a>
+          <a class="btn btn-outline" href="https://www.npmjs.com/package/stacks-clarity-audit" target="_blank">↓ npm CLI</a>
         </div>
       </div>
       <div class="hero-right">
         <div class="term">
           <div class="term-bar">
             <div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div>
-            <div class="term-title">stacks-clarity-audit · v0.1.5</div>
+            <div class="term-label">stacks-clarity-audit · v0.1.5</div>
           </div>
           <div class="term-body">
             <div><span class="t-p">$ </span><span class="t-c">npx stacks-clarity-audit</span></div>
-            <div class="t-d">&nbsp;&nbsp;scan ./contracts/token.clar</div>
+            <div class="t-dim">&nbsp;&nbsp;scan ./contracts/token.clar</div>
             <br>
-            <div class="t-g">&nbsp;&nbsp;┌─────────────────────────────┐</div>
-            <div class="t-g">&nbsp;&nbsp;│&nbsp;&nbsp;Stacks Security Analyzer&nbsp;&nbsp;&nbsp;│</div>
-            <div class="t-g">&nbsp;&nbsp;└─────────────────────────────┘</div>
+            <div class="t-g">&nbsp;&nbsp;┌──────────────────────────┐</div>
+            <div class="t-g">&nbsp;&nbsp;│  Stacks Security Audit   │</div>
+            <div class="t-g">&nbsp;&nbsp;└──────────────────────────┘</div>
             <br>
-            <div><span class="t-r">&nbsp;&nbsp;[CRITICAL]</span> CLA-001 unwrap! unsafe</div>
-            <div><span class="t-y">&nbsp;&nbsp;[WARNING]&nbsp;</span> CLA-003 as-contract risk</div>
-            <div><span class="t-b">&nbsp;&nbsp;[INFO]&nbsp;&nbsp;&nbsp;&nbsp;</span> CLA-005 use read-only</div>
+            <div><span class="t-r">&nbsp;&nbsp;[CRIT] </span><span class="t-d">CLA-001 unwrap! unsafe</span></div>
+            <div><span class="t-r">&nbsp;&nbsp;[CRIT] </span><span class="t-d">CLA-006 unchecked transfer</span></div>
+            <div><span class="t-y">&nbsp;&nbsp;[WARN] </span><span class="t-d">CLA-003 as-contract risk</span></div>
+            <div><span class="t-b">&nbsp;&nbsp;[INFO] </span><span class="t-d">CLA-005 use read-only</span></div>
             <br>
-            <div class="t-d">&nbsp;&nbsp;─────────────────────────────</div>
-            <div>&nbsp;&nbsp;Score: <span class="t-r">19/100</span> <span class="t-d">✗ CRITICAL RISK</span></div>
-            <div>&nbsp;&nbsp;<span class="t-d">Push to registry?</span> <span class="t-c">[y/n]</span> <span class="t-g">y</span></div>
-            <div>&nbsp;&nbsp;<span class="t-g">✓ Submitted to Stacks blockchain</span></div>
+            <div class="t-dim">&nbsp;&nbsp;──────────────────────────</div>
+            <div>&nbsp;&nbsp;Score: <span class="t-r">19/100</span>&nbsp;&nbsp;<span class="t-dim">✗ CRITICAL RISK</span></div>
+            <div>&nbsp;&nbsp;Registry: <span class="t-r">❌ NOT CERTIFIED</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="stats-bar">
-      <div class="stat-cell"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">Total Audits</div></div>
-      <div class="stat-cell"><div class="stat-num" id="statCertified" style="color:var(--green)">—</div><div class="stat-lbl">Certified Safe</div></div>
+    <!-- Stats bar -->
+    <div class="stats-bar grid4">
+      <div class="stat-cell"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">Total Audits</div></div>
+      <div class="stat-cell"><div class="stat-num" id="s-cert" style="color:var(--green)">—</div><div class="stat-lbl">Certified Safe</div></div>
       <div class="stat-cell"><div class="stat-num" style="color:var(--blue)">7</div><div class="stat-lbl">Security Rules</div></div>
       <div class="stat-cell"><div class="stat-num" style="color:var(--purple)">70+</div><div class="stat-lbl">Passing Score</div></div>
     </div>
 
+    <!-- Registry table -->
     <div class="sec-head">
       <div class="sec-title">Audit Registry</div>
       <button class="btn btn-outline btn-sm" onclick="loadRegistry()">↺ Refresh</button>
     </div>
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden" id="registryWrap">
-      <div class="empty" id="registryLoading" style="display:flex;justify-content:center">
-        <div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div>
-      </div>
-      <table class="registry-table" id="registryTable" style="display:none">
-        <thead><tr><th>Contract Address</th><th>Score</th><th>Critical</th><th>Warnings</th><th>Block</th><th>Status</th><th></th></tr></thead>
-        <tbody id="registryBody"></tbody>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:10px;overflow:hidden">
+      <div id="reg-loading" style="display:flex;justify-content:center;padding:40px"><div class="loading"><div class="spin"></div> Querying Stacks blockchain…</div></div>
+      <table class="data-table" id="reg-table" style="display:none">
+        <thead><tr><th>Contract</th><th>Score</th><th>Critical</th><th>Warning</th><th>Block</th><th>Status</th></tr></thead>
+        <tbody id="reg-body"></tbody>
       </table>
-      <div class="empty" id="registryEmpty" style="display:none"><div class="empty-icon">📭</div>No audits yet. Be the first!</div>
+      <div class="empty" id="reg-empty" style="display:none"><span class="empty-icon">📭</span>No audits published yet — be the first!</div>
     </div>
 
     <div class="divider"></div>
 
+    <!-- How it works -->
     <div class="sec-head"><div class="sec-title">How It Works</div></div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px">
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">01</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Run CLI</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Scan your .clar file with <span style="color:var(--orange);font-family:var(--mono)">npx stacks-clarity-audit</span></div></div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">02</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Score</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Receive a 0–100 security score with detailed breakdown</div></div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">03</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Publish Onchain</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Submit results to the Bitcoin-anchored Stacks registry</div></div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">04</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Certified</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Score ≥70 earns a verifiable "Safe" badge for your project</div></div>
+    <div class="how-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px">
+      <div class="card"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--orange);margin-bottom:10px;font-weight:700">01</div><div class="card-title">Run CLI</div><div class="card-body">Scan your <code style="color:var(--orange);background:var(--orange-dim);padding:1px 5px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11px">npx stacks-clarity-audit</code> and get a 0–100 security score.</div></div>
+      <div class="card"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--orange);margin-bottom:10px;font-weight:700">02</div><div class="card-title">Fix Issues</div><div class="card-body">Resolve critical vulnerabilities and warnings until score reaches ≥70 for certification.</div></div>
+      <div class="card"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--orange);margin-bottom:10px;font-weight:700">03</div><div class="card-title">Publish Onchain</div><div class="card-body">Submit results to the Bitcoin-anchored Stacks registry — permanently stored, publicly verifiable.</div></div>
+      <div class="card"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:var(--orange);margin-bottom:10px;font-weight:700">04</div><div class="card-title">Get Certified</div><div class="card-body">Score ≥70 earns a certified badge. Embed it in your README and docs for user trust.</div></div>
     </div>
   </div>
 </div>
 
-<!-- VERIFY -->
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: VERIFY
+══════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-verify">
-  <div class="wrap" style="padding-top:40px">
+  <div class="wrap" style="padding-top:44px">
     <div class="sec-head"><div class="sec-title">Verify Contract Safety</div></div>
-    <div class="search-wrap">
-      <p style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-bottom:14px">Enter a Stacks contract address to check its audit status</p>
-      <div class="search-row">
-        <input class="search-input" id="verifyInput" placeholder="SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7.my-contract" />
+    <div class="card" style="margin-bottom:24px">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);margin-bottom:14px">
+        Enter a Stacks contract address to check its onchain audit status.
+      </p>
+      <div style="display:flex;gap:10px">
+        <input class="form-input" id="verifyInput" placeholder="SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7.my-contract" style="flex:1"/>
         <button class="btn btn-primary" onclick="verifyContract()">🔍 Verify</button>
       </div>
-      <div id="verifyResult"></div>
+      <div id="verifyResult" style="margin-top:16px"></div>
     </div>
-    <div class="sec-head"><div class="sec-title">Try an Example</div></div>
+    <div class="sec-head"><div class="sec-title">Quick Examples</div></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-outline btn-sm" onclick="quickVerify('ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry')">ST3CM...audit-registry (our contract)</button>
+      <button class="btn btn-outline btn-sm" onclick="quickVerify('ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry')">ST3CM…audit-registry (our contract)</button>
     </div>
   </div>
 </div>
 
-<!-- SUBMIT -->
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: SUBMIT AUDIT
+══════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-submit">
-  <div class="wrap" style="padding-top:40px">
+  <div class="wrap" style="padding-top:44px">
     <div class="sec-head">
       <div class="sec-title">Submit Audit Result</div>
-      <div style="font-family:var(--mono);font-size:11px;color:var(--muted2)">Stored permanently on Stacks blockchain</div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">Stored permanently on Stacks blockchain</span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start">
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:28px">
+    <div class="submit-grid" style="display:grid;grid-template-columns:1fr 290px;gap:22px;align-items:start">
+      <div class="card">
         <div class="form-grid">
-          <div class="form-group full"><label class="form-label">Contract Address *</label><input class="form-input" id="f-contract" placeholder="SP...contract-name" /></div>
+          <div class="form-group full">
+            <label class="form-label">Contract Address *</label>
+            <input class="form-input" id="f-contract" placeholder="SP…contract-name"/>
+          </div>
           <div class="form-group full">
             <label class="form-label">Security Score: <span id="scoreVal" style="color:var(--orange)">85</span>/100</label>
-            <div class="score-slider-wrap"><input type="range" class="score-slider" id="f-score" min="0" max="100" value="85" oninput="updateScore(this.value)"><div class="score-display" id="scoreDisp" style="color:var(--green)">85</div></div>
+            <div class="slider-row">
+              <input type="range" class="slider" id="f-score" min="0" max="100" value="85" oninput="updateScore(this.value)">
+              <div class="score-num" id="scoreDisp" style="color:var(--green)">85</div>
+            </div>
           </div>
           <div class="form-group full">
             <label class="form-label">Issue Counts</label>
-            <div class="counter-row">
-              <div class="counter-group"><div style="font-family:var(--mono);font-size:10px;color:var(--red);margin-bottom:4px">CRITICAL</div><input type="number" class="counter-input" id="f-critical" value="0" min="0"></div>
-              <div class="counter-group"><div style="font-family:var(--mono);font-size:10px;color:var(--yellow);margin-bottom:4px">WARNING</div><input type="number" class="counter-input" id="f-warning" value="0" min="0"></div>
-              <div class="counter-group"><div style="font-family:var(--mono);font-size:10px;color:var(--blue);margin-bottom:4px">INFO</div><input type="number" class="counter-input" id="f-info" value="0" min="0"></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--red);margin-bottom:5px">CRITICAL</div><input type="number" class="form-input" id="f-critical" value="0" min="0" style="text-align:center"></div>
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--yellow);margin-bottom:5px">WARNING</div><input type="number" class="form-input" id="f-warning" value="0" min="0" style="text-align:center"></div>
+              <div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);margin-bottom:5px">INFO</div><input type="number" class="form-input" id="f-info" value="0" min="0" style="text-align:center"></div>
             </div>
           </div>
-          <div class="form-group"><label class="form-label">Tool Version</label><input class="form-input" id="f-version" value="0.1.5" /></div>
-          <div class="form-group"><label class="form-label">Report Hash (optional)</label><input class="form-input" id="f-hash" placeholder="IPFS hash..." /></div>
+          <div class="form-group">
+            <label class="form-label">Tool Version</label>
+            <input class="form-input" id="f-version" value="0.1.5"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Report Hash (optional)</label>
+            <input class="form-input" id="f-hash" placeholder="IPFS hash…"/>
+          </div>
         </div>
         <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
-          <button class="btn btn-primary" onclick="submitAudit()" style="width:100%;justify-content:center" id="submitBtn">↑ Submit to Stacks Blockchain</button>
-          <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px;text-align:center" id="submitHint">Requires Leather Wallet · Testnet STX for gas</p>
+          <button class="btn btn-primary" onclick="submitAudit()" style="width:100%;justify-content:center">↑ Submit to Stacks Blockchain</button>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-align:center;margin-top:10px" id="submitHint">Requires Leather Wallet · Testnet STX for gas</p>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em">Score Guide</div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--green)">90–100</span><span style="color:var(--muted2)">Excellent</span></div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--green)">70–89</span><span style="color:var(--muted2)">✅ Safe (certified)</span></div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--yellow)">40–69</span><span style="color:var(--muted2)">⚠️ Moderate risk</span></div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px"><span style="color:var(--red)">0–39</span><span style="color:var(--muted2)">❌ High risk</span></div>
+        <div class="card">
+          <div class="form-label" style="margin-bottom:12px">Score Guide</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px"><span style="color:var(--green)">90–100</span><span style="color:var(--text2)">Excellent</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px"><span style="color:var(--green)">70–89</span><span style="color:var(--text2)">✅ Safe (certified)</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px"><span style="color:var(--yellow)">40–69</span><span style="color:var(--text2)">⚠️ Moderate risk</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px"><span style="color:var(--red)">0–39</span><span style="color:var(--text2)">❌ High risk</span></div>
           </div>
         </div>
-        <div style="background:var(--surface);border:1px solid rgba(255,107,43,.2);border-radius:8px;padding:20px">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--orange);margin-bottom:8px">Get your score first</div>
-          <div style="font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:12px">Run CLI on your contract:</div>
-          <div style="background:var(--bg);border-radius:4px;padding:10px;font-family:var(--mono);font-size:11px;color:var(--orange)">npx stacks-clarity-audit scan ./contract.clar</div>
+        <div class="card orange">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--orange);font-weight:700;margin-bottom:8px">Run CLI first</div>
+          <div class="card-body" style="margin-bottom:10px">Get your score before submitting:</div>
+          <div style="background:var(--bg);border-radius:5px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--orange)">npx stacks-clarity-audit<br>scan ./contract.clar</div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- BADGE -->
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: BADGE
+══════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-badge">
-  <div class="wrap" style="padding-top:40px">
-    <div class="sec-head"><div class="sec-title">Generate Security Badge</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2)">Embed in your README or website</div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px">
-        <div class="form-group" style="margin-bottom:16px">
-          <label class="form-label">Score (0–100)</label>
-          <div class="score-slider-wrap"><input type="range" class="score-slider" id="badge-score" min="0" max="100" value="92" oninput="updateBadge()"><div class="score-display" id="badge-score-val" style="color:var(--green)">92</div></div>
+  <div class="wrap" style="padding-top:44px">
+    <div class="sec-head">
+      <div class="sec-title">Generate Security Badge</div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">For README and docs</span>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="form-label" style="margin-bottom:12px">Adjust Score</div>
+        <div class="slider-row">
+          <input type="range" class="slider" id="badge-slider" min="0" max="100" value="92" oninput="updateBadge()">
+          <div class="score-num" id="badge-num" style="color:var(--green)">92</div>
         </div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em">Preview</div>
-        <div class="badge-preview">
-          <div class="audit-badge"><div class="badge-dot" id="badgeDot"></div><span style="color:var(--muted2);font-size:11px">clarity-audit</span><span id="badgeScoreText" style="font-family:var(--mono);font-weight:700;color:var(--green)">92/100</span><span style="color:var(--muted2);font-size:11px">✅ SAFE</span></div>
+      <div class="card">
+        <div class="form-label" style="margin-bottom:12px">Preview</div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:20px;text-align:center;margin-bottom:14px">
+          <div style="display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:8px 16px;font-family:'IBM Plex Mono',monospace;font-size:12px">
+            <div id="badge-dot" style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>
+            <span style="color:var(--muted)">clarity-audit</span>
+            <span id="badge-score-txt" style="font-weight:700;color:var(--green)">92/100</span>
+            <span id="badge-status-txt" style="color:var(--muted)">✅ SAFE</span>
+          </div>
         </div>
-        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">Markdown</div>
-        <div class="badge-code" id="badgeMarkdown">[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green?style=flat-square&logo=bitcoin)](https://clarity-audit-nine.vercel.app)</div>
-        <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="copyBadge()">Copy Markdown</button>
+        <div class="form-label" style="margin-bottom:8px">Markdown</div>
+        <div style="background:var(--code-bg);border:1px solid var(--border2);border-radius:6px;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);overflow-x:auto;white-space:pre;line-height:1.6" id="badge-md">[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green?style=flat-square&logo=bitcoin)](https://clarity-audit-nine.vercel.app)</div>
+        <button class="btn btn-outline btn-sm" onclick="copyBadge()" style="margin-top:10px">Copy Markdown</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- DEPLOY GUIDE -->
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE: DEPLOY GUIDE
+══════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-deploy">
-  <div class="wrap" style="padding-top:40px;padding-bottom:60px">
-    <div class="sec-head" style="margin-bottom:32px">
-      <div class="sec-title">Deploy Guide — Clarity Contracts on Stacks</div>
-      <a class="btn btn-outline btn-sm" href="https://docs.hiro.so/clarinet" target="_blank">Hiro Docs ↗</a>
+  <div class="wrap" style="padding-top:44px;padding-bottom:60px">
+    <div class="sec-head" style="margin-bottom:28px">
+      <div class="sec-title">Deploy Guide — Clarity on Stacks</div>
+      <div style="display:flex;gap:8px">
+        <!-- Builder docs → docs.stacks.co, Wallet → leather.io -->
+        <a class="btn btn-outline btn-sm" href="https://docs.stacks.co/" target="_blank">Stacks Docs ↗</a>
+        <a class="btn btn-outline btn-sm" href="https://leather.io" target="_blank">Leather Wallet ↗</a>
+      </div>
     </div>
-    <div id="stepBar" style="display:flex;align-items:center;gap:0;margin-bottom:40px;overflow-x:auto;padding-bottom:4px"></div>
+    <div class="stepper" id="stepper"></div>
     <div id="stepPanels"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid var(--border)">
       <button class="btn btn-outline" id="prevBtn" onclick="stepNav(-1)">← Previous</button>
-      <span id="stepCounter" style="font-family:var(--mono);font-size:11px;color:var(--muted)"></span>
+      <span id="stepCounter" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)"></span>
       <button class="btn btn-primary" id="nextBtn" onclick="stepNav(1)">Next →</button>
     </div>
   </div>
 </div>
 
-<style>
-.step-item{display:flex;align-items:center;gap:0;flex-shrink:0}
-.step-node{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
-.step-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700;transition:all .2s;background:var(--surface)}
-.step-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;white-space:nowrap;transition:color .2s}
-.step-connector{width:40px;height:2px;background:var(--border2);margin:0;margin-bottom:18px;flex-shrink:0;transition:background .3s}
-.step-item.done .step-circle{border-color:var(--green);background:rgba(0,217,126,.1);color:var(--green)}
-.step-item.done .step-label{color:var(--green)}
-.step-item.done .step-connector{background:var(--green)}
-.step-item.active .step-circle{border-color:var(--orange);background:rgba(255,107,43,.15);color:var(--orange)}
-.step-item.active .step-label{color:var(--orange)}
-.step-item.pending .step-circle{color:var(--muted)}
-.step-panel{display:none}
-.step-panel.active{display:block;animation:fadeUp .3s ease both}
-.step-title{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px}
-.step-subtitle{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:28px;max-width:640px}
-.code-block{background:#050510;border:1px solid var(--border2);border-radius:7px;overflow:hidden;margin:12px 0}
-.code-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--border);border-bottom:1px solid rgba(255,255,255,.04)}
-.code-lang{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
-.code-copy{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted2);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:3px;transition:color .15s}
-.code-copy:hover{color:var(--orange)}
-.code-body{padding:16px 18px;font-family:var(--mono);font-size:12px;line-height:1.85;overflow-x:auto;white-space:pre}
-.code-body .cm{color:var(--muted2)}.code-body .ck{color:var(--blue)}.code-body .cv{color:var(--orange)}.code-body .cs{color:var(--green)}.code-body .cp{color:var(--purple)}.code-body .co{color:#ffd166}
-.card-grid{display:grid;gap:12px}
-.card-grid.cols2{grid-template-columns:1fr 1fr}
-.card-grid.cols3{grid-template-columns:repeat(3,1fr)}
-.info-card{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px}
-.info-card.accent{border-color:rgba(255,107,43,.25);background:rgba(255,107,43,.04)}
-.info-card.green{border-color:rgba(0,217,126,.25);background:rgba(0,217,126,.04)}
-.info-card.warn{border-color:rgba(255,209,102,.25);background:rgba(255,209,102,.04)}
-.info-card.danger{border-color:rgba(255,59,92,.25);background:rgba(255,59,92,.04)}
-.card-icon{font-size:22px;margin-bottom:10px}
-.card-title{font-family:var(--mono);font-size:12px;font-weight:700;margin-bottom:6px;color:var(--text)}
-.card-body{font-size:12px;color:var(--muted2);line-height:1.65}
-.card-body a{color:var(--orange);text-decoration:none}
-.card-body a:hover{text-decoration:underline}
-.checklist{display:flex;flex-direction:column;gap:10px;margin:16px 0}
-.check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;cursor:pointer;transition:border-color .15s}
-.check-item.checked{border-color:rgba(0,217,126,.3);background:rgba(0,217,126,.04)}
-.check-box{width:18px;height:18px;border:2px solid var(--border2);border-radius:4px;flex-shrink:0;display:grid;place-items:center;margin-top:1px;transition:all .15s}
-.check-item.checked .check-box{background:var(--green);border-color:var(--green)}
-.check-text{font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.5;flex:1}
-.check-item.checked .check-text{color:var(--text)}
-.check-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.cmp-table{width:100%;border-collapse:collapse;margin:16px 0}
-.cmp-table th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
-.cmp-table td{font-family:var(--mono);font-size:11px;padding:11px 16px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:top}
-.cmp-table tr:last-child td{border-bottom:none}
-.cmp-table tr:hover td{background:rgba(255,255,255,.02)}
-.tag{display:inline-flex;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;font-family:var(--mono)}
-.tag-green{background:rgba(0,217,126,.12);color:var(--green);border:1px solid rgba(0,217,126,.25)}
-.tag-yellow{background:rgba(255,209,102,.12);color:var(--yellow);border:1px solid rgba(255,209,102,.25)}
-.tag-red{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.25)}
-.tag-blue{background:rgba(77,158,255,.12);color:var(--blue);border:1px solid rgba(77,158,255,.25)}
-.flow-arrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0}
-.flow-box{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:8px 14px;font-family:var(--mono);font-size:11px;color:var(--text);white-space:nowrap}
-.flow-box.orange{border-color:rgba(255,107,43,.35);color:var(--orange)}
-.flow-box.green{border-color:rgba(0,217,126,.35);color:var(--green)}
-.flow-sep{color:var(--muted);font-size:16px}
-@media(max-width:768px){.card-grid.cols2,.card-grid.cols3{grid-template-columns:1fr}.step-connector{width:20px}}
-</style>
-
-<script>
-const DEPLOY_STEPS = [
-  {id:'env',num:'01',label:'Setup',title:'Install Clarinet & Wallet',icon:'⚙️'},
-  {id:'write',num:'02',label:'Write',title:'Write Your Clarity Contract',icon:'✍️'},
-  {id:'test',num:'03',label:'Test',title:'Test Locally with Clarinet',icon:'🧪'},
-  {id:'audit',num:'04',label:'Audit',title:'Run Security Audit',icon:'🔍'},
-  {id:'testnet',num:'05',label:'Testnet',title:'Deploy to Testnet',icon:'🌐'},
-  {id:'mainnet',num:'06',label:'Mainnet',title:'Deploy to Mainnet',icon:'⚡'},
-];
-let currentStep=0;
-const STEP_CONTENT={
-  env:`<div class="step-title">⚙️ Install Clarinet &amp; Wallet</div><div class="step-subtitle">Clarinet is the official dev tool from Hiro for writing, testing, and deploying Clarity contracts. Install this before anything else.</div><div class="card-grid cols2" style="margin-bottom:20px"><div class="info-card"><div class="card-icon">🍺</div><div class="card-title">macOS</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">brew</span> install clarinet</div></div></div><div class="info-card"><div class="card-icon">🐧</div><div class="card-title">Linux / WSL</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -L https://github.com/hirosystems/clarinet\n  /releases/latest/download/\n  clarinet-linux-x64.tar.gz \n  | tar xz &amp;&amp; mv clarinet /usr/local/bin</div></div></div></div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — verify install</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> --version\n<span class="cm"># clarinet 2.x.x</span></div></div><div style="margin-top:24px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Wallet — choose one</div><div class="card-grid cols2"><div class="info-card accent"><div class="card-title">🦊 Leather Wallet</div><div class="card-body">Official wallet for Stacks &amp; Bitcoin. Built by Leather (formerly Hiro).<br><br><a href="https://leather.io" target="_blank">leather.io ↗</a></div></div><div class="info-card"><div class="card-title">✖ Xverse</div><div class="card-body">Popular alternative — supports both BTC &amp; STX in one wallet.<br><br><a href="https://xverse.app" target="_blank">xverse.app ↗</a></div></div></div>`,
-  write:`<div class="step-title">✍️ Create Project &amp; Write Contract</div><div class="step-subtitle">Clarinet provides a complete project scaffold. One command gives you a full folder structure, config, and example tests.</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — create new project</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> new my-token-project\n<span class="ck">cd</span> my-token-project\n\n<span class="cm"># add a new contract</span>\n<span class="cv">clarinet</span> contract new token</div></div><div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Scaffolded folder structure</div><div class="code-block"><div class="code-bar"><span class="code-lang">tree</span></div><div class="code-body">my-token-project/\n├── <span class="cv">contracts/</span>\n│   └── <span class="cs">token.clar</span>         <span class="cm">← write your contract here</span>\n├── <span class="cv">tests/</span>\n│   └── <span class="cs">token_test.ts</span>      <span class="cm">← unit tests (Deno)</span>\n├── <span class="cv">deployments/</span>           <span class="cm">← deployment plans</span>\n└── <span class="cs">Clarinet.toml</span>          <span class="cm">← project config</span></div></div><div class="info-card warn" style="margin-top:16px"><div class="card-title">💡 Clarity Tips</div><div class="card-body">• Use <code style="color:var(--orange)">define-read-only</code> for getters — free to call off-chain<br>• Avoid <code style="color:var(--red)">unwrap!</code> without error handling — use <code style="color:var(--green)">match</code> or <code style="color:var(--green)">try!</code> instead<br>• All admin functions must validate <code style="color:var(--orange)">tx-sender</code> first</div></div>`,
-  test:`<div class="step-title">🧪 Test Locally with Clarinet</div><div class="step-subtitle">Test your contract before deploying — save gas and catch bugs before production.</div><div class="card-grid cols3" style="margin-bottom:20px"><div class="info-card"><div class="card-title">clarinet check</div><div class="card-body">Syntax + type check for all contracts in the project</div></div><div class="info-card"><div class="card-title">clarinet test</div><div class="card-body">Runs all unit tests in the <code style="color:var(--orange)">tests/</code> folder</div></div><div class="info-card"><div class="card-title">clarinet console</div><div class="card-body">Interactive REPL — call contract functions manually</div></div></div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Syntax check</span>\n<span class="cv">clarinet</span> check\n\n<span class="cm"># Run tests</span>\n<span class="cv">clarinet</span> test\n\n<span class="cm"># REPL</span>\n<span class="cv">clarinet</span> console\n<span class="cm">>>> (contract-call? .token mint-tokens u1000 tx-sender)</span>\n<span class="cs">(ok true)</span></div></div><div class="info-card green" style="margin-top:16px"><div class="card-title">✅ Recommended Coverage</div><div class="card-body">• Happy path for all public functions<br>• Auth rejection — call admin fn from non-owner, expect <code style="color:var(--red)">(err u401)</code><br>• Edge cases — amount 0, transfer exceeding balance</div></div>`,
-  audit:`<div class="step-title">🔍 Audit Before Deploying</div><div class="step-subtitle">Critical step before deploying to mainnet. Run the clarity-audit CLI, review all findings, and submit the results to the onchain registry.</div><div class="flow-arrow"><div class="flow-box">contracts/token.clar</div><div class="flow-sep">→</div><div class="flow-box orange">npx stacks-clarity-audit</div><div class="flow-sep">→</div><div class="flow-box">Score 0–100</div><div class="flow-sep">→</div><div class="flow-box green">Submit to Registry</div></div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — scan contract</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">npx</span> stacks-clarity-audit scan ./contracts/token.clar\n\n<span class="cm"># Or scan an entire directory</span>\n<span class="cv">npx</span> stacks-clarity-audit scan ./contracts\n\n<span class="cm"># Output as JSON for CI/CD pipelines</span>\n<span class="cv">npx</span> stacks-clarity-audit scan ./contracts --json > audit.json</div></div><table class="cmp-table" style="margin-top:20px"><thead><tr><th>Score</th><th>Status</th><th>Deploy?</th><th>Recommendation</th></tr></thead><tbody><tr><td style="color:var(--green)">90–100</td><td><span class="tag tag-green">EXCELLENT</span></td><td>✅ Mainnet</td><td>Submit to registry, add badge</td></tr><tr><td style="color:var(--green)">70–89</td><td><span class="tag tag-green">SAFE</span></td><td>✅ Mainnet</td><td>Certified — earns official badge</td></tr><tr><td style="color:var(--yellow)">40–69</td><td><span class="tag tag-yellow">MODERATE</span></td><td>⚠️ Testnet only</td><td>Fix all critical issues first</td></tr><tr><td style="color:var(--red)">0–39</td><td><span class="tag tag-red">CRITICAL</span></td><td>❌ Do not deploy</td><td>Rework contract</td></tr></tbody></table><div class="info-card accent" style="margin-top:16px"><div class="card-title">📋 After audit passes ≥ 70</div><div class="card-body">Visit the <strong style="color:var(--orange)">Submit Audit</strong> tab above → enter your contract address + score → submit to the Stacks blockchain. Results will appear in the Registry and you can embed the badge in your README.</div></div>`,
-  testnet:`<div class="step-title">🌐 Deploy to Testnet</div><div class="step-subtitle">Testnet is a free staging environment — STX has no real value here. Always test here first before going to mainnet.</div><div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 1 — Clarinet CLI (recommended)</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate deployment plan</span>\n<span class="cv">clarinet</span> deployments generate --testnet\n\n<span class="cm"># Apply (deploy) to testnet</span>\n<span class="cv">clarinet</span> deployments apply \\\n  -p deployments/default.testnet-plan.yaml \\\n  --stacks-node https://api.testnet.hiro.so</div></div><div style="margin-top:20px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 2 — Hiro Platform (GUI)</div><div class="card-grid cols3" style="margin-bottom:16px"><div class="info-card"><div class="card-icon">1️⃣</div><div class="card-title">Open Platform</div><div class="card-body"><a href="https://platform.hiro.so" target="_blank">platform.hiro.so ↗</a><br>Connect your Leather wallet</div></div><div class="info-card"><div class="card-icon">2️⃣</div><div class="card-title">Upload Contract</div><div class="card-body">Drag &amp; drop your <code style="color:var(--orange)">.clar</code> file, or paste the code directly in the editor</div></div><div class="info-card"><div class="card-icon">3️⃣</div><div class="card-title">Deploy</div><div class="card-body">Select <span class="tag tag-yellow">TESTNET</span>, confirm in Leather, wait for tx confirmed (~10 seconds)</div></div></div><div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Get free testnet STX</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — via CLI</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -X POST https://api.testnet.hiro.so/extended/v1/faucets/stx \\\n  -d '{"address":"ST_YOUR_ADDRESS_HERE"}'</div></div><div class="card-body" style="font-size:12px;color:var(--muted2);margin-top:6px">Or via browser: <a href="https://explorer.hiro.so/sandbox/faucet?chain=testnet" target="_blank" style="color:var(--orange)">explorer.hiro.so/sandbox/faucet ↗</a></div><div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Testnet checklist</div><div class="checklist" id="testnetChecklist"><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Contract deployed successfully — tx ID confirmed<div class="check-sub">Check in Hiro Explorer with your contract address</div></div></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">All functions callable from wallet / REPL<div class="check-sub">Test both read-only and public functions</div></div></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Error handling works as expected<div class="check-sub">Try triggering error conditions</div></div></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Audit score ≥ 70 submitted to clarity.audit registry<div class="check-sub">Use the Submit Audit tab above</div></div></div></div>`,
-  mainnet:`<div class="step-title">⚡ Deploy to Mainnet</div><div class="step-subtitle">Final step — deploy to the Bitcoin-anchored Stacks mainnet. Uses real STX. Contracts are permanent and cannot be deleted.</div><div class="info-card danger" style="margin-bottom:20px"><div class="card-title">⚠️ Before deploying to mainnet — make sure:</div><div class="card-body">• Testnet deployment succeeded and verified<br>• Audit score <strong style="color:var(--green)">≥ 70</strong> from stacks-clarity-audit<br>• Wallet has mainnet STX (estimated gas ~0.01–0.05 STX per deploy)<br>• Code has been reviewed — contracts cannot be updated after deployment</div></div><div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Deploy via Clarinet</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate mainnet plan</span>\n<span class="cv">clarinet</span> deployments generate --mainnet\n\n<span class="cm"># Deploy</span>\n<span class="cv">clarinet</span> deployments apply \\\n  -p deployments/default.mainnet-plan.yaml \\\n  --stacks-node https://api.hiro.so</div></div><div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">After successful deployment</div><div class="flow-arrow"><div class="flow-box green">Contract onchain ✅</div><div class="flow-sep">→</div><div class="flow-box orange">Submit to clarity.audit</div><div class="flow-sep">→</div><div class="flow-box">Get Badge</div><div class="flow-sep">→</div><div class="flow-box green">Embed in README</div></div><div class="info-card green" style="margin-top:20px"><div class="card-title">🎉 Done! Final steps</div><div class="card-body">1. Submit audit result to the <strong style="color:var(--orange)">clarity.audit Registry</strong> via the Submit Audit tab<br>2. Generate your badge in the <strong style="color:var(--orange)">Badge</strong> tab<br>3. Embed the Markdown badge in your project README</div></div>`,
-};
-
-function initDeployGuide(){renderStepBar();renderStepContent();updateNavBtns()}
-function renderStepBar(){
-  const bar=document.getElementById('stepBar');
-  bar.innerHTML=DEPLOY_STEPS.map((s,i)=>{
-    const state=i<currentStep?'done':i===currentStep?'active':'pending';
-    const check=i<currentStep?'✓':s.num;
-    const conn=i<DEPLOY_STEPS.length-1?`<div class="step-connector ${i<currentStep?'done':''}"></div>`:'';
-    return `<div class="step-item ${state}"><div class="step-node" onclick="jumpStep(${i})"><div class="step-circle">${check}</div><div class="step-label">${s.label}</div></div>${conn}</div>`;
-  }).join('');
-}
-function renderStepContent(){
-  const container=document.getElementById('stepPanels');
-  container.innerHTML=DEPLOY_STEPS.map((s,i)=>`<div class="step-panel ${i===currentStep?'active':''}" id="step-panel-${i}">${STEP_CONTENT[s.id]}</div>`).join('');
-  document.getElementById('stepCounter').textContent=`Step ${currentStep+1} of ${DEPLOY_STEPS.length}`;
-}
-function updateNavBtns(){
-  document.getElementById('prevBtn').disabled=currentStep===0;
-  document.getElementById('prevBtn').style.opacity=currentStep===0?'0.3':'1';
-  const nextBtn=document.getElementById('nextBtn');
-  if(currentStep===DEPLOY_STEPS.length-1){nextBtn.textContent='✅ All done!';nextBtn.onclick=()=>showToast('Deploy guide complete! 🎉','success');}
-  else{nextBtn.textContent='Next →';nextBtn.onclick=()=>stepNav(1);}
-}
-function stepNav(dir){
-  const next=currentStep+dir;
-  if(next<0||next>=DEPLOY_STEPS.length)return;
-  currentStep=next;renderStepBar();renderStepContent();updateNavBtns();
-  document.getElementById('stepBar').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function jumpStep(i){currentStep=i;renderStepBar();renderStepContent();updateNavBtns()}
-function toggleCheck(el){
-  el.classList.toggle('checked');
-  const box=el.querySelector('.check-box');
-  box.innerHTML=el.classList.contains('checked')?'<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2"><polyline points="2,6 5,9 10,3"/></svg>':'';
-}
-function copyCode(btn){
-  const code=btn.closest('.code-block').querySelector('.code-body');
-  navigator.clipboard.writeText(code.innerText.replace(/\n\n+/g,'\n').trim());
-  btn.textContent='copied!';setTimeout(()=>btn.textContent='copy',1800);
-}
-const _origShowPage=showPage;
-function showPage(id){
-  _origShowPage(id);
-  if(id==='deploy'){currentStep=0;initDeployGuide();}
-}
-</script>
-
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <footer>
-  <div class="wrap footer-inner">
+  <div class="wrap foot-inner">
     <span>clarity.audit · Stacks / Bitcoin L2 · MIT License</span>
-    <div class="footer-links">
+    <div class="foot-links">
       <a href="https://github.com/Chronique/stacks-clarity-audit" target="_blank">GitHub</a>
       <a href="https://www.npmjs.com/package/stacks-clarity-audit" target="_blank">npm</a>
-      <a id="footerContractLink" href="https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry?chain=testnet" target="_blank">Contract</a>
-      <a href="https://stacks.co" target="_blank">Stacks</a>
+      <a id="footContractLink" href="https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry?chain=testnet" target="_blank">Contract</a>
+      <a href="https://docs.stacks.co/" target="_blank">Stacks Docs</a>
     </div>
   </div>
 </footer>
 
 <script>
-// ── Network config ─────────────────────────────────────────────────────────────
-const NETWORKS={
-  testnet:{label:'TESTNET',apiBase:'https://api.testnet.hiro.so',explorerQuery:'?chain=testnet'},
-  mainnet:{label:'MAINNET',apiBase:'https://api.hiro.so',explorerQuery:''},
-};
-let currentNetwork='testnet';
-function getNetCfg(){return NETWORKS[currentNetwork]}
+/* ═══════════════════════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════════════════════ */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '🌙' : '☀️';
+  try { localStorage.setItem('ca_theme', t); } catch(e){}
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+(function initTheme() {
+  let t = 'dark';
+  try { t = localStorage.getItem('ca_theme') || 'dark'; } catch(e){}
+  applyTheme(t);
+})();
 
-function applyNetwork(net){
-  currentNetwork=net;
-  const cfg=getNetCfg();
-  const trigger=document.getElementById('netTrigger');
-  trigger.className=`net-trigger ${net}`;
-  document.getElementById('netLabel').textContent=cfg.label;
-  document.getElementById('netDropFt').textContent=cfg.apiBase;
-  const CONTRACT_ADDR='ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry';
-  document.getElementById('footerContractLink').href=`https://explorer.hiro.so/address/${CONTRACT_ADDR}${cfg.explorerQuery}`;
-  const hint=document.getElementById('submitHint');
-  if(hint)hint.textContent=net==='mainnet'?'Requires Leather Wallet · Real STX for gas ⚡':'Requires Leather Wallet · Testnet STX for gas';
-  document.getElementById('mainnetBanner').classList.toggle('show',net==='mainnet');
-  renderDropOptions();
+/* ═══════════════════════════════════════════════════════════════
+   NETWORK
+═══════════════════════════════════════════════════════════════ */
+const NETS = {
+  testnet: { label:'TESTNET', api:'https://api.testnet.hiro.so', explorer:'?chain=testnet' },
+  mainnet: { label:'MAINNET', api:'https://api.hiro.so',         explorer:'' },
+};
+let currentNet = 'testnet';
+
+function applyNet(net) {
+  currentNet = net;
+  const cfg = NETS[net];
+  const btn = document.getElementById('netBtn');
+  btn.className = `net-btn ${net}`;
+  btn.querySelector('.dot-ring').style.background = net === 'testnet' ? 'var(--yellow)' : 'var(--green)';
+  btn.querySelector('.dot-core').style.background = net === 'testnet' ? 'var(--yellow)' : 'var(--green)';
+  document.getElementById('netLabel').textContent = cfg.label;
+  document.getElementById('netFooter').textContent = cfg.api;
+  document.getElementById('footContractLink').href =
+    `https://explorer.hiro.so/address/ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry${cfg.explorer}`;
+  const hint = document.getElementById('submitHint');
+  if (hint) hint.textContent = net === 'mainnet'
+    ? 'Requires Leather Wallet · Real STX for gas ⚡'
+    : 'Requires Leather Wallet · Testnet STX for gas';
+  document.getElementById('mainnetBanner').classList.toggle('show', net === 'mainnet');
+  renderNetOptions();
 }
 
-function renderDropOptions(confirming=false,pendingNet=null){
-  const inner=document.getElementById('netDropInner');
-  if(confirming&&pendingNet){
-    inner.innerHTML=`<div class="confirm-hd">⚠ Switch to MAINNET?</div><div class="confirm-panel"><div class="confirm-txt">Switching to <strong>MAINNET</strong> — real STX transactions will be broadcast to the live network.</div><div class="confirm-btns"><button class="btn-yes" onclick="confirmNetSwitch('mainnet')">Confirm</button><button class="btn-no" onclick="cancelNetSwitch()">Cancel</button></div></div>`;
+let confirmingMainnet = false;
+function renderNetOptions(confirm = false) {
+  confirmingMainnet = confirm;
+  const wrap = document.getElementById('netOptions');
+  if (confirm) {
+    wrap.innerHTML = `
+      <div class="confirm-hd">⚠ Switch to MAINNET?</div>
+      <div class="confirm-body">
+        <div class="confirm-txt">Real STX transactions will be broadcast to the <strong>live network</strong>. Ensure your wallet is set to mainnet.</div>
+        <div class="confirm-btns">
+          <button class="btn-yes" onclick="doSwitchNet('mainnet')">Confirm</button>
+          <button class="btn-no" onclick="renderNetOptions()">Cancel</button>
+        </div>
+      </div>`;
     return;
   }
-  inner.innerHTML=['testnet','mainnet'].map(net=>{
-    const cfg=NETWORKS[net];const isActive=net===currentNetwork;
-    const colorClass=net==='testnet'?'testnet-opt':'mainnet-opt';
-    const activeClass=isActive?'is-active':'inactive-opt';
-    const onclick=isActive?'closeNetDrop()':net==='mainnet'?'askMainnetConfirm()':`switchNet('${net}')`;
-    return `<div class="net-opt ${colorClass} ${activeClass}" onclick="${onclick}"><div class="opt-dot-wrap"><div class="opt-dot-ring"></div><div class="opt-dot-core"></div></div>${cfg.label}<svg class="opt-check" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="2,6 5,9 10,3"/></svg></div>`;
+  wrap.innerHTML = Object.entries(NETS).map(([key, cfg]) => {
+    const isActive = key === currentNet;
+    const cls = key === 'testnet' ? 'testnet-opt' : 'mainnet-opt';
+    const onclick = isActive ? 'closeNetDrop()' : key === 'mainnet' ? "renderNetOptions(true)" : `doSwitchNet('${key}')`;
+    return `<div class="net-option ${cls} ${isActive ? 'active' : ''}" onclick="${onclick}">
+      <div class="dot-wrap" style="position:relative;width:7px;height:7px;flex-shrink:0">
+        <div style="position:absolute;inset:0;border-radius:50%;background:currentColor;opacity:.4${isActive ? ';animation:pulse 1.8s ease-in-out infinite' : ''}"></div>
+        <div style="position:absolute;inset:1px;border-radius:50%;background:currentColor"></div>
+      </div>
+      ${cfg.label}
+      <span class="check">✓</span>
+    </div>`;
   }).join('');
 }
 
-function toggleNetDrop(){
-  const drop=document.getElementById('netDrop');const trigger=document.getElementById('netTrigger');
-  if(drop.classList.contains('show')){closeNetDrop();}
-  else{renderDropOptions();drop.classList.add('show');trigger.classList.add('open');}
+function doSwitchNet(net) {
+  applyNet(net);
+  closeNetDrop();
+  loadRegistry();
+  showToast(`Switched to ${NETS[net].label}`, 'success');
 }
-function closeNetDrop(){document.getElementById('netDrop').classList.remove('show');document.getElementById('netTrigger').classList.remove('open')}
-function switchNet(net){applyNetwork(net);closeNetDrop();loadRegistry();showToast(`Switched to ${NETWORKS[net].label}`,'success')}
-function askMainnetConfirm(){renderDropOptions(true,'mainnet')}
-function confirmNetSwitch(net){applyNetwork(net);closeNetDrop();loadRegistry();showToast(`Switched to ${NETWORKS[net].label} ⚡`,'success')}
-function cancelNetSwitch(){renderDropOptions()}
-document.addEventListener('mousedown',e=>{const sel=document.getElementById('netSel');if(!sel.contains(e.target))closeNetDrop()});
 
-// ── App state ─────────────────────────────────────────────────────────────────
-const CONTRACT_ADDRESS='ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2';
-const CONTRACT_NAME='audit-registry';
-let walletAddress=null;
-let connectedWalletType=null;
-let registryData=[
-  {address:'ST3CM...audit-registry',full:'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry',score:91,critical:0,warning:1,info:2,block:187432,passed:true}
-];
+function toggleNetDrop() {
+  const drop = document.getElementById('netDrop');
+  if (drop.classList.contains('show')) { closeNetDrop(); return; }
+  renderNetOptions();
+  drop.classList.add('show');
+  document.getElementById('netBtn').classList.add('open');
+}
+function closeNetDrop() {
+  document.getElementById('netDrop').classList.remove('show');
+  document.getElementById('netBtn').classList.remove('open');
+}
+document.addEventListener('mousedown', e => {
+  if (!document.getElementById('netWrap').contains(e.target)) closeNetDrop();
+});
 
-// ── Wallet definitions ────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════════════
+   WALLET
+═══════════════════════════════════════════════════════════════ */
+let walletAddr = null;
+let walletType = null;
+
 const WALLETS = [
   {
-    id: 'leather',
-    name: 'Leather',
-    url: 'leather.io',
-    installUrl: 'https://leather.io/install-extension',
-    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
-      <path d="M50 18C32.3 18 18 32.3 18 50C18 67.7 32.3 82 50 82C67.7 82 82 67.7 82 50C82 32.3 67.7 18 50 18Z" fill="#FF6C0A"/>
-      <path d="M50 30C38.95 30 30 38.95 30 50C30 61.05 38.95 70 50 70C61.05 70 70 61.05 70 50" stroke="white" stroke-width="7" stroke-linecap="round" fill="none"/>
-      <circle cx="70" cy="50" r="5" fill="white"/>
-    </svg>`,
+    id:'leather', name:'Leather', url:'leather.io',
+    install:'https://leather.io/install-extension',
+    icon:`<svg width="26" height="26" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="22" fill="#1A1A2E"/><path d="M50 18C32.3 18 18 32.3 18 50C18 67.7 32.3 82 50 82C67.7 82 82 67.7 82 50C82 32.3 67.7 18 50 18Z" fill="#FF6C0A"/><path d="M50 30C38.95 30 30 38.95 30 50C30 61.05 38.95 70 50 70C61.05 70 70 61.05 70 50" stroke="white" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="70" cy="50" r="5" fill="white"/></svg>`,
     detect: () => !!(window.LeatherProvider || window.HiroWalletProvider),
     connect: connectLeather,
   },
   {
-    id: 'xverse',
-    name: 'Xverse Wallet',
-    url: 'xverse.app',
-    installUrl: 'https://www.xverse.app/download',
-    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
-      <rect width="100" height="100" rx="22" fill="url(#xg)"/>
-      <path d="M28 25L50 52L28 75H40L50 63L60 75H72L50 48L72 25H60L50 37L40 25H28Z" fill="white"/>
-      <defs><linearGradient id="xg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#EE7A30"/><stop offset="1" stop-color="#E34234"/></linearGradient></defs>
-    </svg>`,
+    id:'xverse', name:'Xverse Wallet', url:'xverse.app',
+    install:'https://www.xverse.app/download',
+    icon:`<svg width="26" height="26" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="22" fill="url(#xg)"/><path d="M28 25L50 52L28 75H40L50 63L60 75H72L50 48L72 25H60L50 37L40 25H28Z" fill="white"/><defs><linearGradient id="xg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#EE7A30"/><stop offset="1" stop-color="#E34234"/></linearGradient></defs></svg>`,
     detect: () => !!(window.XverseProviders?.StacksProvider),
     connect: connectXverse,
   },
   {
-    id: 'asigna',
-    name: 'Asigna Multisig',
-    url: 'asigna.io',
-    installUrl: 'https://asigna.io',
-    openUrl: 'https://app.asigna.io',
-    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
-      <rect width="100" height="100" rx="22" fill="url(#ag)"/>
-      <path d="M50 20L72 35V65L50 80L28 65V35L50 20Z" stroke="white" stroke-width="6" fill="none"/>
-      <path d="M50 35L62 42V56L50 63L38 56V42L50 35Z" fill="white" opacity=".9"/>
-      <defs><linearGradient id="ag" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs>
-    </svg>`,
+    id:'asigna', name:'Asigna Multisig', url:'asigna.io',
+    install:'https://app.asigna.io', isOpen: true,
+    icon:`<svg width="26" height="26" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="22" fill="url(#ag)"/><path d="M50 20L72 35V65L50 80L28 65V35L50 20Z" stroke="white" stroke-width="6" fill="none"/><path d="M50 35L62 42V56L50 63L38 56V42L50 35Z" fill="white" opacity=".9"/><defs><linearGradient id="ag" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs></svg>`,
     detect: () => false,
-    isOpen: true,
-    connect: () => window.open('https://app.asigna.io','_blank'),
+    connect: () => window.open('https://app.asigna.io', '_blank'),
   },
   {
-    id: 'fordefi',
-    name: 'Fordefi',
-    url: 'www.fordefi.com',
-    installUrl: 'https://www.fordefi.com',
-    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
-      <rect width="100" height="100" rx="22" fill="url(#fg)"/>
-      <rect x="22" y="38" width="56" height="34" rx="6" stroke="white" stroke-width="6" fill="none"/>
-      <path d="M38 38V30C38 23.4 43.4 18 50 18C56.6 18 62 23.4 62 30V38" stroke="white" stroke-width="6" stroke-linecap="round" fill="none"/>
-      <circle cx="50" cy="55" r="6" fill="white"/>
-      <rect x="48" y="55" width="4" height="9" rx="2" fill="white"/>
-      <defs><linearGradient id="fg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#0EA5E9"/><stop offset="1" stop-color="#2563EB"/></linearGradient></defs>
-    </svg>`,
+    id:'fordefi', name:'Fordefi', url:'fordefi.com',
+    install:'https://www.fordefi.com',
+    icon:`<svg width="26" height="26" viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="22" fill="url(#fg)"/><rect x="22" y="38" width="56" height="34" rx="6" stroke="white" stroke-width="6" fill="none"/><path d="M38 38V30C38 23.4 43.4 18 50 18C56.6 18 62 23.4 62 30V38" stroke="white" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="50" cy="55" r="6" fill="white"/><rect x="48" y="55" width="4" height="9" rx="2" fill="white"/><defs><linearGradient id="fg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#0EA5E9"/><stop offset="1" stop-color="#2563EB"/></linearGradient></defs></svg>`,
     detect: () => false,
-    connect: () => window.open('https://www.fordefi.com','_blank'),
+    connect: () => window.open('https://www.fordefi.com', '_blank'),
   },
 ];
 
-// ── Wallet connection functions ───────────────────────────────────────────────
+function renderWalletList() {
+  const available = WALLETS.filter(w => w.detect());
+  const others    = WALLETS.filter(w => !w.detect());
+  let html = '';
+  if (available.length) {
+    html += `<span class="wallet-section-lbl">Available wallets</span>`;
+    html += available.map(walletRowHTML).join('');
+  }
+  if (others.length) {
+    html += `<span class="wallet-section-lbl" style="margin-top:${available.length ? '8px':'0'}">${available.length ? 'Other wallets' : 'Available wallets'}</span>`;
+    html += others.map(walletRowHTML).join('');
+  }
+  document.getElementById('walletList').innerHTML = html;
+}
+
+function walletRowHTML(w) {
+  const avail = w.detect();
+  const label = w.isOpen ? 'Open →' : avail ? 'Connect' : 'Install →';
+  const cls   = avail ? 'primary' : 'secondary';
+  return `<div class="wallet-row" onclick="handleWallet('${w.id}')">
+    <div class="wallet-icon">${w.icon}</div>
+    <div class="wallet-info">
+      <div class="wallet-name">${w.name}</div>
+      <div class="wallet-url">${w.url}</div>
+    </div>
+    <button class="wallet-action ${cls}" onclick="event.stopPropagation();handleWallet('${w.id}')">${label}</button>
+  </div>`;
+}
+
+function handleWallet(id) {
+  const w = WALLETS.find(x => x.id === id);
+  if (!w) return;
+  if (w.detect() || w.isOpen) { w.connect(); }
+  else { window.open(w.install, '_blank'); closeWalletModal(); showToast(`Installing ${w.name}… refresh after install`, 'info'); }
+}
+
 async function connectLeather() {
+  const provider = window.LeatherProvider || window.HiroWalletProvider || window.StacksProvider;
+  if (!provider) { window.open('https://leather.io/install-extension', '_blank'); return; }
+  closeWalletModal();
+  const btn = document.getElementById('connectBtn');
+  btn.textContent = '⏳ Connecting…'; btn.disabled = true;
   try {
-    const provider = window.LeatherProvider || window.HiroWalletProvider || window.StacksProvider;
-    if (!provider) { window.open('https://leather.io/install-extension','_blank'); return; }
-
-    closeWalletModal();
-    const btn = document.getElementById('connectBtn');
-    btn.textContent = '⏳ Connecting...'; btn.disabled = true;
-
     const resp = await provider.request('getAddresses');
-    const addresses = resp?.result?.addresses || resp?.addresses || [];
-    const stxAddr = addresses.find(a => a.type === 'p2wpkh-p2sh' || a.symbol === 'STX' || (a.address||'').startsWith('ST') || (a.address||'').startsWith('SP'));
-    walletAddress = stxAddr?.address || addresses[0]?.address;
-
-    if (!walletAddress) throw new Error('No STX address found');
-    connectedWalletType = 'leather';
+    const addrs = resp?.result?.addresses || resp?.addresses || [];
+    const stx = addrs.find(a => (a.address || '').startsWith('ST') || (a.address || '').startsWith('SP'));
+    walletAddr = stx?.address || addrs[0]?.address;
+    if (!walletAddr) throw new Error('No STX address');
+    walletType = 'leather';
     updateConnectBtn();
-    showToast(`Connected: ${walletAddress.slice(0,8)}...${walletAddress.slice(-4)}`,'success');
+    showToast(`Connected: ${walletAddr.slice(0,8)}…${walletAddr.slice(-4)}`, 'success');
   } catch(e) {
     console.error(e);
-    showToast('Connection failed — try again','error');
-    document.getElementById('connectBtn').textContent='Connect Wallet';
-    document.getElementById('connectBtn').disabled=false;
+    showToast('Connection failed — try again', 'error');
+    btn.textContent = 'Connect Wallet'; btn.disabled = false;
   }
 }
 
 async function connectXverse() {
+  const provider = window.XverseProviders?.StacksProvider || window.StacksProvider;
+  if (!provider) { window.open('https://www.xverse.app/download', '_blank'); return; }
+  closeWalletModal();
+  const btn = document.getElementById('connectBtn');
+  btn.textContent = '⏳ Connecting…'; btn.disabled = true;
   try {
-    const provider = window.XverseProviders?.StacksProvider || window.StacksProvider;
-    if (!provider) { window.open('https://www.xverse.app/download','_blank'); return; }
-
-    closeWalletModal();
-    const btn = document.getElementById('connectBtn');
-    btn.textContent = '⏳ Connecting...'; btn.disabled = true;
-
     const resp = await provider.request('getAddresses', { purposes: ['stacks'] });
-    const addresses = resp?.result?.addresses || resp?.addresses || [];
-    walletAddress = addresses[0]?.address;
-
-    if (!walletAddress) throw new Error('No STX address found');
-    connectedWalletType = 'xverse';
+    const addrs = resp?.result?.addresses || resp?.addresses || [];
+    walletAddr = addrs[0]?.address;
+    if (!walletAddr) throw new Error('No STX address');
+    walletType = 'xverse';
     updateConnectBtn();
-    showToast(`Connected via Xverse: ${walletAddress.slice(0,8)}...${walletAddress.slice(-4)}`,'success');
+    showToast(`Connected via Xverse: ${walletAddr.slice(0,8)}…${walletAddr.slice(-4)}`, 'success');
   } catch(e) {
     console.error(e);
-    showToast('Connection failed — try again','error');
-    document.getElementById('connectBtn').textContent='Connect Wallet';
-    document.getElementById('connectBtn').disabled=false;
+    showToast('Connection failed — try again', 'error');
+    btn.textContent = 'Connect Wallet'; btn.disabled = false;
   }
 }
 
-function updateConnectBtn(){
-  const btn=document.getElementById('connectBtn');
-  btn.disabled=false;
-  if(walletAddress){
-    btn.textContent=`${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
+function updateConnectBtn() {
+  const btn = document.getElementById('connectBtn');
+  btn.disabled = false;
+  if (walletAddr) {
+    btn.textContent = `${walletAddr.slice(0,6)}…${walletAddr.slice(-4)}`;
     btn.classList.add('connected');
   } else {
-    btn.textContent='Connect Wallet';
+    btn.textContent = 'Connect Wallet';
     btn.classList.remove('connected');
   }
 }
 
-// ── Wallet Modal ──────────────────────────────────────────────────────────────
-function connectWallet(){
-  if(walletAddress){
-    // Disconnect
-    walletAddress=null; connectedWalletType=null;
-    updateConnectBtn();
-    showToast('Wallet disconnected','success');
-    return;
-  }
+function handleConnectBtn() {
+  if (walletAddr) { walletAddr = null; walletType = null; updateConnectBtn(); showToast('Wallet disconnected', 'info'); return; }
   openWalletModal();
 }
-
-function openWalletModal(){
-  const overlay=document.getElementById('walletOverlay');
-  overlay.style.display='flex';
+function openWalletModal() {
   renderWalletList();
-  requestAnimationFrame(()=>overlay.style.opacity='1');
+  document.getElementById('walletOverlay').classList.add('show');
 }
+function closeWalletModal() { document.getElementById('walletOverlay').classList.remove('show'); }
+function closeWalletOverlay(e) { if (e.target === document.getElementById('walletOverlay')) closeWalletModal(); }
 
-function closeWalletModal(e){
-  if(e&&e.target!==document.getElementById('walletOverlay'))return;
-  const overlay=document.getElementById('walletOverlay');
-  overlay.style.opacity='0';
-  overlay.style.transition='opacity .15s ease';
-  setTimeout(()=>{overlay.style.display='none';overlay.style.transition='';},150);
-}
+/* ═══════════════════════════════════════════════════════════════
+   ONBOARDING
+═══════════════════════════════════════════════════════════════ */
+const OB = {
+  dev: {
+    cta: 'Open Deploy Guide →',
+    action: () => { closeOnboard(); showPage('deploy'); },
+    outcome: '🏆 Your contract earns a certified onchain badge — embedded in README and verifiable by anyone.',
+    steps: [
+      { n:'01', col:'#ff6b2b', bg:'var(--orange-dim)', title:'Write & Test Your Contract',
+        desc:'Use <code>clarinet new my-project</code> to scaffold. Write your Clarity contract, then <code>clarinet test</code> locally before auditing.',
+        link:null },
+      { n:'02', col:'var(--blue)', bg:'var(--blue-dim)', title:'Run Security Audit',
+        desc:'Scan with <code>npx stacks-clarity-audit scan ./contracts</code> — get a 0–100 score + full breakdown of issues.',
+        link:null },
+      { n:'03', col:'var(--yellow)', bg:'var(--yellow-dim)', title:'Fix Issues & Deploy to Testnet',
+        desc:'Resolve criticals until score ≥ 70. Deploy to testnet via <a href="https://platform.hiro.so" target="_blank">platform.hiro.so</a> or <a href="https://docs.stacks.co/tools/clarinet" target="_blank">Clarinet CLI</a>.',
+        link:null },
+      { n:'04', col:'var(--purple)', bg:'var(--blue-dim)', title:'Submit Audit Onchain',
+        desc:'Go to <strong>Submit Audit</strong> tab, enter your contract address + score, confirm with <a href="https://leather.io" target="_blank">Leather Wallet</a>. Stored on Stacks forever.',
+        link:{ label:'Submit Audit →', page:'submit', col:'var(--purple)', border:'rgba(167,139,250,.35)' } },
+      { n:'05', col:'var(--green)', bg:'var(--green-dim)', title:'Get Your Badge',
+        desc:'Score ≥ 70 = certified. Grab the Markdown badge from the <strong>Badge</strong> tab and embed in your README or docs.',
+        link:{ label:'Generate Badge →', page:'badge', col:'var(--green)', border:'var(--green-line)' } },
+    ],
+  },
+  user: {
+    cta: 'Verify a Contract →',
+    action: () => { closeOnboard(); showPage('verify'); },
+    outcome: "✅ You'll see the exact security score and certification status before interacting with real funds.",
+    steps: [
+      { n:'01', col:'var(--blue)', bg:'var(--blue-dim)', title:'Find the Contract Address',
+        desc:"Get the Stacks contract address from the project's website, README, or Discord. Format: <code>SP…contract-name</code>",
+        link:null },
+      { n:'02', col:'#ff6b2b', bg:'var(--orange-dim)', title:'Verify in the Registry',
+        desc:'Open the <strong>Verify</strong> tab, paste the address, click Verify. We query the onchain registry instantly.',
+        link:{ label:'Go to Verify →', page:'verify', col:'var(--orange)', border:'var(--orange-line)' } },
+      { n:'03', col:'var(--yellow)', bg:'var(--yellow-dim)', title:'Read the Audit Result',
+        desc:"You'll see the score, issues breakdown, block number, and certification status. Fully onchain — no trust required.",
+        link:null },
+      { n:'04', col:'var(--green)', bg:'var(--green-dim)', title:'Decide With Confidence',
+        desc:'Score ≥ 70 = <code style="color:var(--green)">CERTIFIED SAFE</code>. Below that = developer hasn\'t fixed all security issues — proceed with caution.',
+        link:null },
+    ],
+  },
+};
 
-function renderWalletList(){
-  const container=document.getElementById('walletListContainer');
-  const available=WALLETS.filter(w=>w.detect());
-  const others=WALLETS.filter(w=>!w.detect());
+let currentPersona = 'dev';
 
-  let html='';
-
-  if(available.length>0){
-    html+=`<div class="wallet-section-label">Available wallets</div>`;
-    html+=available.map(w=>walletRowHTML(w,true)).join('');
-    if(others.length>0) html+=`<div style="height:8px"></div>`;
-  }
-
-  if(others.length>0){
-    html+=`<div class="wallet-section-label">${available.length>0?'Other wallets':'Available wallets'}</div>`;
-    html+=others.map(w=>walletRowHTML(w,false)).join('');
-  }
-
-  container.innerHTML=html;
-}
-
-function walletRowHTML(w, isAvailable){
-  const btnLabel = w.isOpen ? 'Open →' : isAvailable ? 'Connect' : 'Install →';
-  const btnClass = isAvailable ? 'primary' : 'secondary';
-  return `
-    <div class="wallet-row">
-      <div class="wallet-icon">${w.icon}</div>
-      <div class="wallet-info">
-        <div class="wallet-name">${w.name}</div>
-        <div class="wallet-url">${w.url}</div>
+function renderOb(persona) {
+  const data = OB[persona];
+  const el = document.getElementById(`flow-${persona}`);
+  if (el.dataset.built) return;
+  el.dataset.built = '1';
+  let html = '';
+  data.steps.forEach((s, i) => {
+    html += `<div class="ob-step" style="animation-delay:${i * .06}s">
+      <div class="ob-num" style="background:${s.bg};color:${s.col}">${s.n}</div>
+      <div class="ob-step-content">
+        <div class="ob-step-title">${s.title}</div>
+        <div class="ob-step-desc">${s.desc}</div>
+        ${s.link ? `<button class="ob-step-link" style="color:${s.link.col};border-color:${s.link.border}" onclick="closeOnboard();showPage('${s.link.page}')">${s.link.label}</button>` : ''}
       </div>
-      <button class="wallet-connect-btn ${btnClass}" onclick="handleWalletClick('${w.id}')">${btnLabel}</button>
     </div>`;
+    if (i < data.steps.length - 1) html += `<div class="ob-connector"></div>`;
+  });
+  html += `<div class="ob-outcome">${data.outcome}</div>`;
+  el.innerHTML = html;
 }
 
-function handleWalletClick(id){
-  const wallet=WALLETS.find(w=>w.id===id);
-  if(!wallet)return;
-  if(wallet.detect()||wallet.isOpen){
-    wallet.connect();
-  } else {
-    window.open(wallet.installUrl,'_blank');
-    closeWalletModal();
-    showToast(`Installing ${wallet.name}... refresh after install`,'success');
+function switchPersona(p) {
+  currentPersona = p;
+  document.getElementById('tab-dev').classList.toggle('active', p === 'dev');
+  document.getElementById('tab-user').classList.toggle('active', p === 'user');
+  document.getElementById('flow-dev').style.display  = p === 'dev'  ? 'block' : 'none';
+  document.getElementById('flow-user').style.display = p === 'user' ? 'block' : 'none';
+  document.getElementById('ob-cta').textContent = OB[p].cta;
+  renderOb(p);
+}
+
+function onboardCTA() { OB[currentPersona].action(); }
+
+function closeOnboard() {
+  const ov = document.getElementById('obOverlay');
+  ov.style.opacity = '0'; ov.style.transition = 'opacity .2s ease';
+  setTimeout(() => ov.style.display = 'none', 200);
+  if (document.getElementById('dontShow').checked) {
+    try { localStorage.setItem('ca_onboarded', '1'); } catch(e){}
   }
 }
 
-// Close modal on ESC
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeWalletModal();
+window.addEventListener('load', () => {
+  let skip = false;
+  try { skip = localStorage.getItem('ca_onboarded') === '1'; } catch(e){}
+  if (skip) { document.getElementById('obOverlay').style.display = 'none'; }
+  else { renderOb('dev'); }
+  loadRegistry();
 });
 
-// ── Page routing ──────────────────────────────────────────────────────────────
-function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  const map={home:0,verify:1,submit:2,badge:3,deploy:4};
-  document.querySelectorAll('.nav-pill')[map[id]]?.classList.add('active');
-  if(id==='home')loadRegistry();
+document.getElementById('obOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('obOverlay')) closeOnboard();
+});
+
+/* ═══════════════════════════════════════════════════════════════
+   PAGE ROUTING
+═══════════════════════════════════════════════════════════════ */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-pill').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const idx = { home:0, verify:1, submit:2, badge:3, deploy:4 };
+  document.querySelectorAll('.nav-pill')[idx[id]]?.classList.add('active');
   closeNetDrop();
+  if (id === 'home')   loadRegistry();
+  if (id === 'deploy') initDeploy();
 }
 
-function loadRegistry(){
-  const loading=document.getElementById('registryLoading');
-  const table=document.getElementById('registryTable');
-  const empty=document.getElementById('registryEmpty');
-  loading.style.display='flex';loading.style.justifyContent='center';
-  table.style.display='none';empty.style.display='none';
-  setTimeout(()=>{
-    loading.style.display='none';
-    if(registryData.length===0){empty.style.display='block';return}
-    const certified=registryData.filter(r=>r.passed).length;
-    document.getElementById('statTotal').textContent=registryData.length;
-    document.getElementById('statCertified').textContent=certified;
-    const cfg=getNetCfg();
-    const tbody=document.getElementById('registryBody');
-    tbody.innerHTML=registryData.map(r=>{
-      const sc=r.score>=70?'score-safe':r.score>=40?'score-warn':'score-fail';
-      const si=r.score>=70?'✅':r.score>=40?'⚠️':'❌';
-      const explorerUrl=`https://explorer.hiro.so/address/${r.full}${cfg.explorerQuery}`;
-      return `<tr><td><span class="addr-short" onclick="quickVerify('${r.full}')">${r.address}</span></td><td><span class="score-pill ${sc}">${si} ${r.score}/100</span></td><td style="color:var(--red);font-weight:700">${r.critical}</td><td style="color:var(--yellow)">${r.warning}</td><td style="color:var(--muted2)">#${r.block.toLocaleString()}</td><td><span class="score-pill ${r.passed?'score-safe':'score-fail'}">${r.passed?'CERTIFIED':'FAILED'}</span></td><td><button class="btn btn-outline btn-sm" onclick="quickVerify('${r.full}')">Details →</button></td></tr>`;
+/* ═══════════════════════════════════════════════════════════════
+   REGISTRY
+═══════════════════════════════════════════════════════════════ */
+const MOCK_DATA = [
+  { short:'ST3CM…audit-registry', full:'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry', score:91, critical:0, warning:1, info:2, block:187432 },
+];
+
+function loadRegistry() {
+  ['reg-loading','reg-table','reg-empty'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.display = id === 'reg-loading' ? 'flex' : 'none';
+    if (id === 'reg-loading') el.style.justifyContent = 'center';
+  });
+
+  setTimeout(() => {
+    document.getElementById('reg-loading').style.display = 'none';
+    const data = MOCK_DATA;
+    if (!data.length) { document.getElementById('reg-empty').style.display = 'block'; return; }
+
+    document.getElementById('s-total').textContent = data.length;
+    document.getElementById('s-cert').textContent  = data.filter(r => r.score >= 70).length;
+
+    const cfg = NETS[currentNet];
+    document.getElementById('reg-body').innerHTML = data.map(r => {
+      const cls = r.score >= 70 ? 'pill-green' : r.score >= 40 ? 'pill-yellow' : 'pill-red';
+      const icon = r.score >= 70 ? '✅' : r.score >= 40 ? '⚠️' : '❌';
+      const status = r.score >= 70 ? 'CERTIFIED SAFE' : r.score >= 40 ? 'MODERATE RISK' : 'HIGH RISK';
+      const explorerUrl = `https://explorer.hiro.so/address/${r.full}${cfg.explorer}`;
+      return `<tr>
+        <td><span style="color:var(--blue);cursor:pointer" onclick="quickVerify('${r.full}')" title="${r.full}">${r.short}</span></td>
+        <td><span class="pill ${cls}">${icon} ${r.score}/100</span></td>
+        <td style="color:var(--red);font-weight:700">${r.critical}</td>
+        <td style="color:var(--yellow)">${r.warning}</td>
+        <td style="color:var(--muted)">${r.block.toLocaleString()}</td>
+        <td>
+          <span class="pill ${cls}" style="font-size:10px">${status}</span>
+          <a href="${explorerUrl}" target="_blank" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);text-decoration:none;margin-left:8px">Explorer ↗</a>
+        </td>
+      </tr>`;
     }).join('');
-    table.style.display='table';
-  },800);
+    document.getElementById('reg-table').style.display = 'table';
+  }, 900);
 }
 
-function quickVerify(addr){showPage('verify');document.getElementById('verifyInput').value=addr;verifyContract()}
-
-async function verifyContract(){
-  const addr=document.getElementById('verifyInput').value.trim();
-  const container=document.getElementById('verifyResult');
-  if(!addr){showToast('Enter a contract address','error');return}
-  container.innerHTML='<div style="padding:20px;text-align:center"><div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div></div>';
-  await new Promise(r=>setTimeout(r,800));
-  const mock=registryData.find(r=>r.full===addr||addr.includes(r.full.split('.')[1]));
-  if(mock){renderVerifyResult(addr,mock);return}
-  renderNotFound(addr,container);
+/* ═══════════════════════════════════════════════════════════════
+   VERIFY
+═══════════════════════════════════════════════════════════════ */
+function quickVerify(addr) {
+  showPage('verify');
+  document.getElementById('verifyInput').value = addr;
+  verifyContract();
 }
 
-function renderVerifyResult(addr,data){
-  const container=document.getElementById('verifyResult');
-  const cfg=getNetCfg();
-  const explorerUrl=`https://explorer.hiro.so/address/${addr}${cfg.explorerQuery}`;
-  const c=data.score>=70?'var(--green)':data.score>=40?'var(--yellow)':'var(--red)';
-  const lbl=data.score>=90?'EXCELLENT':data.score>=70?'SAFE ✅':data.score>=40?'MODERATE RISK ⚠️':'HIGH RISK ❌';
-  container.innerHTML=`<div class="result-card" style="margin-top:16px"><div class="result-header"><div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px">CONTRACT ADDRESS</div><div class="result-addr">${addr}</div></div><div style="display:flex;align-items:center;gap:12px"><div><div class="score-big" style="color:${c}">${data.score}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">/ 100</div></div><div><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:${c}">${lbl}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Block #${data.block?.toLocaleString()||'N/A'}</div></div></div></div><div class="result-body"><div class="result-cell"><div class="cell-val" style="color:var(--red)">${data.critical}</div><div class="cell-lbl">Critical</div></div><div class="result-cell"><div class="cell-val" style="color:var(--yellow)">${data.warning}</div><div class="cell-lbl">Warnings</div></div><div class="result-cell"><div class="cell-val" style="color:var(--blue)">${data.info||0}</div><div class="cell-lbl">Info</div></div><div class="result-cell" style="background:${data.passed?'rgba(0,217,126,.05)':'rgba(255,59,92,.05)'}"><div class="cell-val" style="color:${data.passed?'var(--green)':'var(--red)'}">${data.passed?'✅':'❌'}</div><div class="cell-lbl">${data.passed?'Certified':'Not Certified'}</div></div></div></div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-green btn-sm" onclick="showPage('badge')">Get Badge →</button><a class="btn btn-outline btn-sm" href="${explorerUrl}" target="_blank">Explorer ↗</a></div>`;
+function verifyContract() {
+  const addr = document.getElementById('verifyInput').value.trim();
+  const out = document.getElementById('verifyResult');
+  if (!addr) { showToast('Enter a contract address', 'error'); return; }
+
+  out.innerHTML = `<div style="display:flex;justify-content:center;padding:24px"><div class="loading"><div class="spin"></div> Querying registry…</div></div>`;
+
+  setTimeout(() => {
+    const match = MOCK_DATA.find(r => r.full === addr || r.short === addr);
+    if (match) {
+      const cls  = match.score >= 70 ? 'pill-green' : match.score >= 40 ? 'pill-yellow' : 'pill-red';
+      const icon = match.score >= 70 ? '✅' : match.score >= 40 ? '⚠️' : '❌';
+      const label = match.score >= 70 ? 'CERTIFIED SAFE' : match.score >= 40 ? 'MODERATE RISK' : 'HIGH RISK';
+      out.innerHTML = `
+        <div class="card" style="margin-top:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--blue)">${match.full}</span>
+            <span class="pill ${cls}" style="font-size:13px">${icon} ${match.score}/100 — ${label}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:6px;overflow:hidden">
+            <div style="background:var(--surface2);padding:16px 18px"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--red)">${match.critical}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase">Critical</div></div>
+            <div style="background:var(--surface2);padding:16px 18px"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--yellow)">${match.warning}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase">Warning</div></div>
+            <div style="background:var(--surface2);padding:16px 18px"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--blue)">${match.info}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase">Info</div></div>
+            <div style="background:var(--surface2);padding:16px 18px"><div style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--text2)">#${match.block.toLocaleString()}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase">Block</div></div>
+          </div>
+        </div>`;
+    } else {
+      out.innerHTML = `
+        <div class="card" style="text-align:center;padding:32px;border-color:rgba(255,59,92,.3)">
+          <div style="font-size:28px;margin-bottom:10px">🔍</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">No audit found</div>
+          <div style="font-size:12px;color:var(--text2)">This contract hasn't been submitted to the registry yet.</div>
+        </div>`;
+    }
+  }, 700);
 }
 
-function renderNotFound(addr,container){
-  container.innerHTML=`<div class="result-card" style="margin-top:16px;padding:32px;text-align:center"><div style="font-size:32px;margin-bottom:12px">🔍</div><div style="font-family:var(--mono);font-size:13px;color:var(--muted2);margin-bottom:8px">No audit found for this contract</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${addr}</div><div style="margin-top:16px"><button class="btn btn-primary btn-sm" onclick="showPage('submit')">Submit Audit →</button></div></div>`;
+/* ═══════════════════════════════════════════════════════════════
+   SUBMIT AUDIT
+═══════════════════════════════════════════════════════════════ */
+function updateScore(v) {
+  const n = parseInt(v);
+  document.getElementById('scoreVal').textContent = n;
+  document.getElementById('scoreDisp').textContent = n;
+  const col = n >= 70 ? 'var(--green)' : n >= 40 ? 'var(--yellow)' : 'var(--red)';
+  document.getElementById('scoreDisp').style.color = col;
+  document.getElementById('scoreVal').style.color  = col;
 }
 
-async function submitAudit(){
-  if(!walletAddress){
-    showToast('Connect your Leather Wallet first','error');
-    setTimeout(()=>openWalletModal(),600);
-    return;
+function submitAudit() {
+  if (!walletAddr) { openWalletModal(); return; }
+  const contract = document.getElementById('f-contract').value.trim();
+  if (!contract) { showToast('Enter a contract address', 'error'); return; }
+  const score = document.getElementById('f-score').value;
+  showToast(`Submitting to ${NETS[currentNet].label}… confirm in wallet`, 'info');
+  setTimeout(() => showToast('✅ Audit submitted to Stacks blockchain!', 'success'), 2000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BADGE
+═══════════════════════════════════════════════════════════════ */
+function updateBadge() {
+  const v = parseInt(document.getElementById('badge-slider').value);
+  const col = v >= 70 ? 'green' : v >= 40 ? 'yellow' : 'red';
+  const colVar = v >= 70 ? 'var(--green)' : v >= 40 ? 'var(--yellow)' : 'var(--red)';
+  const status = v >= 90 ? '✅ EXCELLENT' : v >= 70 ? '✅ SAFE' : v >= 40 ? '⚠️ MODERATE' : '❌ HIGH RISK';
+  const badgeCol = v >= 70 ? 'green' : v >= 40 ? 'yellow' : 'red';
+
+  document.getElementById('badge-num').textContent = v;
+  document.getElementById('badge-num').style.color = colVar;
+  document.getElementById('badge-score-txt').textContent = `${v}/100`;
+  document.getElementById('badge-score-txt').style.color = colVar;
+  document.getElementById('badge-status-txt').textContent = status;
+  document.getElementById('badge-dot').style.background = colVar;
+  document.getElementById('badge-md').textContent =
+    `[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${v}%2F100-${badgeCol}?style=flat-square&logo=bitcoin)](https://clarity-audit-nine.vercel.app)`;
+}
+
+function copyBadge() {
+  const md = document.getElementById('badge-md').textContent;
+  navigator.clipboard?.writeText(md).then(() => showToast('Badge markdown copied!', 'success'))
+    .catch(() => showToast('Copy failed — select manually', 'error'));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DEPLOY GUIDE
+═══════════════════════════════════════════════════════════════ */
+const DEPLOY_STEPS = [
+  {
+    label:'Setup', title:'01 · Environment Setup',
+    sub:'Install Clarinet and Node.js to get your local Clarity development environment ready.',
+    content: () => `
+      <div class="grid2">
+        <div class="card">
+          <div class="card-icon">🦀</div>
+          <div class="card-title">Install Clarinet</div>
+          <div class="card-body">Official Clarity development tool by Stacks — local blockchain, testing, deployment.<br><br>
+            <a href="https://docs.stacks.co/reference" target="_blank">docs.stacks.co ↗</a></div>
+            
+            <div class="card-title-center" style="margin-top:20px;">Mac</div>
+            <div class="code-block" style="margin-top:12px">
+            <div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+            <div class="code-body">brew install clarinet</div>
+          </div>
+          
+            <div class="card-title-center">Windows</div>
+          <div class="code-block" style="margin-top:12px">
+            <div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+            <div class="code-body">winget install clarinet</div>
+          </div>
+          
+            <div class="card-title-center">Linux</div>
+          <div class="code-block" style="margin-top:12px">
+            <div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+            <div class="code-body">curl -L https://install.clarinet.sh | sh</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📦</div>
+          <div class="card-title">Install stacks-clarity-audit CLI</div>
+          <div class="card-body">Run the security auditor locally on your contracts before submitting.</div>
+          <div class="code-block" style="margin-top:12px">
+            <div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+            <div class="code-body">npm install -g stacks-clarity-audit
+
+<span class="cm"># Or use without installing:</span>
+npx stacks-clarity-audit --help</div>
+          </div>
+        </div>
+      </div>
+      <div class="code-block" style="margin-top:14px">
+        <div class="code-bar"><span class="code-lang">bash — new project</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <div class="code-body">clarinet new my-contract && cd my-contract
+clarinet contract new token      <span class="cm"># creates contracts/token.clar</span></div>
+      </div>`
+  },
+  {
+    label:'Write', title:'02 · Write Your Contract',
+    sub:'Write your Clarity contract following security best practices. The language is intentionally restrictive — no loops, no reentrancy.',
+    content: () => `
+      <div class="code-block">
+        <div class="code-bar"><span class="code-lang">clarity</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <div class="code-body"><span class="cm">;; Safe token pattern — CLA-compliant</span>
+<span class="ck">(define-constant</span> <span class="cv">CONTRACT-OWNER</span> tx-sender<span class="ck">)</span>
+<span class="ck">(define-constant</span> <span class="cv">ERR-NOT-OWNER</span> (err u401)<span class="ck">)</span>
+<span class="ck">(define-constant</span> <span class="cv">ERR-INSUFFICIENT</span> (err u402)<span class="ck">)</span>
+
+<span class="ck">(define-fungible-token</span> <span class="cv">my-token</span><span class="ck">)</span>
+
+<span class="cm">;; ✅ Auth check on admin function (CLA-002 compliant)</span>
+<span class="ck">(define-public</span> (mint <span class="cp">(amount uint)</span> <span class="cp">(recipient principal)</span>)
+  (<span class="ck">begin</span>
+    (<span class="ck">asserts!</span> (<span class="ck">is-eq</span> tx-sender <span class="cv">CONTRACT-OWNER</span>) <span class="cv">ERR-NOT-OWNER</span>)
+    (<span class="ck">ft-mint?</span> my-token amount recipient)<span class="ck">)</span><span class="ck">)</span>
+
+<span class="cm">;; ✅ Checked transfer result (CLA-006 compliant)</span>
+<span class="ck">(define-public</span> (transfer <span class="cp">(amount uint)</span> <span class="cp">(to principal)</span>)
+  (<span class="ck">try!</span> (<span class="ck">ft-transfer?</span> my-token amount tx-sender to))
+  (ok true)<span class="ck">)</span>
+
+<span class="cm">;; ✅ Read-only getter (CLA-005 compliant)</span>
+<span class="ck">(define-read-only</span> (get-balance <span class="cp">(who principal)</span>)
+  (<span class="ck">ft-get-balance</span> my-token who)<span class="ck">)</span></div>
+      </div>
+      <div class="card green" style="margin-top:12px">
+        <div class="card-body">📖 Full Clarity reference: <a href="https://docs.stacks.co/get-started/developer-quickstart" target="_blank">docs.stacks.co/clarity/overview ↗</a></div>
+      </div>`
+  },
+  {
+    label:'Test', title:'03 · Test Locally',
+    sub:'Use Clarinet to run unit tests before auditing. Catching bugs here saves time and gas.',
+    content: () => `
+      <div class="code-block">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <div class="code-body">clarinet test                          <span class="cm"># run all tests</span>
+clarinet check                         <span class="cm"># static analysis</span>
+clarinet console                       <span class="cm"># REPL — interactive testing</span></div>
+      </div>
+      <div class="code-block" style="margin-top:12px">
+        <div class="code-bar"><span class="code-lang">typescript — example test</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <div class="code-body">Clarinet.test({
+  name: <span class="cs">"owner can mint tokens"</span>,
+  async fn(chain, accounts) {
+    const deployer = accounts.get(<span class="cs">"deployer"</span>)!;
+    const wallet1  = accounts.get(<span class="cs">"wallet_1"</span>)!;
+
+    const block = chain.mineBlock([
+      Tx.contractCall(<span class="cs">"my-token"</span>, <span class="cs">"mint"</span>,
+        [types.uint(100), types.principal(wallet1.address)],
+        deployer.address)
+    ]);
+    block.receipts[0].result.expectOk();
   }
-  const contract=document.getElementById('f-contract').value.trim();
-  const score=parseInt(document.getElementById('f-score').value);
-  const critical=parseInt(document.getElementById('f-critical').value)||0;
-  const warning=parseInt(document.getElementById('f-warning').value)||0;
-  const info=parseInt(document.getElementById('f-info').value)||0;
-  if(!contract){showToast('Enter contract address','error');return}
-  const btn=document.getElementById('submitBtn');
-  btn.textContent='⏳ Broadcasting...';btn.disabled=true;
-  await new Promise(r=>setTimeout(r,1500));
-  const short=contract.length>20?contract.slice(0,12)+'...'+contract.slice(-8):contract;
-  registryData.unshift({address:short,full:contract,score,critical,warning,info,block:187500+Math.floor(Math.random()*100),passed:score>=70});
-  btn.textContent='↑ Submit to Stacks Blockchain';btn.disabled=false;
-  showToast(`Audit submitted! Score: ${score}/100 ${score>=70?'✅':'❌'}`,'success');
-  setTimeout(()=>showPage('home'),1500);
+});</div>
+      </div>
+      <div class="checklist" id="test-checks">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text"><div class="check-main">clarinet check passes with no errors</div></div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text"><div class="check-main">All unit tests pass</div></div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text"><div class="check-main">Edge cases tested (zero amounts, unauthorized callers)</div></div></div>
+      </div>`
+  },
+  {
+    label:'Audit', title:'04 · Security Audit',
+    sub:'Run stacks-clarity-audit to scan for known vulnerability patterns. Aim for score ≥ 70 before deploying.',
+    content: () => `
+      <div class="code-block">
+        <div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <div class="code-body">npx stacks-clarity-audit scan ./contracts
+
+<span class="cm"># Output as JSON (for CI):</span>
+npx stacks-clarity-audit scan ./contracts --json > report.json
+
+<span class="cm"># List all rules:</span>
+npx stacks-clarity-audit rules</div>
+      </div>
+      <div style="margin-top:16px">
+        <div class="form-label" style="margin-bottom:10px">Security Rules Checked (7 total)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${[['CLA-001','critical','unwrap! without safe error-handling'],
+             ['CLA-002','critical','Admin function missing auth check'],
+             ['CLA-003','warning','as-contract without auth guard'],
+             ['CLA-004','warning','Hardcoded principal address'],
+             ['CLA-005','info','Getter should use define-read-only'],
+             ['CLA-006','critical','Unchecked stx-transfer? / ft-transfer? result'],
+             ['CLA-007','warning','tx-sender used inside as-contract block'],
+          ].map(([id,sev,desc]) => {
+            const col = sev==='critical' ? 'var(--red)' : sev==='warning' ? 'var(--yellow)' : 'var(--blue)';
+            return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:6px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--blue)">${id}</span>
+              <span class="pill ${sev==='critical'?'pill-red':sev==='warning'?'pill-yellow':'pill-blue'}" style="font-size:9px;padding:2px 7px">${sev.toUpperCase()}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2)">${desc}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`
+  },
+  {
+    label:'Deploy', title:'05 · Deploy to Testnet',
+    sub:'Deploy your audited contract to Stacks testnet. Get free testnet STX from the faucet.',
+    content: () => `
+      <div class="flow-row">
+        <div class="flow-box">Write Contract</div><span class="flow-arrow">→</span>
+        <div class="flow-box">Audit (score ≥70)</div><span class="flow-arrow">→</span>
+        <div class="flow-box orange">Deploy Testnet</div><span class="flow-arrow">→</span>
+        <div class="flow-box">Verify UI</div><span class="flow-arrow">→</span>
+        <div class="flow-box green">Mainnet</div>
+      </div>
+      <div class="code-block">
+        <div class="code-bar"><span class="code-lang">bash — deploy via Clarinet</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+        <div class="code-body">clarinet deployments apply --testnet
+
+<span class="cm"># Or use Hiro Platform (GUI):</span>
+<span class="cm"># https://platform.hiro.so → New Project → Deploy</span></div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card">
+          <div class="card-icon">🚰</div>
+          <div class="card-title">Get Testnet STX</div>
+          <div class="card-body">Free testnet STX for gas fees:<br><a href="https://explorer.hiro.so/sandbox/faucet?chain=testnet" target="_blank">Hiro Faucet ↗</a></div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <div class="card-title">Explore Your Contract</div>
+          <div class="card-body">Verify deployment on the Stacks explorer:<br><a href="https://explorer.hiro.so/?chain=testnet" target="_blank">explorer.hiro.so ↗</a></div>
+        </div>
+      </div>
+      <div class="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text"><div class="check-main">Contract deployed on testnet</div></div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text"><div class="check-main">All functions callable from explorer</div></div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text"><div class="check-main">Score ≥ 70 confirmed in audit output</div></div></div>
+      </div>`
+  },
+  {
+    label:'Publish', title:'06 · Publish Audit Onchain',
+    sub:'Submit your audit result to the clarity.audit registry. Score ≥ 70 earns a permanent CERTIFIED SAFE badge.',
+    content: () => `
+      <div class="card green" style="margin-bottom:16px">
+        <div class="card-body">
+          Submit your audit to the Stacks registry contract at:<br>
+          <code style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--orange)">ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry</code>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-icon">🦺</div>
+          <div class="card-title">Step 1 — Connect Wallet</div>
+          <div class="card-body">Connect <a href="https://leather.io" target="_blank">Leather Wallet</a> or Xverse from the header. Make sure you're on the right network.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">📋</div>
+          <div class="card-title">Step 2 — Fill Submit Form</div>
+          <div class="card-body">Go to <strong>Submit Audit</strong> tab. Enter your contract address, score, and issue counts from CLI output.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔏</div>
+          <div class="card-title">Step 3 — Confirm Transaction</div>
+          <div class="card-body">Sign the transaction in your wallet. Gas fee is minimal (testnet STX is free).</div>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏅</div>
+          <div class="card-title">Step 4 — Get Your Badge</div>
+          <div class="card-body">Once confirmed, grab your Markdown badge from the <strong>Badge</strong> tab and embed in your README.</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px">
+        <button class="btn btn-primary" onclick="showPage('submit')">↑ Go to Submit Audit</button>
+        <button class="btn btn-outline" onclick="showPage('badge')">🏅 Generate Badge</button>
+      </div>`
+  },
+];
+
+let currentStep = 0;
+
+function initDeploy() {
+  renderStepper();
+  renderStepPanels();
+  updateStepNav();
 }
 
-function updateScore(val){
-  val=parseInt(val);
-  const c=val>=70?'var(--green)':val>=40?'var(--yellow)':'var(--red)';
-  document.getElementById('scoreVal').textContent=val;document.getElementById('scoreVal').style.color=c;
-  document.getElementById('scoreDisp').textContent=val;document.getElementById('scoreDisp').style.color=c;
+function renderStepper() {
+  const bar = document.getElementById('stepper');
+  bar.innerHTML = DEPLOY_STEPS.map((s, i) => {
+    const cls = i < currentStep ? 'done' : i === currentStep ? 'active' : '';
+    const lineCls = i < currentStep ? 'done' : i === currentStep ? 'active' : '';
+    return `<div class="step-node ${cls}" onclick="goStep(${i})">
+        <div class="step-circle">${i < currentStep ? '✓' : String(i+1).padStart(2,'0')}</div>
+        <div class="step-label">${s.label}</div>
+      </div>${i < DEPLOY_STEPS.length-1 ? `<div class="step-line ${lineCls}"></div>` : ''}`;
+  }).join('');
 }
 
-function updateBadge(){
-  const score=parseInt(document.getElementById('badge-score').value);
-  const c=score>=70?'#00d97e':score>=40?'#ffd166':'#ff3b5c';
-  const cn=score>=70?'green':score>=40?'yellow':'red';
-  document.getElementById('badge-score-val').textContent=score;document.getElementById('badge-score-val').style.color=c;
-  document.getElementById('badgeScoreText').textContent=`${score}/100`;document.getElementById('badgeScoreText').style.color=c;
-  document.getElementById('badgeDot').style.background=c;
-  document.getElementById('badgeMarkdown').textContent=`[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${score}%2F100-${cn}?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)`;
+function renderStepPanels() {
+  document.getElementById('stepPanels').innerHTML = DEPLOY_STEPS.map((s, i) =>
+    `<div class="step-panel ${i === currentStep ? 'active' : ''}" id="step-${i}">
+      <div class="step-big-title">${s.title}</div>
+      <div class="step-sub">${s.sub}</div>
+      ${s.content()}
+    </div>`
+  ).join('');
 }
 
-function copyBadge(){navigator.clipboard.writeText(document.getElementById('badgeMarkdown').textContent);showToast('Badge copied!','success')}
-
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className=`toast ${type} show`;
-  setTimeout(()=>t.classList.remove('show'),3000);
+function goStep(i) {
+  currentStep = i;
+  renderStepper();
+  document.querySelectorAll('.step-panel').forEach((p,idx) => p.classList.toggle('active', idx === i));
+  updateStepNav();
 }
 
-// Init
-applyNetwork('testnet');
-loadRegistry();
-updateBadge();
+function stepNav(dir) {
+  currentStep = Math.max(0, Math.min(DEPLOY_STEPS.length - 1, currentStep + dir));
+  goStep(currentStep);
+}
+
+function updateStepNav() {
+  document.getElementById('prevBtn').disabled = currentStep === 0;
+  document.getElementById('prevBtn').style.opacity = currentStep === 0 ? '.4' : '1';
+  document.getElementById('nextBtn').textContent = currentStep === DEPLOY_STEPS.length-1 ? '✓ Done' : 'Next →';
+  document.getElementById('stepCounter').textContent = `Step ${currentStep+1} of ${DEPLOY_STEPS.length}`;
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+function copyCode(btn) {
+  const code = btn.closest('.code-block').querySelector('.code-body').innerText;
+  navigator.clipboard?.writeText(code).then(() => {
+    btn.textContent = 'copied!'; btn.style.color = 'var(--green)';
+    setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; }, 1800);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYBOARD
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeWalletModal(); closeNetDrop(); }
+});
+
+/* Init */
+applyNet('testnet');
+renderNetOptions();
 </script>
 </body>
 </html>
