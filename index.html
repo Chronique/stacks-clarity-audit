@@ -28,23 +28,13 @@
     .wrap{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
     header{position:sticky;top:0;z-index:100;background:rgba(8,8,16,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
     .topbar{display:flex;align-items:center;justify-content:space-between;height:56px}
-
-    /* ── Logo ── */
     .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);text-decoration:none;line-height:1}
     .logo-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-    .logo-text{display:flex;flex-direction:column;gap:1px}
-    .logo-word{letter-spacing:.12em}
-    .logo-word-top{color:#fff}
-    .logo-word-bot{color:var(--orange)}
-    .logo-sep{color:rgba(255,107,43,.4);margin:0 1px}
-
     .nav-pills{display:flex;gap:4px}
     .nav-pill{font-family:var(--mono);font-size:11px;padding:6px 14px;border-radius:4px;color:var(--muted2);cursor:pointer;border:none;background:transparent;transition:all .15s}
     .nav-pill:hover{color:var(--text);background:var(--surface)}
     .nav-pill.active{color:var(--orange);background:rgba(255,107,43,.1);border:1px solid rgba(255,107,43,.2)}
     .header-right{display:flex;align-items:center;gap:10px}
-
-    /* ── Network Selector ── */
     .net-sel{position:relative;font-family:var(--mono);font-size:10px;user-select:none}
     .net-trigger{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:4px;border:1px solid;cursor:pointer;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;transition:opacity .15s,transform .1s;white-space:nowrap}
     .net-trigger:hover{opacity:.8}
@@ -59,7 +49,6 @@
     @keyframes ping{75%,100%{transform:scale(2.2);opacity:0}}
     .chev{width:9px;height:9px;transition:transform .2s;opacity:.6}
     .net-trigger.open .chev{transform:rotate(180deg)}
-
     .net-drop{display:none;position:absolute;right:0;top:calc(100% + 6px);width:230px;background:#0c0c18;border:1px solid var(--border2);border-radius:7px;box-shadow:0 16px 48px rgba(0,0,0,.7);overflow:hidden;z-index:200;animation:dropIn .12s ease}
     .net-drop.show{display:block}
     @keyframes dropIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
@@ -80,8 +69,6 @@
     .opt-check{margin-left:auto;opacity:0}
     .net-opt.is-active .opt-check{opacity:1}
     .drop-ft{padding:6px 12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.03em}
-
-    /* Confirm panel */
     .confirm-panel{padding:12px;display:flex;flex-direction:column;gap:10px}
     .confirm-hd{padding:7px 12px;font-size:9px;letter-spacing:.22em;color:#ffd166;border-bottom:1px solid var(--border);text-transform:uppercase}
     .confirm-txt{font-family:var(--mono);font-size:10px;color:var(--muted2);line-height:1.6}
@@ -91,11 +78,8 @@
     .confirm-btns button:hover{opacity:.8}
     .btn-yes{background:rgba(0,217,126,.12);border:1px solid rgba(0,217,126,.3);color:#00d97e}
     .btn-no{background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--muted2)}
-
-    /* Mainnet warning banner */
     .mainnet-banner{display:none;background:rgba(0,217,126,.06);border-bottom:1px solid rgba(0,217,126,.15);padding:6px 0;text-align:center;font-family:var(--mono);font-size:10px;color:#00d97e;letter-spacing:.08em}
     .mainnet-banner.show{display:block}
-
     .connect-btn{font-family:var(--mono);font-size:11px;padding:7px 14px;background:var(--orange);color:#000;border:none;border-radius:4px;cursor:pointer;font-weight:700;transition:background .15s}
     .connect-btn:hover{background:var(--orange2)}
     .connect-btn.connected{background:rgba(0,217,126,.15);color:var(--green);border:1px solid rgba(0,217,126,.3)}
@@ -198,9 +182,50 @@
       .result-body{grid-template-columns:repeat(2,1fr)}
       .nav-pills{display:none}
     }
+
+    /* ── Wallet Modal Styles ── */
+    @keyframes walletFadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes walletSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+    .wallet-row{
+      display:flex;align-items:center;gap:14px;
+      padding:12px 14px;border-radius:10px;
+      border:1px solid var(--border2);
+      background:var(--surface2);
+      margin-bottom:8px;
+      transition:border-color .15s, background .15s;
+    }
+    .wallet-row:hover{border-color:rgba(255,107,43,.3);background:#111122}
+    .wallet-icon{
+      width:40px;height:40px;border-radius:10px;
+      display:grid;place-items:center;
+      flex-shrink:0;overflow:hidden;font-size:20px;
+    }
+    .wallet-info{flex:1;min-width:0}
+    .wallet-name{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);line-height:1.2}
+    .wallet-url{font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px}
+    .wallet-connect-btn{
+      font-family:var(--sans);font-size:12px;font-weight:700;
+      padding:8px 16px;border-radius:7px;cursor:pointer;
+      transition:all .15s;white-space:nowrap;border:1px solid;
+    }
+    .wallet-connect-btn.primary{
+      background:var(--text);color:#080810;border-color:var(--text);
+    }
+    .wallet-connect-btn.primary:hover{background:#fff;border-color:#fff}
+    .wallet-connect-btn.secondary{
+      background:transparent;color:var(--muted2);border-color:var(--border2);
+    }
+    .wallet-connect-btn.secondary:hover{color:var(--text);border-color:var(--muted2)}
+    .wallet-section-label{
+      font-family:var(--mono);font-size:10px;font-weight:700;
+      letter-spacing:.14em;text-transform:uppercase;
+      color:var(--muted);padding:4px 2px 10px;
+    }
   </style>
 </head>
 <body>
+
 <!-- ── Onboarding Modal ─────────────────────────────────────────────────────── -->
 <div id="onboardOverlay" style="
   position:fixed;inset:0;z-index:9000;
@@ -221,8 +246,6 @@
     max-height:92vh;
     display:flex;flex-direction:column;
   ">
-
-    <!-- Modal header -->
     <div style="padding:28px 32px 0;flex-shrink:0">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <div style="display:flex;align-items:center;gap:10px">
@@ -237,69 +260,71 @@
         <button onclick="closeOnboard()" style="background:none;border:none;color:#4a4a6a;cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:color .15s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#4a4a6a'">✕</button>
       </div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:#4a4a6a;text-transform:uppercase;margin-bottom:20px">The Onchain Security Registry for Clarity Contracts</div>
-
-      <!-- Persona selector tabs -->
       <div style="display:flex;gap:4px;background:#080810;border-radius:7px;padding:4px;border:1px solid #1a1a2e">
-        <button id="tab-dev" onclick="switchPersona('dev')" style="
-          flex:1;padding:9px;border:none;border-radius:5px;
-          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;
-          cursor:pointer;transition:all .2s;
-          background:#ff6b2b;color:#000;
-        ">👨‍💻 I'm a Developer</button>
-        <button id="tab-user" onclick="switchPersona('user')" style="
-          flex:1;padding:9px;border:none;border-radius:5px;
-          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;
-          cursor:pointer;transition:all .2s;
-          background:transparent;color:#4a4a6a;
-        ">🔍 I'm Verifying a Contract</button>
+        <button id="tab-dev" onclick="switchPersona('dev')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;background:#ff6b2b;color:#000;">👨‍💻 I'm a Developer</button>
+        <button id="tab-user" onclick="switchPersona('user')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;transition:all .2s;background:transparent;color:#4a4a6a;">🔍 I'm Verifying a Contract</button>
       </div>
     </div>
-
-    <!-- Modal body — scrollable -->
     <div style="overflow-y:auto;flex:1;padding:24px 32px 0">
-
-      <!-- ── DEVELOPER FLOW ── -->
       <div id="flow-dev">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">
-          Deploy your Clarity contract to Stacks, get it audited, and publish the results onchain so users can verify your security.
-        </div>
-
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">Deploy your Clarity contract to Stacks, get it audited, and publish the results onchain so users can verify your security.</div>
         <div id="ob-steps-dev"></div>
       </div>
-
-      <!-- ── USER/INVESTOR FLOW ── -->
       <div id="flow-user" style="display:none">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">
-          Before interacting with any Stacks smart contract, verify its security audit status — directly from onchain data.
-        </div>
-
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6a6a8a;margin-bottom:20px;line-height:1.6">Before interacting with any Stacks smart contract, verify its security audit status — directly from onchain data.</div>
         <div id="ob-steps-user"></div>
       </div>
-
     </div>
-
-    <!-- Modal footer -->
     <div style="padding:20px 32px;border-top:1px solid #1a1a2e;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:#0a0a16">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#4a4a6a;letter-spacing:.06em">
         <input type="checkbox" id="dontShowAgain" style="accent-color:#ff6b2b;width:13px;height:13px">
         Don't show again
       </label>
       <div style="display:flex;gap:8px">
-        <button onclick="closeOnboard()" style="
-          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
-          padding:9px 20px;border-radius:5px;cursor:pointer;transition:all .15s;
-          background:transparent;color:#6a6a8a;border:1px solid #252540;
-        " onmouseover="this.style.borderColor='#6a6a8a'" onmouseout="this.style.borderColor='#252540'">
-          Skip
-        </button>
-        <button id="ob-cta" onclick="onboardCTA()" style="
-          font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
-          padding:9px 22px;border-radius:5px;cursor:pointer;transition:all .15s;
-          background:#ff6b2b;color:#000;border:none;
-        " onmouseover="this.style.background='#ff8c5a'" onmouseout="this.style.background='#ff6b2b'">
-          Get Started →
-        </button>
+        <button onclick="closeOnboard()" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:9px 20px;border-radius:5px;cursor:pointer;transition:all .15s;background:transparent;color:#6a6a8a;border:1px solid #252540;" onmouseover="this.style.borderColor='#6a6a8a'" onmouseout="this.style.borderColor='#252540'">Skip</button>
+        <button id="ob-cta" onclick="onboardCTA()" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:9px 22px;border-radius:5px;cursor:pointer;transition:all .15s;background:#ff6b2b;color:#000;border:none;" onmouseover="this.style.background='#ff8c5a'" onmouseout="this.style.background='#ff6b2b'">Get Started →</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Wallet Connect Modal ──────────────────────────────────────────────────── -->
+<div id="walletOverlay" style="
+  position:fixed;inset:0;z-index:8500;
+  background:rgba(5,5,14,.78);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;justify-content:center;
+  padding:20px;
+" onclick="closeWalletModal(event)">
+  <div id="walletModal" style="
+    width:100%;max-width:400px;
+    background:#0e0e1a;
+    border:1px solid #2a2a42;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 32px 80px rgba(0,0,0,.9);
+    animation:walletSlideUp .25s ease;
+    font-family:'IBM Plex Sans',sans-serif;
+  ">
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:24px 22px 16px">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#dde1f0;letter-spacing:-.02em;line-height:1.2">Connect a wallet</div>
+        <div style="font-size:12px;color:#6a6a8a;margin-top:5px;line-height:1.4">Select the wallet you want to connect to.</div>
+      </div>
+      <button onclick="closeWalletModal()" style="
+        background:rgba(255,255,255,.07);border:none;cursor:pointer;
+        width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;
+        display:grid;place-items:center;
+        color:#6a6a8a;font-size:13px;transition:all .15s;
+      " onmouseover="this.style.background='rgba(255,255,255,.14)';this.style.color='#dde1f0'"
+         onmouseout="this.style.background='rgba(255,255,255,.07)';this.style.color='#6a6a8a'">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:0 14px 18px" id="walletListContainer">
+      <!-- Injected by JS -->
     </div>
   </div>
 </div>
@@ -308,90 +333,34 @@
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Onboard step card ── */
-.ob-step{
-  display:flex;gap:16px;padding:16px;
-  background:#0e0e1a;border:1px solid #1a1a2e;border-radius:9px;
-  margin-bottom:10px;cursor:default;
-  transition:border-color .2s, background .2s;
-  animation:fadeUp .35s ease both;
-}
+.ob-step{display:flex;gap:16px;padding:16px;background:#0e0e1a;border:1px solid #1a1a2e;border-radius:9px;margin-bottom:10px;cursor:default;transition:border-color .2s,background .2s;animation:fadeUp .35s ease both}
 .ob-step:hover{border-color:#252540;background:#111122}
-.ob-step-num{
-  width:32px;height:32px;border-radius:50%;
-  display:grid;place-items:center;
-  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
-  flex-shrink:0;margin-top:1px;
-}
+.ob-step-num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
 .ob-step-body{flex:1;min-width:0}
 .ob-step-title{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#dde1f0;margin-bottom:4px}
 .ob-step-desc{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6a6a8a;line-height:1.65}
 .ob-step-desc code{color:#ff6b2b;background:rgba(255,107,43,.08);padding:1px 5px;border-radius:3px}
 .ob-step-desc a{color:#4d9eff;text-decoration:none}
 .ob-step-desc a:hover{text-decoration:underline}
-.ob-step-action{
-  display:inline-flex;align-items:center;gap:5px;
-  margin-top:8px;padding:4px 10px;border-radius:4px;
-  font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;
-  border:1px solid;cursor:pointer;background:transparent;transition:opacity .15s;
-}
+.ob-step-action{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:4px 10px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;border:1px solid;cursor:pointer;background:transparent;transition:opacity .15s}
 .ob-step-action:hover{opacity:.75}
-
-/* Connector dot between steps */
-.ob-connector{
-  display:flex;align-items:center;gap:0;margin:0 0 0 30px;height:12px;
-}
+.ob-connector{display:flex;align-items:center;gap:0;margin:0 0 0 30px;height:12px}
 .ob-connector::before{content:'';display:block;width:2px;height:12px;background:#1a1a2e;border-radius:1px}
-
-/* Outcome badge */
-.ob-outcome{
-  display:flex;align-items:center;gap:12px;
-  padding:14px 16px;margin-bottom:16px;
-  border-radius:8px;
-  background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.2);
-  font-family:'IBM Plex Mono',monospace;font-size:11px;color:#00d97e;
-  animation:fadeUp .4s .2s ease both;opacity:0;animation-fill-mode:both;
-}
+.ob-outcome{display:flex;align-items:center;gap:12px;padding:14px 16px;margin-bottom:16px;border-radius:8px;background:rgba(0,217,126,.05);border:1px solid rgba(0,217,126,.2);font-family:'IBM Plex Mono',monospace;font-size:11px;color:#00d97e;animation:fadeUp .4s .2s ease both;opacity:0;animation-fill-mode:both}
 </style>
 
 <script>
-// ── Onboarding data ───────────────────────────────────────────────────────────
 const OB_PERSONA = {
   dev: {
     cta: 'Open Deploy Guide →',
     ctaAction: () => { closeOnboard(); showPage('deploy'); },
     outcome: '🏆 Your contract gets a certified badge — embedded in README and verifiable by anyone onchain.',
     steps: [
-      {
-        num: '01', color: '#ff6b2b', bg: 'rgba(255,107,43,.12)',
-        title: 'Write & Test Your Contract',
-        desc: 'Use <code>clarinet new my-project</code> to scaffold, write your Clarity contract, then run <code>clarinet test</code> locally.',
-        action: null,
-      },
-      {
-        num: '02', color: '#4d9eff', bg: 'rgba(77,158,255,.12)',
-        title: 'Run Security Audit',
-        desc: 'Scan with <code>npx stacks-clarity-audit scan ./contracts</code> — get a 0–100 score + list of critical/warning/info findings.',
-        action: null,
-      },
-      {
-        num: '03', color: '#ffd166', bg: 'rgba(255,209,102,.12)',
-        title: 'Fix Issues & Deploy',
-        desc: 'Fix until score ≥ 70. Deploy to testnet first via Clarinet or <a href="https://platform.hiro.so" target="_blank">platform.hiro.so</a>, then mainnet.',
-        action: null,
-      },
-      {
-        num: '04', color: '#a78bfa', bg: 'rgba(167,139,250,.12)',
-        title: 'Submit Audit Onchain',
-        desc: 'Go to <strong style="color:#dde1f0">Submit Audit</strong> tab → enter contract address + score → confirm with Hiro Wallet. Results stored on Stacks forever.',
-        action: { label: 'Submit Audit →', page: 'submit', color: '#a78bfa', border: 'rgba(167,139,250,.3)' },
-      },
-      {
-        num: '05', color: '#00d97e', bg: 'rgba(0,217,126,.12)',
-        title: 'Get Your Badge',
-        desc: 'Score ≥ 70 earns a certified badge. Grab the Markdown snippet from the <strong style="color:#dde1f0">Badge</strong> tab and embed it in your README.',
-        action: { label: 'Generate Badge →', page: 'badge', color: '#00d97e', border: 'rgba(0,217,126,.3)' },
-      },
+      {num:'01',color:'#ff6b2b',bg:'rgba(255,107,43,.12)',title:'Write & Test Your Contract',desc:'Use <code>clarinet new my-project</code> to scaffold, write your Clarity contract, then run <code>clarinet test</code> locally.',action:null},
+      {num:'02',color:'#4d9eff',bg:'rgba(77,158,255,.12)',title:'Run Security Audit',desc:'Scan with <code>npx stacks-clarity-audit scan ./contracts</code> — get a 0–100 score + list of critical/warning/info findings.',action:null},
+      {num:'03',color:'#ffd166',bg:'rgba(255,209,102,.12)',title:'Fix Issues & Deploy',desc:'Fix until score ≥ 70. Deploy to testnet first via Clarinet or <a href="https://platform.hiro.so" target="_blank">platform.hiro.so</a>, then mainnet.',action:null},
+      {num:'04',color:'#a78bfa',bg:'rgba(167,139,250,.12)',title:'Submit Audit Onchain',desc:'Go to <strong style="color:#dde1f0">Submit Audit</strong> tab → enter contract address + score → confirm with Leather Wallet. Results stored on Stacks forever.',action:{label:'Submit Audit →',page:'submit',color:'#a78bfa',border:'rgba(167,139,250,.3)'}},
+      {num:'05',color:'#00d97e',bg:'rgba(0,217,126,.12)',title:'Get Your Badge',desc:'Score ≥ 70 earns a certified badge. Grab the Markdown snippet from the <strong style="color:#dde1f0">Badge</strong> tab and embed it in your README.',action:{label:'Generate Badge →',page:'badge',color:'#00d97e',border:'rgba(0,217,126,.3)'}},
     ],
   },
   user: {
@@ -399,129 +368,63 @@ const OB_PERSONA = {
     ctaAction: () => { closeOnboard(); showPage('verify'); },
     outcome: '✅ You\'ll know exactly whether a contract has been audited and what its security score is — before you interact with real funds.',
     steps: [
-      {
-        num: '01', color: '#4d9eff', bg: 'rgba(77,158,255,.12)',
-        title: 'Find the Contract Address',
-        desc: 'Get the Stacks contract address from the project\'s website, README, or Discord. It looks like <code>SP...contractname</code>.',
-        action: null,
-      },
-      {
-        num: '02', color: '#ff6b2b', bg: 'rgba(255,107,43,.12)',
-        title: 'Paste it in Verify Tab',
-        desc: 'Open the <strong style="color:#dde1f0">Verify</strong> tab, paste the address, and click Verify. We query the onchain registry instantly.',
-        action: { label: 'Go to Verify →', page: 'verify', color: '#ff6b2b', border: 'rgba(255,107,43,.3)' },
-      },
-      {
-        num: '03', color: '#ffd166', bg: 'rgba(255,209,102,.12)',
-        title: 'Read the Audit Result',
-        desc: 'You\'ll see the security score, number of critical/warning issues, the block it was submitted, and certification status.',
-        action: null,
-      },
-      {
-        num: '04', color: '#00d97e', bg: 'rgba(0,217,126,.12)',
-        title: 'Make an Informed Decision',
-        desc: 'Score ≥ 70 = <code style="color:#00d97e">CERTIFIED SAFE</code>. Score below that means the developer hasn\'t fully secured the contract — proceed with caution.',
-        action: null,
-      },
+      {num:'01',color:'#4d9eff',bg:'rgba(77,158,255,.12)',title:'Find the Contract Address',desc:'Get the Stacks contract address from the project\'s website, README, or Discord. It looks like <code>SP...contractname</code>.',action:null},
+      {num:'02',color:'#ff6b2b',bg:'rgba(255,107,43,.12)',title:'Paste it in Verify Tab',desc:'Open the <strong style="color:#dde1f0">Verify</strong> tab, paste the address, and click Verify. We query the onchain registry instantly.',action:{label:'Go to Verify →',page:'verify',color:'#ff6b2b',border:'rgba(255,107,43,.3)'}},
+      {num:'03',color:'#ffd166',bg:'rgba(255,209,102,.12)',title:'Read the Audit Result',desc:'You\'ll see the security score, number of critical/warning issues, the block it was submitted, and certification status.',action:null},
+      {num:'04',color:'#00d97e',bg:'rgba(0,217,126,.12)',title:'Make an Informed Decision',desc:'Score ≥ 70 = <code style="color:#00d97e">CERTIFIED SAFE</code>. Score below that means the developer hasn\'t fully secured the contract — proceed with caution.',action:null},
     ],
   },
 };
 
 let currentPersona = 'dev';
-
 function renderObSteps(persona) {
   const data = OB_PERSONA[persona];
   const container = document.getElementById(`ob-steps-${persona}`);
   if (container.dataset.rendered) return;
   container.dataset.rendered = '1';
-
   let html = '';
   data.steps.forEach((s, i) => {
-    html += `
-      <div class="ob-step" style="animation-delay:${i * 0.06}s">
-        <div class="ob-step-num" style="background:${s.bg};color:${s.color}">${s.num}</div>
-        <div class="ob-step-body">
-          <div class="ob-step-title">${s.title}</div>
-          <div class="ob-step-desc">${s.desc}</div>
-          ${s.action ? `
-            <button class="ob-step-action" onclick="closeOnboard();showPage('${s.action.page}')"
-              style="color:${s.action.color};border-color:${s.action.border}">
-              ${s.action.label}
-            </button>` : ''}
-        </div>
-      </div>
-      ${i < data.steps.length - 1 ? '<div class="ob-connector"></div>' : ''}`;
+    html += `<div class="ob-step" style="animation-delay:${i*.06}s"><div class="ob-step-num" style="background:${s.bg};color:${s.color}">${s.num}</div><div class="ob-step-body"><div class="ob-step-title">${s.title}</div><div class="ob-step-desc">${s.desc}</div>${s.action?`<button class="ob-step-action" onclick="closeOnboard();showPage('${s.action.page}')" style="color:${s.action.color};border-color:${s.action.border}">${s.action.label}</button>`:''}</div></div>${i<data.steps.length-1?'<div class="ob-connector"></div>':''}`;
   });
-
   html += `<div class="ob-outcome" style="margin-top:14px">${data.outcome}</div>`;
   container.innerHTML = html;
 }
-
 function switchPersona(p) {
   currentPersona = p;
-  // Tabs
-  const devTab  = document.getElementById('tab-dev');
+  const devTab = document.getElementById('tab-dev');
   const userTab = document.getElementById('tab-user');
-  if (p === 'dev') {
-    devTab.style.cssText  += ';background:#ff6b2b;color:#000';
-    userTab.style.cssText += ';background:transparent;color:#4a4a6a';
-  } else {
-    userTab.style.cssText += ';background:#ff6b2b;color:#000';
-    devTab.style.cssText  += ';background:transparent;color:#4a4a6a';
-  }
-  // Panels
-  document.getElementById('flow-dev').style.display  = p === 'dev'  ? 'block' : 'none';
-  document.getElementById('flow-user').style.display = p === 'user' ? 'block' : 'none';
-  // CTA label
+  if (p==='dev') { devTab.style.cssText+=';background:#ff6b2b;color:#000'; userTab.style.cssText+=';background:transparent;color:#4a4a6a'; }
+  else { userTab.style.cssText+=';background:#ff6b2b;color:#000'; devTab.style.cssText+=';background:transparent;color:#4a4a6a'; }
+  document.getElementById('flow-dev').style.display = p==='dev'?'block':'none';
+  document.getElementById('flow-user').style.display = p==='user'?'block':'none';
   document.getElementById('ob-cta').textContent = OB_PERSONA[p].cta;
-  // Render steps lazily
   renderObSteps(p);
 }
-
-function onboardCTA() {
-  OB_PERSONA[currentPersona].ctaAction();
-}
-
+function onboardCTA() { OB_PERSONA[currentPersona].ctaAction(); }
 function closeOnboard() {
   const overlay = document.getElementById('onboardOverlay');
-  overlay.style.opacity = '0';
-  overlay.style.transition = 'opacity .2s ease';
-  setTimeout(() => overlay.style.display = 'none', 200);
-  if (document.getElementById('dontShowAgain').checked) {
-    try { localStorage.setItem('clarity_audit_onboarded','1'); } catch(e) {}
-  }
+  overlay.style.opacity='0'; overlay.style.transition='opacity .2s ease';
+  setTimeout(()=>overlay.style.display='none',200);
+  if (document.getElementById('dontShowAgain').checked) { try{localStorage.setItem('clarity_audit_onboarded','1');}catch(e){} }
 }
-
-// Auto-show on load (unless dismissed before)
-window.addEventListener('load', () => {
-  let skip = false;
-  try { skip = localStorage.getItem('clarity_audit_onboarded') === '1'; } catch(e) {}
-  if (skip) {
-    document.getElementById('onboardOverlay').style.display = 'none';
-  } else {
-    renderObSteps('dev');
-  }
+window.addEventListener('load', ()=>{
+  let skip=false; try{skip=localStorage.getItem('clarity_audit_onboarded')==='1';}catch(e){}
+  if (skip) document.getElementById('onboardOverlay').style.display='none';
+  else renderObSteps('dev');
 });
-
-// Close on overlay click (not modal)
-document.getElementById('onboardOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeOnboard();
-});
+document.getElementById('onboardOverlay').addEventListener('click', function(e){ if(e.target===this)closeOnboard(); });
 </script>
 
 <div class="grid-bg"></div>
 <div class="glow-orb g1"></div>
 <div class="glow-orb g2"></div>
 
-<!-- Mainnet warning banner -->
 <div class="mainnet-banner" id="mainnetBanner">
   ⚡ MAINNET — transactions use real STX. Ensure your wallet is set to mainnet.
 </div>
 
 <header>
   <div class="wrap topbar">
-
-    <!-- ── Logo ── -->
     <a class="logo" href="#" onclick="showPage('home');return false">
       <svg class="logo-icon" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="512" height="512" rx="110" fill="#F7931A"/>
@@ -531,7 +434,6 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
       </svg>
       clarity<span>.</span>audit
     </a>
-
     <div class="nav-pills">
       <button class="nav-pill active" onclick="showPage('home')">Registry</button>
       <button class="nav-pill" onclick="showPage('verify')">Verify</button>
@@ -539,32 +441,19 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
       <button class="nav-pill" onclick="showPage('badge')">Badge</button>
       <button class="nav-pill" onclick="showPage('deploy')">Deploy Guide</button>
     </div>
-
     <div class="header-right">
-      <!-- ── Network Selector ── -->
       <div class="net-sel" id="netSel">
         <div class="net-trigger testnet" id="netTrigger" onclick="toggleNetDrop()">
-          <div class="dot-wrap">
-            <div class="dot-ring"></div>
-            <div class="dot-core"></div>
-          </div>
+          <div class="dot-wrap"><div class="dot-ring"></div><div class="dot-core"></div></div>
           <span id="netLabel">TESTNET</span>
-          <svg class="chev" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8">
-            <polyline points="1,3 5,7 9,3"/>
-          </svg>
+          <svg class="chev" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="1,3 5,7 9,3"/></svg>
         </div>
-
         <div class="net-drop" id="netDrop">
           <div class="drop-hd">Select Network</div>
-
-          <div id="netDropInner">
-            <!-- Options injected by JS -->
-          </div>
-
+          <div id="netDropInner"></div>
           <div class="drop-ft" id="netDropFt">https://api.testnet.hiro.so</div>
         </div>
       </div>
-
       <button class="connect-btn" id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
     </div>
   </div>
@@ -627,40 +516,20 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
         <div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div>
       </div>
       <table class="registry-table" id="registryTable" style="display:none">
-        <thead><tr>
-          <th>Contract Address</th><th>Score</th><th>Critical</th><th>Warnings</th><th>Block</th><th>Status</th><th></th>
-        </tr></thead>
+        <thead><tr><th>Contract Address</th><th>Score</th><th>Critical</th><th>Warnings</th><th>Block</th><th>Status</th><th></th></tr></thead>
         <tbody id="registryBody"></tbody>
       </table>
-      <div class="empty" id="registryEmpty" style="display:none">
-        <div class="empty-icon">📭</div>No audits yet. Be the first!
-      </div>
+      <div class="empty" id="registryEmpty" style="display:none"><div class="empty-icon">📭</div>No audits yet. Be the first!</div>
     </div>
 
     <div class="divider"></div>
 
     <div class="sec-head"><div class="sec-title">How It Works</div></div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px">
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
-        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">01</div>
-        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Run CLI</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Scan your .clar file with <span style="color:var(--orange);font-family:var(--mono)">npx stacks-clarity-audit</span></div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
-        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">02</div>
-        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Score</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Receive a 0–100 security score with detailed breakdown</div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
-        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">03</div>
-        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Publish Onchain</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Submit results to the Bitcoin-anchored Stacks registry</div>
-      </div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px">
-        <div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">04</div>
-        <div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Certified</div>
-        <div style="font-size:12px;color:var(--muted2);line-height:1.6">Score ≥70 earns a verifiable "Safe" badge for your project</div>
-      </div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">01</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Run CLI</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Scan your .clar file with <span style="color:var(--orange);font-family:var(--mono)">npx stacks-clarity-audit</span></div></div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">02</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Score</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Receive a 0–100 security score with detailed breakdown</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">03</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Publish Onchain</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Submit results to the Bitcoin-anchored Stacks registry</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:20px"><div style="font-family:var(--mono);font-size:24px;color:var(--orange);margin-bottom:12px">04</div><div style="font-weight:600;margin-bottom:6px;font-size:14px">Get Certified</div><div style="font-size:12px;color:var(--muted2);line-height:1.6">Score ≥70 earns a verifiable "Safe" badge for your project</div></div>
     </div>
   </div>
 </div>
@@ -694,46 +563,25 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
     <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start">
       <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:28px">
         <div class="form-grid">
-          <div class="form-group full">
-            <label class="form-label">Contract Address *</label>
-            <input class="form-input" id="f-contract" placeholder="SP...contract-name" />
-          </div>
+          <div class="form-group full"><label class="form-label">Contract Address *</label><input class="form-input" id="f-contract" placeholder="SP...contract-name" /></div>
           <div class="form-group full">
             <label class="form-label">Security Score: <span id="scoreVal" style="color:var(--orange)">85</span>/100</label>
-            <div class="score-slider-wrap">
-              <input type="range" class="score-slider" id="f-score" min="0" max="100" value="85" oninput="updateScore(this.value)">
-              <div class="score-display" id="scoreDisp" style="color:var(--green)">85</div>
-            </div>
+            <div class="score-slider-wrap"><input type="range" class="score-slider" id="f-score" min="0" max="100" value="85" oninput="updateScore(this.value)"><div class="score-display" id="scoreDisp" style="color:var(--green)">85</div></div>
           </div>
           <div class="form-group full">
             <label class="form-label">Issue Counts</label>
             <div class="counter-row">
-              <div class="counter-group">
-                <div style="font-family:var(--mono);font-size:10px;color:var(--red);margin-bottom:4px">CRITICAL</div>
-                <input type="number" class="counter-input" id="f-critical" value="0" min="0">
-              </div>
-              <div class="counter-group">
-                <div style="font-family:var(--mono);font-size:10px;color:var(--yellow);margin-bottom:4px">WARNING</div>
-                <input type="number" class="counter-input" id="f-warning" value="0" min="0">
-              </div>
-              <div class="counter-group">
-                <div style="font-family:var(--mono);font-size:10px;color:var(--blue);margin-bottom:4px">INFO</div>
-                <input type="number" class="counter-input" id="f-info" value="0" min="0">
-              </div>
+              <div class="counter-group"><div style="font-family:var(--mono);font-size:10px;color:var(--red);margin-bottom:4px">CRITICAL</div><input type="number" class="counter-input" id="f-critical" value="0" min="0"></div>
+              <div class="counter-group"><div style="font-family:var(--mono);font-size:10px;color:var(--yellow);margin-bottom:4px">WARNING</div><input type="number" class="counter-input" id="f-warning" value="0" min="0"></div>
+              <div class="counter-group"><div style="font-family:var(--mono);font-size:10px;color:var(--blue);margin-bottom:4px">INFO</div><input type="number" class="counter-input" id="f-info" value="0" min="0"></div>
             </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Tool Version</label>
-            <input class="form-input" id="f-version" value="0.1.4" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Report Hash (optional)</label>
-            <input class="form-input" id="f-hash" placeholder="IPFS hash..." />
-          </div>
+          <div class="form-group"><label class="form-label">Tool Version</label><input class="form-input" id="f-version" value="0.1.4" /></div>
+          <div class="form-group"><label class="form-label">Report Hash (optional)</label><input class="form-input" id="f-hash" placeholder="IPFS hash..." /></div>
         </div>
         <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
           <button class="btn btn-primary" onclick="submitAudit()" style="width:100%;justify-content:center" id="submitBtn">↑ Submit to Stacks Blockchain</button>
-          <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px;text-align:center" id="submitHint">Requires Hiro Wallet · Testnet STX for gas</p>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:10px;text-align:center" id="submitHint">Requires Leather Wallet · Testnet STX for gas</p>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:12px">
@@ -759,29 +607,18 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 <!-- BADGE -->
 <div class="page" id="page-badge">
   <div class="wrap" style="padding-top:40px">
-    <div class="sec-head">
-      <div class="sec-title">Generate Security Badge</div>
-      <div style="font-family:var(--mono);font-size:11px;color:var(--muted2)">Embed in your README or website</div>
-    </div>
+    <div class="sec-head"><div class="sec-title">Generate Security Badge</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted2)">Embed in your README or website</div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
       <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px">
         <div class="form-group" style="margin-bottom:16px">
           <label class="form-label">Score (0–100)</label>
-          <div class="score-slider-wrap">
-            <input type="range" class="score-slider" id="badge-score" min="0" max="100" value="92" oninput="updateBadge()">
-            <div class="score-display" id="badge-score-val" style="color:var(--green)">92</div>
-          </div>
+          <div class="score-slider-wrap"><input type="range" class="score-slider" id="badge-score" min="0" max="100" value="92" oninput="updateBadge()"><div class="score-display" id="badge-score-val" style="color:var(--green)">92</div></div>
         </div>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:24px">
         <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em">Preview</div>
         <div class="badge-preview">
-          <div class="audit-badge">
-            <div class="badge-dot" id="badgeDot"></div>
-            <span style="color:var(--muted2);font-size:11px">clarity-audit</span>
-            <span id="badgeScoreText" style="font-family:var(--mono);font-weight:700;color:var(--green)">92/100</span>
-            <span style="color:var(--muted2);font-size:11px">✅ SAFE</span>
-          </div>
+          <div class="audit-badge"><div class="badge-dot" id="badgeDot"></div><span style="color:var(--muted2);font-size:11px">clarity-audit</span><span id="badgeScoreText" style="font-family:var(--mono);font-weight:700;color:var(--green)">92/100</span><span style="color:var(--muted2);font-size:11px">✅ SAFE</span></div>
         </div>
         <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">Markdown</div>
         <div class="badge-code" id="badgeMarkdown">[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green?style=flat-square&logo=bitcoin)](https://clarity-audit-nine.vercel.app)</div>
@@ -794,33 +631,21 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 <!-- DEPLOY GUIDE -->
 <div class="page" id="page-deploy">
   <div class="wrap" style="padding-top:40px;padding-bottom:60px">
-
-    <!-- Header -->
     <div class="sec-head" style="margin-bottom:32px">
       <div class="sec-title">Deploy Guide — Clarity Contracts on Stacks</div>
       <a class="btn btn-outline btn-sm" href="https://docs.hiro.so/clarinet" target="_blank">Hiro Docs ↗</a>
     </div>
-
-    <!-- Progress stepper -->
-    <div id="stepBar" style="display:flex;align-items:center;gap:0;margin-bottom:40px;overflow-x:auto;padding-bottom:4px">
-      <!-- injected by JS -->
-    </div>
-
-    <!-- Step panels -->
+    <div id="stepBar" style="display:flex;align-items:center;gap:0;margin-bottom:40px;overflow-x:auto;padding-bottom:4px"></div>
     <div id="stepPanels"></div>
-
-    <!-- Bottom nav -->
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--border)">
       <button class="btn btn-outline" id="prevBtn" onclick="stepNav(-1)">← Previous</button>
       <span id="stepCounter" style="font-family:var(--mono);font-size:11px;color:var(--muted)"></span>
       <button class="btn btn-primary" id="nextBtn" onclick="stepNav(1)">Next →</button>
     </div>
-
   </div>
 </div>
 
 <style>
-/* ── Step bar ── */
 .step-item{display:flex;align-items:center;gap:0;flex-shrink:0}
 .step-node{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
 .step-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700;transition:all .2s;background:var(--surface)}
@@ -832,28 +657,17 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 .step-item.active .step-circle{border-color:var(--orange);background:rgba(255,107,43,.15);color:var(--orange)}
 .step-item.active .step-label{color:var(--orange)}
 .step-item.pending .step-circle{color:var(--muted)}
-
-/* ── Step content ── */
 .step-panel{display:none}
 .step-panel.active{display:block;animation:fadeUp .3s ease both}
 .step-title{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px}
 .step-subtitle{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:28px;max-width:640px}
-
-/* Code blocks */
 .code-block{background:#050510;border:1px solid var(--border2);border-radius:7px;overflow:hidden;margin:12px 0}
 .code-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--border);border-bottom:1px solid rgba(255,255,255,.04)}
 .code-lang{font-family:var(--mono);font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
 .code-copy{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--muted2);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:3px;transition:color .15s}
 .code-copy:hover{color:var(--orange)}
 .code-body{padding:16px 18px;font-family:var(--mono);font-size:12px;line-height:1.85;overflow-x:auto;white-space:pre}
-.code-body .cm{color:var(--muted2)}
-.code-body .ck{color:var(--blue)}
-.code-body .cv{color:var(--orange)}
-.code-body .cs{color:var(--green)}
-.code-body .cp{color:var(--purple)}
-.code-body .co{color:#ffd166}
-
-/* Cards grid */
+.code-body .cm{color:var(--muted2)}.code-body .ck{color:var(--blue)}.code-body .cv{color:var(--orange)}.code-body .cs{color:var(--green)}.code-body .cp{color:var(--purple)}.code-body .co{color:#ffd166}
 .card-grid{display:grid;gap:12px}
 .card-grid.cols2{grid-template-columns:1fr 1fr}
 .card-grid.cols3{grid-template-columns:repeat(3,1fr)}
@@ -867,19 +681,14 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 .card-body{font-size:12px;color:var(--muted2);line-height:1.65}
 .card-body a{color:var(--orange);text-decoration:none}
 .card-body a:hover{text-decoration:underline}
-
-/* Checklist */
 .checklist{display:flex;flex-direction:column;gap:10px;margin:16px 0}
 .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:6px;cursor:pointer;transition:border-color .15s}
-.check-item:hover{border-color:var(--border2)}
 .check-item.checked{border-color:rgba(0,217,126,.3);background:rgba(0,217,126,.04)}
 .check-box{width:18px;height:18px;border:2px solid var(--border2);border-radius:4px;flex-shrink:0;display:grid;place-items:center;margin-top:1px;transition:all .15s}
 .check-item.checked .check-box{background:var(--green);border-color:var(--green)}
 .check-text{font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.5;flex:1}
 .check-item.checked .check-text{color:var(--text)}
 .check-sub{font-size:10px;color:var(--muted);margin-top:2px}
-
-/* Comparison table */
 .cmp-table{width:100%;border-collapse:collapse;margin:16px 0}
 .cmp-table th{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
 .cmp-table td{font-family:var(--mono);font-size:11px;padding:11px 16px;border-bottom:1px solid var(--border);color:var(--muted2);vertical-align:top}
@@ -890,410 +699,76 @@ document.getElementById('onboardOverlay').addEventListener('click', function(e) 
 .tag-yellow{background:rgba(255,209,102,.12);color:var(--yellow);border:1px solid rgba(255,209,102,.25)}
 .tag-red{background:rgba(255,59,92,.12);color:var(--red);border:1px solid rgba(255,59,92,.25)}
 .tag-blue{background:rgba(77,158,255,.12);color:var(--blue);border:1px solid rgba(77,158,255,.25)}
-
-/* Inline badge */
-.inline-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:3px;font-family:var(--mono);font-size:10px}
 .flow-arrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0}
 .flow-box{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:8px 14px;font-family:var(--mono);font-size:11px;color:var(--text);white-space:nowrap}
 .flow-box.orange{border-color:rgba(255,107,43,.35);color:var(--orange)}
 .flow-box.green{border-color:rgba(0,217,126,.35);color:var(--green)}
 .flow-sep{color:var(--muted);font-size:16px}
-
-@media(max-width:768px){
-  .card-grid.cols2,.card-grid.cols3{grid-template-columns:1fr}
-  .step-connector{width:20px}
-}
+@media(max-width:768px){.card-grid.cols2,.card-grid.cols3{grid-template-columns:1fr}.step-connector{width:20px}}
 </style>
 
 <script>
-// ── Deploy Guide ───────────────────────────────────────────────────────────────
 const DEPLOY_STEPS = [
-  { id:'env',    num:'01', label:'Setup',    title:'Install Clarinet & Wallet',           icon:'⚙️' },
-  { id:'write',  num:'02', label:'Write',    title:'Write Your Clarity Contract',          icon:'✍️' },
-  { id:'test',   num:'03', label:'Test',     title:'Test Locally with Clarinet',           icon:'🧪' },
-  { id:'audit',  num:'04', label:'Audit',    title:'Run Security Audit',                   icon:'🔍' },
-  { id:'testnet',num:'05', label:'Testnet',  title:'Deploy to Testnet',                    icon:'🌐' },
-  { id:'mainnet',num:'06', label:'Mainnet',  title:'Deploy to Mainnet',                    icon:'⚡' },
+  {id:'env',num:'01',label:'Setup',title:'Install Clarinet & Wallet',icon:'⚙️'},
+  {id:'write',num:'02',label:'Write',title:'Write Your Clarity Contract',icon:'✍️'},
+  {id:'test',num:'03',label:'Test',title:'Test Locally with Clarinet',icon:'🧪'},
+  {id:'audit',num:'04',label:'Audit',title:'Run Security Audit',icon:'🔍'},
+  {id:'testnet',num:'05',label:'Testnet',title:'Deploy to Testnet',icon:'🌐'},
+  {id:'mainnet',num:'06',label:'Mainnet',title:'Deploy to Mainnet',icon:'⚡'},
 ];
-
-let currentStep = 0;
-
-const STEP_CONTENT = {
-  env: `
-    <div class="step-title">⚙️ Install Clarinet &amp; Wallet</div>
-    <div class="step-subtitle">Clarinet is the official dev tool from Hiro for writing, testing, and deploying Clarity contracts. Install this before anything else.</div>
-
-    <div class="card-grid cols2" style="margin-bottom:20px">
-      <div class="info-card">
-        <div class="card-icon">🍺</div>
-        <div class="card-title">macOS</div>
-        <div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">brew</span> install clarinet</div></div>
-      </div>
-      <div class="info-card">
-        <div class="card-icon">🐧</div>
-        <div class="card-title">Linux / WSL</div>
-        <div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -L https://github.com/hirosystems/clarinet\n  /releases/latest/download/\n  clarinet-linux-x64.tar.gz \n  | tar xz &amp;&amp; mv clarinet /usr/local/bin</div></div>
-      </div>
-    </div>
-
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash — verify install</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> --version
-<span class="cm"># clarinet 2.x.x</span></div></div>
-
-    <div style="margin-top:24px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Wallet — choose one</div>
-    <div class="card-grid cols2">
-      <div class="info-card accent">
-        <div class="card-title">🦊 Leather (ex-Hiro Wallet)</div>
-        <div class="card-body">Official wallet from Hiro. Supports Stacks &amp; Bitcoin.<br><br><a href="https://leather.io" target="_blank">leather.io ↗</a></div>
-      </div>
-      <div class="info-card">
-        <div class="card-title">✖ Xverse</div>
-        <div class="card-body">Popular alternative — supports both BTC &amp; STX in one wallet.<br><br><a href="https://xverse.app" target="_blank">xverse.app ↗</a></div>
-      </div>
-    </div>`,
-
-  write: `
-    <div class="step-title">✍️ Create Project &amp; Write Contract</div>
-    <div class="step-subtitle">Clarinet provides a complete project scaffold. One command gives you a full folder structure, config, and example tests.</div>
-
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash — create new project</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> new my-token-project
-<span class="ck">cd</span> my-token-project
-
-<span class="cm"># add a new contract</span>
-<span class="cv">clarinet</span> contract new token</div></div>
-
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Scaffolded folder structure</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">tree</span></div><div class="code-body">my-token-project/
-├── <span class="cv">contracts/</span>
-│   └── <span class="cs">token.clar</span>         <span class="cm">← write your contract here</span>
-├── <span class="cv">tests/</span>
-│   └── <span class="cs">token_test.ts</span>      <span class="cm">← unit tests (Deno)</span>
-├── <span class="cv">deployments/</span>           <span class="cm">← deployment plans</span>
-└── <span class="cs">Clarinet.toml</span>          <span class="cm">← project config</span></div></div>
-
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Example contract (contracts/token.clar)</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">clarity</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm">;; Simple fungible token</span>
-<span class="ck">(define-fungible-token)</span> my-token)
-
-<span class="ck">(define-constant)</span> CONTRACT-OWNER tx-sender)
-<span class="ck">(define-constant)</span> ERR-NOT-AUTH (<span class="cv">err</span> u401))
-
-<span class="cm">;; Mint — owner only</span>
-<span class="ck">(define-public</span> (mint-tokens (amount uint) (recipient principal))
-  (<span class="cv">begin</span>
-    (<span class="cv">asserts!</span> (<span class="cs">is-eq</span> tx-sender CONTRACT-OWNER) ERR-NOT-AUTH)
-    (<span class="cs">ft-mint?</span> my-token amount recipient)))
-
-<span class="cm">;; Transfer</span>
-<span class="ck">(define-public</span> (transfer (amount uint) (to principal))
-  (<span class="cs">ft-transfer?</span> my-token amount tx-sender to))
-
-<span class="cm">;; Read-only getter</span>
-<span class="ck">(define-read-only</span> (get-balance (addr principal))
-  (<span class="cv">ok</span> (<span class="cs">ft-get-balance</span> my-token addr)))</div></div>
-
-    <div class="info-card warn" style="margin-top:16px">
-      <div class="card-title">💡 Clarity Tips</div>
-      <div class="card-body">
-        • Use <code style="color:var(--orange)">define-read-only</code> for getters — free to call off-chain<br>
-        • Avoid <code style="color:var(--red)">unwrap!</code> without error handling — use <code style="color:var(--green)">match</code> or <code style="color:var(--green)">try!</code> instead<br>
-        • All admin functions must validate <code style="color:var(--orange)">tx-sender</code> first
-      </div>
-    </div>`,
-
-  test: `
-    <div class="step-title">🧪 Test Locally with Clarinet</div>
-    <div class="step-subtitle">Test your contract before deploying — save gas and catch bugs before production. Clarinet provides a simnet (local blockchain) and a unit test runner.</div>
-
-    <div class="card-grid cols3" style="margin-bottom:20px">
-      <div class="info-card">
-        <div class="card-title">clarinet check</div>
-        <div class="card-body">Syntax + type check for all contracts in the project</div>
-      </div>
-      <div class="info-card">
-        <div class="card-title">clarinet test</div>
-        <div class="card-body">Runs all unit tests in the <code style="color:var(--orange)">tests/</code> folder</div>
-      </div>
-      <div class="info-card">
-        <div class="card-title">clarinet console</div>
-        <div class="card-body">Interactive REPL — call contract functions manually</div>
-      </div>
-    </div>
-
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Syntax check</span>
-<span class="cv">clarinet</span> check
-
-<span class="cm"># Run tests</span>
-<span class="cv">clarinet</span> test
-
-<span class="cm"># REPL — call functions manually</span>
-<span class="cv">clarinet</span> console
-<span class="cm">>>> (contract-call? .token mint-tokens u1000 tx-sender)</span>
-<span class="cs">(ok true)</span></div></div>
-
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Example unit test (tests/token_test.ts)</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">typescript</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="ck">import</span> { Clarinet, Tx, Chain, Account } <span class="ck">from</span> <span class="cs">'@hirosystems/clarinet-sdk'</span>;
-
-Clarinet.test({
-  name: <span class="cs">"owner can mint tokens"</span>,
-  async fn(chain: Chain, accounts: Map&lt;string, Account&gt;) {
-    <span class="ck">const</span> deployer = accounts.get(<span class="cs">'deployer'</span>)!;
-    <span class="ck">const</span> block = chain.mineBlock([
-      Tx.contractCall(<span class="cs">'token'</span>, <span class="cs">'mint-tokens'</span>,
-        [<span class="cv">types.uint</span>(1000), <span class="cv">types.principal</span>(deployer.address)],
-        deployer.address)
-    ]);
-    block.receipts[0].result.expectOk().expectBool(<span class="cv">true</span>);
-  }
-});</div></div>
-
-    <div class="info-card green" style="margin-top:16px">
-      <div class="card-title">✅ Recommended Coverage</div>
-      <div class="card-body">
-        • Happy path for all public functions<br>
-        • Auth rejection — call admin fn from non-owner, expect <code style="color:var(--red)">(err u401)</code><br>
-        • Edge cases — amount 0, transfer exceeding balance
-      </div>
-    </div>`,
-
-  audit: `
-    <div class="step-title">🔍 Audit Before Deploying</div>
-    <div class="step-subtitle">Critical step before deploying to mainnet. Run the clarity-audit CLI, review all findings, and submit the results to the onchain registry.</div>
-
-    <div class="flow-arrow">
-      <div class="flow-box">contracts/token.clar</div>
-      <div class="flow-sep">→</div>
-      <div class="flow-box orange">npx stacks-clarity-audit</div>
-      <div class="flow-sep">→</div>
-      <div class="flow-box">Score 0–100</div>
-      <div class="flow-sep">→</div>
-      <div class="flow-box green">Submit to Registry</div>
-    </div>
-
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash — scan contract</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">npx</span> stacks-clarity-audit scan ./contracts/token.clar
-
-<span class="cm"># Or scan an entire directory</span>
-<span class="cv">npx</span> stacks-clarity-audit scan ./contracts
-
-<span class="cm"># Output as JSON for CI/CD pipelines</span>
-<span class="cv">npx</span> stacks-clarity-audit scan ./contracts --json > audit.json</div></div>
-
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Score threshold before deploying</div>
-    <table class="cmp-table">
-      <thead><tr><th>Score</th><th>Status</th><th>Deploy?</th><th>Recommendation</th></tr></thead>
-      <tbody>
-        <tr><td style="color:var(--green)">90–100</td><td><span class="tag tag-green">EXCELLENT</span></td><td>✅ Mainnet</td><td>Submit to registry, add badge</td></tr>
-        <tr><td style="color:var(--green)">70–89</td><td><span class="tag tag-green">SAFE</span></td><td>✅ Mainnet</td><td>Certified — earns official badge</td></tr>
-        <tr><td style="color:var(--yellow)">40–69</td><td><span class="tag tag-yellow">MODERATE</span></td><td>⚠️ Testnet only</td><td>Fix all critical issues first</td></tr>
-        <tr><td style="color:var(--red)">0–39</td><td><span class="tag tag-red">CRITICAL</span></td><td>❌ Do not deploy</td><td>Rework contract</td></tr>
-      </tbody>
-    </table>
-
-    <div class="code-block" style="margin-top:16px"><div class="code-bar"><span class="code-lang">yaml — GitHub Actions CI</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="ck">name:</span> Clarity Audit
-
-<span class="ck">on:</span> [push, pull_request]
-
-<span class="ck">jobs:</span>
-  audit:
-    <span class="ck">runs-on:</span> ubuntu-latest
-    <span class="ck">steps:</span>
-      - <span class="ck">uses:</span> actions/checkout@v3
-      - <span class="ck">name:</span> Audit contracts
-        <span class="ck">run:</span> <span class="cv">npx</span> stacks-clarity-audit scan ./contracts
-        <span class="cm"># Exits 1 if any CRITICAL found — blocks merge</span></div></div>
-
-    <div class="info-card accent" style="margin-top:16px">
-      <div class="card-title">📋 After audit passes ≥ 70</div>
-      <div class="card-body">Visit the <strong style="color:var(--orange)">Submit Audit</strong> tab above → enter your contract address + score → submit to the Stacks blockchain. Results will appear in the Registry and you can embed the badge in your README.</div>
-    </div>`,
-
-  testnet: `
-    <div class="step-title">🌐 Deploy to Testnet</div>
-    <div class="step-subtitle">Testnet is a free staging environment — STX has no real value here. Always test here first before going to mainnet.</div>
-
-    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 1 — Clarinet CLI (recommended)</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate deployment plan</span>
-<span class="cv">clarinet</span> deployments generate --testnet
-
-<span class="cm"># Apply (deploy) to testnet</span>
-<span class="cv">clarinet</span> deployments apply \
-  -p deployments/default.testnet-plan.yaml \
-  --stacks-node https://api.testnet.hiro.so</div></div>
-
-    <div style="margin-top:20px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 2 — Hiro Platform (GUI)</div>
-    <div class="card-grid cols3" style="margin-bottom:16px">
-      <div class="info-card">
-        <div class="card-icon">1️⃣</div>
-        <div class="card-title">Open Platform</div>
-        <div class="card-body"><a href="https://platform.hiro.so" target="_blank">platform.hiro.so ↗</a><br>Connect your Leather or Xverse wallet</div>
-      </div>
-      <div class="info-card">
-        <div class="card-icon">2️⃣</div>
-        <div class="card-title">Upload Contract</div>
-        <div class="card-body">Drag &amp; drop your <code style="color:var(--orange)">.clar</code> file, or paste the code directly in the editor</div>
-      </div>
-      <div class="info-card">
-        <div class="card-icon">3️⃣</div>
-        <div class="card-title">Deploy</div>
-        <div class="card-body">Select <span class="tag tag-yellow">TESTNET</span>, confirm in your wallet, wait for tx confirmed (~10 seconds)</div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Get free testnet STX</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash — via CLI</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -X POST https://api.testnet.hiro.so/extended/v1/faucets/stx \
-  -d '{"address":"ST_YOUR_ADDRESS_HERE"}'</div></div>
-    <div class="card-body" style="font-size:12px;color:var(--muted2);margin-top:6px">Or via browser: <a href="https://explorer.hiro.so/sandbox/faucet?chain=testnet" target="_blank" style="color:var(--orange)">explorer.hiro.so/sandbox/faucet ↗</a></div>
-
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Testnet checklist</div>
-    <div class="checklist" id="testnetChecklist">
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Contract deployed successfully — tx ID confirmed <div class="check-sub">Check in Hiro Explorer with your contract address</div></div></div>
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">All functions callable from wallet / REPL <div class="check-sub">Test both read-only and public functions</div></div></div>
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Error handling works as expected <div class="check-sub">Try triggering error conditions — verify correct error codes are returned</div></div></div>
-      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Audit score ≥ 70 submitted to clarity.audit registry <div class="check-sub">Use the Submit Audit tab above</div></div></div>
-    </div>`,
-
-  mainnet: `
-    <div class="step-title">⚡ Deploy to Mainnet</div>
-    <div class="step-subtitle">Final step — deploy to the Bitcoin-anchored Stacks mainnet. Uses real STX. Contracts are permanent and cannot be deleted.</div>
-
-    <div class="info-card danger" style="margin-bottom:20px">
-      <div class="card-title">⚠️ Before deploying to mainnet — make sure:</div>
-      <div class="card-body">
-        • Testnet deployment succeeded and verified<br>
-        • Audit score <strong style="color:var(--green)">≥ 70</strong> from stacks-clarity-audit<br>
-        • Wallet has mainnet STX (estimated gas ~0.01–0.05 STX per deploy)<br>
-        • Code has been reviewed — contracts cannot be updated after deployment
-      </div>
-    </div>
-
-    <div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Deploy via Clarinet</div>
-    <div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate mainnet plan</span>
-<span class="cv">clarinet</span> deployments generate --mainnet
-
-<span class="cm"># Deploy</span>
-<span class="cv">clarinet</span> deployments apply \
-  -p deployments/default.mainnet-plan.yaml \
-  --stacks-node https://api.hiro.so</div></div>
-
-    <div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">After successful deployment</div>
-    <div class="flow-arrow">
-      <div class="flow-box green">Contract onchain ✅</div>
-      <div class="flow-sep">→</div>
-      <div class="flow-box orange">Submit to clarity.audit</div>
-      <div class="flow-sep">→</div>
-      <div class="flow-box">Get Badge</div>
-      <div class="flow-sep">→</div>
-      <div class="flow-box green">Embed in README</div>
-    </div>
-
-    <table class="cmp-table" style="margin-top:20px">
-      <thead><tr><th>Aspect</th><th>Testnet</th><th>Mainnet</th></tr></thead>
-      <tbody>
-        <tr><td>STX</td><td><span class="tag tag-green">Free (faucet)</span></td><td><span class="tag tag-yellow">Buy on exchange</span></td></tr>
-        <tr><td>Gas per deploy</td><td><span class="tag tag-green">~0</span></td><td><span class="tag tag-yellow">~0.01–0.05 STX</span></td></tr>
-        <tr><td>Contract permanent</td><td><span class="tag tag-blue">Resettable</span></td><td><span class="tag tag-red">Permanent ⚡</span></td></tr>
-        <tr><td>Bitcoin anchored</td><td>Every ~10 blocks</td><td>Every Bitcoin block</td></tr>
-        <tr><td>Explorer</td><td><a href="https://explorer.hiro.so/?chain=testnet" target="_blank" style="color:var(--blue)">explorer.hiro.so (testnet) ↗</a></td><td><a href="https://explorer.hiro.so" target="_blank" style="color:var(--blue)">explorer.hiro.so ↗</a></td></tr>
-      </tbody>
-    </table>
-
-    <div class="info-card green" style="margin-top:20px">
-      <div class="card-title">🎉 Done! Final steps</div>
-      <div class="card-body">
-        1. Submit audit result to the <strong style="color:var(--orange)">clarity.audit Registry</strong> via the Submit Audit tab<br>
-        2. Generate your badge in the <strong style="color:var(--orange)">Badge</strong> tab<br>
-        3. Embed the Markdown badge in your project README<br><br>
-        <code style="color:var(--green)">[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green...)](https://clarity-audit-nine.vercel.app)</code>
-      </div>
-    </div>`,
+let currentStep=0;
+const STEP_CONTENT={
+  env:`<div class="step-title">⚙️ Install Clarinet &amp; Wallet</div><div class="step-subtitle">Clarinet is the official dev tool from Hiro for writing, testing, and deploying Clarity contracts. Install this before anything else.</div><div class="card-grid cols2" style="margin-bottom:20px"><div class="info-card"><div class="card-icon">🍺</div><div class="card-title">macOS</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">brew</span> install clarinet</div></div></div><div class="info-card"><div class="card-icon">🐧</div><div class="card-title">Linux / WSL</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -L https://github.com/hirosystems/clarinet\n  /releases/latest/download/\n  clarinet-linux-x64.tar.gz \n  | tar xz &amp;&amp; mv clarinet /usr/local/bin</div></div></div></div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — verify install</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> --version\n<span class="cm"># clarinet 2.x.x</span></div></div><div style="margin-top:24px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Wallet — choose one</div><div class="card-grid cols2"><div class="info-card accent"><div class="card-title">🦊 Leather Wallet</div><div class="card-body">Official wallet for Stacks &amp; Bitcoin. Built by Leather (formerly Hiro).<br><br><a href="https://leather.io" target="_blank">leather.io ↗</a></div></div><div class="info-card"><div class="card-title">✖ Xverse</div><div class="card-body">Popular alternative — supports both BTC &amp; STX in one wallet.<br><br><a href="https://xverse.app" target="_blank">xverse.app ↗</a></div></div></div>`,
+  write:`<div class="step-title">✍️ Create Project &amp; Write Contract</div><div class="step-subtitle">Clarinet provides a complete project scaffold. One command gives you a full folder structure, config, and example tests.</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — create new project</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">clarinet</span> new my-token-project\n<span class="ck">cd</span> my-token-project\n\n<span class="cm"># add a new contract</span>\n<span class="cv">clarinet</span> contract new token</div></div><div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Scaffolded folder structure</div><div class="code-block"><div class="code-bar"><span class="code-lang">tree</span></div><div class="code-body">my-token-project/\n├── <span class="cv">contracts/</span>\n│   └── <span class="cs">token.clar</span>         <span class="cm">← write your contract here</span>\n├── <span class="cv">tests/</span>\n│   └── <span class="cs">token_test.ts</span>      <span class="cm">← unit tests (Deno)</span>\n├── <span class="cv">deployments/</span>           <span class="cm">← deployment plans</span>\n└── <span class="cs">Clarinet.toml</span>          <span class="cm">← project config</span></div></div><div class="info-card warn" style="margin-top:16px"><div class="card-title">💡 Clarity Tips</div><div class="card-body">• Use <code style="color:var(--orange)">define-read-only</code> for getters — free to call off-chain<br>• Avoid <code style="color:var(--red)">unwrap!</code> without error handling — use <code style="color:var(--green)">match</code> or <code style="color:var(--green)">try!</code> instead<br>• All admin functions must validate <code style="color:var(--orange)">tx-sender</code> first</div></div>`,
+  test:`<div class="step-title">🧪 Test Locally with Clarinet</div><div class="step-subtitle">Test your contract before deploying — save gas and catch bugs before production.</div><div class="card-grid cols3" style="margin-bottom:20px"><div class="info-card"><div class="card-title">clarinet check</div><div class="card-body">Syntax + type check for all contracts in the project</div></div><div class="info-card"><div class="card-title">clarinet test</div><div class="card-body">Runs all unit tests in the <code style="color:var(--orange)">tests/</code> folder</div></div><div class="info-card"><div class="card-title">clarinet console</div><div class="card-body">Interactive REPL — call contract functions manually</div></div></div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Syntax check</span>\n<span class="cv">clarinet</span> check\n\n<span class="cm"># Run tests</span>\n<span class="cv">clarinet</span> test\n\n<span class="cm"># REPL</span>\n<span class="cv">clarinet</span> console\n<span class="cm">>>> (contract-call? .token mint-tokens u1000 tx-sender)</span>\n<span class="cs">(ok true)</span></div></div><div class="info-card green" style="margin-top:16px"><div class="card-title">✅ Recommended Coverage</div><div class="card-body">• Happy path for all public functions<br>• Auth rejection — call admin fn from non-owner, expect <code style="color:var(--red)">(err u401)</code><br>• Edge cases — amount 0, transfer exceeding balance</div></div>`,
+  audit:`<div class="step-title">🔍 Audit Before Deploying</div><div class="step-subtitle">Critical step before deploying to mainnet. Run the clarity-audit CLI, review all findings, and submit the results to the onchain registry.</div><div class="flow-arrow"><div class="flow-box">contracts/token.clar</div><div class="flow-sep">→</div><div class="flow-box orange">npx stacks-clarity-audit</div><div class="flow-sep">→</div><div class="flow-box">Score 0–100</div><div class="flow-sep">→</div><div class="flow-box green">Submit to Registry</div></div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — scan contract</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">npx</span> stacks-clarity-audit scan ./contracts/token.clar\n\n<span class="cm"># Or scan an entire directory</span>\n<span class="cv">npx</span> stacks-clarity-audit scan ./contracts\n\n<span class="cm"># Output as JSON for CI/CD pipelines</span>\n<span class="cv">npx</span> stacks-clarity-audit scan ./contracts --json > audit.json</div></div><table class="cmp-table" style="margin-top:20px"><thead><tr><th>Score</th><th>Status</th><th>Deploy?</th><th>Recommendation</th></tr></thead><tbody><tr><td style="color:var(--green)">90–100</td><td><span class="tag tag-green">EXCELLENT</span></td><td>✅ Mainnet</td><td>Submit to registry, add badge</td></tr><tr><td style="color:var(--green)">70–89</td><td><span class="tag tag-green">SAFE</span></td><td>✅ Mainnet</td><td>Certified — earns official badge</td></tr><tr><td style="color:var(--yellow)">40–69</td><td><span class="tag tag-yellow">MODERATE</span></td><td>⚠️ Testnet only</td><td>Fix all critical issues first</td></tr><tr><td style="color:var(--red)">0–39</td><td><span class="tag tag-red">CRITICAL</span></td><td>❌ Do not deploy</td><td>Rework contract</td></tr></tbody></table><div class="info-card accent" style="margin-top:16px"><div class="card-title">📋 After audit passes ≥ 70</div><div class="card-body">Visit the <strong style="color:var(--orange)">Submit Audit</strong> tab above → enter your contract address + score → submit to the Stacks blockchain. Results will appear in the Registry and you can embed the badge in your README.</div></div>`,
+  testnet:`<div class="step-title">🌐 Deploy to Testnet</div><div class="step-subtitle">Testnet is a free staging environment — STX has no real value here. Always test here first before going to mainnet.</div><div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 1 — Clarinet CLI (recommended)</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate deployment plan</span>\n<span class="cv">clarinet</span> deployments generate --testnet\n\n<span class="cm"># Apply (deploy) to testnet</span>\n<span class="cv">clarinet</span> deployments apply \\\n  -p deployments/default.testnet-plan.yaml \\\n  --stacks-node https://api.testnet.hiro.so</div></div><div style="margin-top:20px;margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Option 2 — Hiro Platform (GUI)</div><div class="card-grid cols3" style="margin-bottom:16px"><div class="info-card"><div class="card-icon">1️⃣</div><div class="card-title">Open Platform</div><div class="card-body"><a href="https://platform.hiro.so" target="_blank">platform.hiro.so ↗</a><br>Connect your Leather wallet</div></div><div class="info-card"><div class="card-icon">2️⃣</div><div class="card-title">Upload Contract</div><div class="card-body">Drag &amp; drop your <code style="color:var(--orange)">.clar</code> file, or paste the code directly in the editor</div></div><div class="info-card"><div class="card-icon">3️⃣</div><div class="card-title">Deploy</div><div class="card-body">Select <span class="tag tag-yellow">TESTNET</span>, confirm in Leather, wait for tx confirmed (~10 seconds)</div></div></div><div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Get free testnet STX</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash — via CLI</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cv">curl</span> -X POST https://api.testnet.hiro.so/extended/v1/faucets/stx \\\n  -d '{"address":"ST_YOUR_ADDRESS_HERE"}'</div></div><div class="card-body" style="font-size:12px;color:var(--muted2);margin-top:6px">Or via browser: <a href="https://explorer.hiro.so/sandbox/faucet?chain=testnet" target="_blank" style="color:var(--orange)">explorer.hiro.so/sandbox/faucet ↗</a></div><div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Testnet checklist</div><div class="checklist" id="testnetChecklist"><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Contract deployed successfully — tx ID confirmed<div class="check-sub">Check in Hiro Explorer with your contract address</div></div></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">All functions callable from wallet / REPL<div class="check-sub">Test both read-only and public functions</div></div></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Error handling works as expected<div class="check-sub">Try triggering error conditions</div></div></div><div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Audit score ≥ 70 submitted to clarity.audit registry<div class="check-sub">Use the Submit Audit tab above</div></div></div></div>`,
+  mainnet:`<div class="step-title">⚡ Deploy to Mainnet</div><div class="step-subtitle">Final step — deploy to the Bitcoin-anchored Stacks mainnet. Uses real STX. Contracts are permanent and cannot be deleted.</div><div class="info-card danger" style="margin-bottom:20px"><div class="card-title">⚠️ Before deploying to mainnet — make sure:</div><div class="card-body">• Testnet deployment succeeded and verified<br>• Audit score <strong style="color:var(--green)">≥ 70</strong> from stacks-clarity-audit<br>• Wallet has mainnet STX (estimated gas ~0.01–0.05 STX per deploy)<br>• Code has been reviewed — contracts cannot be updated after deployment</div></div><div style="margin-bottom:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">Deploy via Clarinet</div><div class="code-block"><div class="code-bar"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">copy</button></div><div class="code-body"><span class="cm"># Generate mainnet plan</span>\n<span class="cv">clarinet</span> deployments generate --mainnet\n\n<span class="cm"># Deploy</span>\n<span class="cv">clarinet</span> deployments apply \\\n  -p deployments/default.mainnet-plan.yaml \\\n  --stacks-node https://api.hiro.so</div></div><div style="margin-top:20px;margin-bottom:8px;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em">After successful deployment</div><div class="flow-arrow"><div class="flow-box green">Contract onchain ✅</div><div class="flow-sep">→</div><div class="flow-box orange">Submit to clarity.audit</div><div class="flow-sep">→</div><div class="flow-box">Get Badge</div><div class="flow-sep">→</div><div class="flow-box green">Embed in README</div></div><div class="info-card green" style="margin-top:20px"><div class="card-title">🎉 Done! Final steps</div><div class="card-body">1. Submit audit result to the <strong style="color:var(--orange)">clarity.audit Registry</strong> via the Submit Audit tab<br>2. Generate your badge in the <strong style="color:var(--orange)">Badge</strong> tab<br>3. Embed the Markdown badge in your project README</div></div>`,
 };
 
-function initDeployGuide() {
-  renderStepBar();
-  renderStepContent();
-  updateNavBtns();
-}
-
-function renderStepBar() {
-  const bar = document.getElementById('stepBar');
-  bar.innerHTML = DEPLOY_STEPS.map((s, i) => {
-    const state = i < currentStep ? 'done' : i === currentStep ? 'active' : 'pending';
-    const check = i < currentStep ? '✓' : s.num;
-    const conn  = i < DEPLOY_STEPS.length - 1
-      ? `<div class="step-connector ${i < currentStep ? 'done' : ''}"></div>` : '';
-    return `
-      <div class="step-item ${state}">
-        <div class="step-node" onclick="jumpStep(${i})">
-          <div class="step-circle">${check}</div>
-          <div class="step-label">${s.label}</div>
-        </div>
-        ${conn}
-      </div>`;
+function initDeployGuide(){renderStepBar();renderStepContent();updateNavBtns()}
+function renderStepBar(){
+  const bar=document.getElementById('stepBar');
+  bar.innerHTML=DEPLOY_STEPS.map((s,i)=>{
+    const state=i<currentStep?'done':i===currentStep?'active':'pending';
+    const check=i<currentStep?'✓':s.num;
+    const conn=i<DEPLOY_STEPS.length-1?`<div class="step-connector ${i<currentStep?'done':''}"></div>`:'';
+    return `<div class="step-item ${state}"><div class="step-node" onclick="jumpStep(${i})"><div class="step-circle">${check}</div><div class="step-label">${s.label}</div></div>${conn}</div>`;
   }).join('');
 }
-
-function renderStepContent() {
-  const container = document.getElementById('stepPanels');
-  container.innerHTML = DEPLOY_STEPS.map((s, i) =>
-    `<div class="step-panel ${i === currentStep ? 'active' : ''}" id="step-panel-${i}">
-      ${STEP_CONTENT[s.id]}
-    </div>`
-  ).join('');
-  document.getElementById('stepCounter').textContent = `Step ${currentStep + 1} of ${DEPLOY_STEPS.length}`;
+function renderStepContent(){
+  const container=document.getElementById('stepPanels');
+  container.innerHTML=DEPLOY_STEPS.map((s,i)=>`<div class="step-panel ${i===currentStep?'active':''}" id="step-panel-${i}">${STEP_CONTENT[s.id]}</div>`).join('');
+  document.getElementById('stepCounter').textContent=`Step ${currentStep+1} of ${DEPLOY_STEPS.length}`;
 }
-
-function updateNavBtns() {
-  document.getElementById('prevBtn').disabled = currentStep === 0;
-  document.getElementById('prevBtn').style.opacity = currentStep === 0 ? '0.3' : '1';
-  const nextBtn = document.getElementById('nextBtn');
-  if (currentStep === DEPLOY_STEPS.length - 1) {
-    nextBtn.textContent = '✅ All done!';
-    nextBtn.onclick = () => showToast('Deploy guide complete! 🎉', 'success');
-  } else {
-    nextBtn.textContent = 'Next →';
-    nextBtn.onclick = () => stepNav(1);
-  }
+function updateNavBtns(){
+  document.getElementById('prevBtn').disabled=currentStep===0;
+  document.getElementById('prevBtn').style.opacity=currentStep===0?'0.3':'1';
+  const nextBtn=document.getElementById('nextBtn');
+  if(currentStep===DEPLOY_STEPS.length-1){nextBtn.textContent='✅ All done!';nextBtn.onclick=()=>showToast('Deploy guide complete! 🎉','success');}
+  else{nextBtn.textContent='Next →';nextBtn.onclick=()=>stepNav(1);}
 }
-
-function stepNav(dir) {
-  const next = currentStep + dir;
-  if (next < 0 || next >= DEPLOY_STEPS.length) return;
-  currentStep = next;
-  renderStepBar();
-  renderStepContent();
-  updateNavBtns();
-  document.getElementById('stepBar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function stepNav(dir){
+  const next=currentStep+dir;
+  if(next<0||next>=DEPLOY_STEPS.length)return;
+  currentStep=next;renderStepBar();renderStepContent();updateNavBtns();
+  document.getElementById('stepBar').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-
-function jumpStep(i) {
-  currentStep = i;
-  renderStepBar();
-  renderStepContent();
-  updateNavBtns();
-}
-
-function toggleCheck(el) {
+function jumpStep(i){currentStep=i;renderStepBar();renderStepContent();updateNavBtns()}
+function toggleCheck(el){
   el.classList.toggle('checked');
-  const box = el.querySelector('.check-box');
-  box.innerHTML = el.classList.contains('checked')
-    ? '<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2"><polyline points="2,6 5,9 10,3"/></svg>'
-    : '';
+  const box=el.querySelector('.check-box');
+  box.innerHTML=el.classList.contains('checked')?'<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2"><polyline points="2,6 5,9 10,3"/></svg>':'';
 }
-
-function copyCode(btn) {
-  const code = btn.closest('.code-block').querySelector('.code-body');
+function copyCode(btn){
+  const code=btn.closest('.code-block').querySelector('.code-body');
   navigator.clipboard.writeText(code.innerText.replace(/\n\n+/g,'\n').trim());
-  btn.textContent = 'copied!';
-  setTimeout(() => btn.textContent = 'copy', 1800);
+  btn.textContent='copied!';setTimeout(()=>btn.textContent='copy',1800);
 }
-
-// Re-init when page shown
-const _origShowPage = showPage;
-function showPage(id) {
+const _origShowPage=showPage;
+function showPage(id){
   _origShowPage(id);
-  if (id === 'deploy') {
-    currentStep = 0;
-    initDeployGuide();
-  }
+  if(id==='deploy'){currentStep=0;initDeployGuide();}
 }
 </script>
 
@@ -1312,310 +787,381 @@ function showPage(id) {
 </footer>
 
 <script>
-// ── Network config ────────────────────────────────────────────────────────────
-const NETWORKS = {
-  testnet: {
-    label: 'TESTNET',
-    apiBase: 'https://api.testnet.hiro.so',
-    explorerChain: 'testnet',
-    explorerQuery: '?chain=testnet',
-  },
-  mainnet: {
-    label: 'MAINNET',
-    apiBase: 'https://api.hiro.so',
-    explorerChain: 'mainnet',
-    explorerQuery: '',
-  },
+// ── Network config ─────────────────────────────────────────────────────────────
+const NETWORKS={
+  testnet:{label:'TESTNET',apiBase:'https://api.testnet.hiro.so',explorerQuery:'?chain=testnet'},
+  mainnet:{label:'MAINNET',apiBase:'https://api.hiro.so',explorerQuery:''},
 };
+let currentNetwork='testnet';
+function getNetCfg(){return NETWORKS[currentNetwork]}
 
-let currentNetwork = 'testnet';
-
-function getNetCfg() { return NETWORKS[currentNetwork]; }
-
-function applyNetwork(net) {
-  currentNetwork = net;
-  const cfg = getNetCfg();
-
-  // Update trigger button style + label
-  const trigger = document.getElementById('netTrigger');
-  trigger.className = `net-trigger ${net}`;
-  document.getElementById('netLabel').textContent = cfg.label;
-
-  // Update footer API hint
-  document.getElementById('netDropFt').textContent = cfg.apiBase;
-
-  // Update footer contract explorer link
-  const CONTRACT_ADDR = 'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry';
-  document.getElementById('footerContractLink').href =
-    `https://explorer.hiro.so/address/${CONTRACT_ADDR}${cfg.explorerQuery}`;
-
-  // Update submit hint text
-  const hint = document.getElementById('submitHint');
-  if (hint) hint.textContent =
-    net === 'mainnet'
-      ? 'Requires Hiro Wallet · Real STX for gas ⚡'
-      : 'Requires Hiro Wallet · Testnet STX for gas';
-
-  // Mainnet banner
-  document.getElementById('mainnetBanner').classList.toggle('show', net === 'mainnet');
-
-  // Re-render dropdown options
+function applyNetwork(net){
+  currentNetwork=net;
+  const cfg=getNetCfg();
+  const trigger=document.getElementById('netTrigger');
+  trigger.className=`net-trigger ${net}`;
+  document.getElementById('netLabel').textContent=cfg.label;
+  document.getElementById('netDropFt').textContent=cfg.apiBase;
+  const CONTRACT_ADDR='ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry';
+  document.getElementById('footerContractLink').href=`https://explorer.hiro.so/address/${CONTRACT_ADDR}${cfg.explorerQuery}`;
+  const hint=document.getElementById('submitHint');
+  if(hint)hint.textContent=net==='mainnet'?'Requires Leather Wallet · Real STX for gas ⚡':'Requires Leather Wallet · Testnet STX for gas';
+  document.getElementById('mainnetBanner').classList.toggle('show',net==='mainnet');
   renderDropOptions();
 }
 
-function renderDropOptions(confirming = false, pendingNet = null) {
-  const inner = document.getElementById('netDropInner');
-
-  if (confirming && pendingNet) {
-    inner.innerHTML = `
-      <div class="confirm-hd">⚠ Switch to MAINNET?</div>
-      <div class="confirm-panel">
-        <div class="confirm-txt">Switching to <strong>MAINNET</strong> — real STX transactions will be broadcast to the live network.</div>
-        <div class="confirm-btns">
-          <button class="btn-yes" onclick="confirmNetSwitch('mainnet')">Confirm</button>
-          <button class="btn-no"  onclick="cancelNetSwitch()">Cancel</button>
-        </div>
-      </div>`;
+function renderDropOptions(confirming=false,pendingNet=null){
+  const inner=document.getElementById('netDropInner');
+  if(confirming&&pendingNet){
+    inner.innerHTML=`<div class="confirm-hd">⚠ Switch to MAINNET?</div><div class="confirm-panel"><div class="confirm-txt">Switching to <strong>MAINNET</strong> — real STX transactions will be broadcast to the live network.</div><div class="confirm-btns"><button class="btn-yes" onclick="confirmNetSwitch('mainnet')">Confirm</button><button class="btn-no" onclick="cancelNetSwitch()">Cancel</button></div></div>`;
     return;
   }
-
-  const nets = ['testnet','mainnet'];
-  inner.innerHTML = nets.map(net => {
-    const cfg = NETWORKS[net];
-    const isActive = net === currentNetwork;
-    const colorClass = net === 'testnet' ? 'testnet-opt' : 'mainnet-opt';
-    const activeClass = isActive ? 'is-active' : 'inactive-opt';
-    const onclick = isActive
-      ? `closeNetDrop()`
-      : net === 'mainnet'
-        ? `askMainnetConfirm()`
-        : `switchNet('${net}')`;
-
-    return `
-      <div class="net-opt ${colorClass} ${activeClass}" onclick="${onclick}">
-        <div class="opt-dot-wrap">
-          <div class="opt-dot-ring"></div>
-          <div class="opt-dot-core"></div>
-        </div>
-        ${cfg.label}
-        <svg class="opt-check" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2">
-          <polyline points="2,6 5,9 10,3"/>
-        </svg>
-      </div>`;
+  inner.innerHTML=['testnet','mainnet'].map(net=>{
+    const cfg=NETWORKS[net];const isActive=net===currentNetwork;
+    const colorClass=net==='testnet'?'testnet-opt':'mainnet-opt';
+    const activeClass=isActive?'is-active':'inactive-opt';
+    const onclick=isActive?'closeNetDrop()':net==='mainnet'?'askMainnetConfirm()':`switchNet('${net}')`;
+    return `<div class="net-opt ${colorClass} ${activeClass}" onclick="${onclick}"><div class="opt-dot-wrap"><div class="opt-dot-ring"></div><div class="opt-dot-core"></div></div>${cfg.label}<svg class="opt-check" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="2,6 5,9 10,3"/></svg></div>`;
   }).join('');
 }
 
-function toggleNetDrop() {
-  const drop = document.getElementById('netDrop');
-  const trigger = document.getElementById('netTrigger');
-  const isOpen = drop.classList.contains('show');
-  if (isOpen) {
-    closeNetDrop();
-  } else {
-    renderDropOptions();
-    drop.classList.add('show');
-    trigger.classList.add('open');
-  }
+function toggleNetDrop(){
+  const drop=document.getElementById('netDrop');const trigger=document.getElementById('netTrigger');
+  if(drop.classList.contains('show')){closeNetDrop();}
+  else{renderDropOptions();drop.classList.add('show');trigger.classList.add('open');}
 }
-
-function closeNetDrop() {
-  document.getElementById('netDrop').classList.remove('show');
-  document.getElementById('netTrigger').classList.remove('open');
-}
-
-function switchNet(net) {
-  applyNetwork(net);
-  closeNetDrop();
-  loadRegistry();
-  showToast(`Switched to ${NETWORKS[net].label}`, 'success');
-}
-
-function askMainnetConfirm() {
-  renderDropOptions(true, 'mainnet');
-}
-
-function confirmNetSwitch(net) {
-  applyNetwork(net);
-  closeNetDrop();
-  loadRegistry();
-  showToast(`Switched to ${NETWORKS[net].label} ⚡`, 'success');
-}
-
-function cancelNetSwitch() {
-  renderDropOptions();
-}
-
-// Close dropdown on outside click
-document.addEventListener('mousedown', e => {
-  const sel = document.getElementById('netSel');
-  if (!sel.contains(e.target)) closeNetDrop();
-});
+function closeNetDrop(){document.getElementById('netDrop').classList.remove('show');document.getElementById('netTrigger').classList.remove('open')}
+function switchNet(net){applyNetwork(net);closeNetDrop();loadRegistry();showToast(`Switched to ${NETWORKS[net].label}`,'success')}
+function askMainnetConfirm(){renderDropOptions(true,'mainnet')}
+function confirmNetSwitch(net){applyNetwork(net);closeNetDrop();loadRegistry();showToast(`Switched to ${NETWORKS[net].label} ⚡`,'success')}
+function cancelNetSwitch(){renderDropOptions()}
+document.addEventListener('mousedown',e=>{const sel=document.getElementById('netSel');if(!sel.contains(e.target))closeNetDrop()});
 
 // ── App state ─────────────────────────────────────────────────────────────────
-const CONTRACT_ADDRESS = 'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2';
-const CONTRACT_NAME = 'audit-registry';
-let walletAddress = null;
-let registryData = [
+const CONTRACT_ADDRESS='ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2';
+const CONTRACT_NAME='audit-registry';
+let walletAddress=null;
+let connectedWalletType=null;
+let registryData=[
   {address:'ST3CM...audit-registry',full:'ST3CM1955QMJ712DDV0C0F0KE205XQQT4CRZ3R3N2.audit-registry',score:91,critical:0,warning:1,info:2,block:187432,passed:true}
 ];
 
-function showPage(id) {
+// ── Wallet definitions ────────────────────────────────────────────────────────
+const WALLETS = [
+  {
+    id: 'leather',
+    name: 'Leather',
+    url: 'leather.io',
+    installUrl: 'https://leather.io/install-extension',
+    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
+      <path d="M50 18C32.3 18 18 32.3 18 50C18 67.7 32.3 82 50 82C67.7 82 82 67.7 82 50C82 32.3 67.7 18 50 18Z" fill="#FF6C0A"/>
+      <path d="M50 30C38.95 30 30 38.95 30 50C30 61.05 38.95 70 50 70C61.05 70 70 61.05 70 50" stroke="white" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <circle cx="70" cy="50" r="5" fill="white"/>
+    </svg>`,
+    detect: () => !!(window.LeatherProvider || window.HiroWalletProvider),
+    connect: connectLeather,
+  },
+  {
+    id: 'xverse',
+    name: 'Xverse Wallet',
+    url: 'xverse.app',
+    installUrl: 'https://www.xverse.app/download',
+    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
+      <rect width="100" height="100" rx="22" fill="url(#xg)"/>
+      <path d="M28 25L50 52L28 75H40L50 63L60 75H72L50 48L72 25H60L50 37L40 25H28Z" fill="white"/>
+      <defs><linearGradient id="xg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#EE7A30"/><stop offset="1" stop-color="#E34234"/></linearGradient></defs>
+    </svg>`,
+    detect: () => !!(window.XverseProviders?.StacksProvider),
+    connect: connectXverse,
+  },
+  {
+    id: 'asigna',
+    name: 'Asigna Multisig',
+    url: 'asigna.io',
+    installUrl: 'https://asigna.io',
+    openUrl: 'https://app.asigna.io',
+    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
+      <rect width="100" height="100" rx="22" fill="url(#ag)"/>
+      <path d="M50 20L72 35V65L50 80L28 65V35L50 20Z" stroke="white" stroke-width="6" fill="none"/>
+      <path d="M50 35L62 42V56L50 63L38 56V42L50 35Z" fill="white" opacity=".9"/>
+      <defs><linearGradient id="ag" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#4F46E5"/></linearGradient></defs>
+    </svg>`,
+    detect: () => false,
+    isOpen: true,
+    connect: () => window.open('https://app.asigna.io','_blank'),
+  },
+  {
+    id: 'fordefi',
+    name: 'Fordefi',
+    url: 'www.fordefi.com',
+    installUrl: 'https://www.fordefi.com',
+    icon: `<svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" rx="22" fill="#1A1A2E"/>
+      <rect width="100" height="100" rx="22" fill="url(#fg)"/>
+      <rect x="22" y="38" width="56" height="34" rx="6" stroke="white" stroke-width="6" fill="none"/>
+      <path d="M38 38V30C38 23.4 43.4 18 50 18C56.6 18 62 23.4 62 30V38" stroke="white" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="50" cy="55" r="6" fill="white"/>
+      <rect x="48" y="55" width="4" height="9" rx="2" fill="white"/>
+      <defs><linearGradient id="fg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#0EA5E9"/><stop offset="1" stop-color="#2563EB"/></linearGradient></defs>
+    </svg>`,
+    detect: () => false,
+    connect: () => window.open('https://www.fordefi.com','_blank'),
+  },
+];
+
+// ── Wallet connection functions ───────────────────────────────────────────────
+async function connectLeather() {
+  try {
+    const provider = window.LeatherProvider || window.HiroWalletProvider || window.StacksProvider;
+    if (!provider) { window.open('https://leather.io/install-extension','_blank'); return; }
+
+    closeWalletModal();
+    const btn = document.getElementById('connectBtn');
+    btn.textContent = '⏳ Connecting...'; btn.disabled = true;
+
+    const resp = await provider.request('getAddresses');
+    const addresses = resp?.result?.addresses || resp?.addresses || [];
+    const stxAddr = addresses.find(a => a.type === 'p2wpkh-p2sh' || a.symbol === 'STX' || (a.address||'').startsWith('ST') || (a.address||'').startsWith('SP'));
+    walletAddress = stxAddr?.address || addresses[0]?.address;
+
+    if (!walletAddress) throw new Error('No STX address found');
+    connectedWalletType = 'leather';
+    updateConnectBtn();
+    showToast(`Connected: ${walletAddress.slice(0,8)}...${walletAddress.slice(-4)}`,'success');
+  } catch(e) {
+    console.error(e);
+    showToast('Connection failed — try again','error');
+    document.getElementById('connectBtn').textContent='Connect Wallet';
+    document.getElementById('connectBtn').disabled=false;
+  }
+}
+
+async function connectXverse() {
+  try {
+    const provider = window.XverseProviders?.StacksProvider || window.StacksProvider;
+    if (!provider) { window.open('https://www.xverse.app/download','_blank'); return; }
+
+    closeWalletModal();
+    const btn = document.getElementById('connectBtn');
+    btn.textContent = '⏳ Connecting...'; btn.disabled = true;
+
+    const resp = await provider.request('getAddresses', { purposes: ['stacks'] });
+    const addresses = resp?.result?.addresses || resp?.addresses || [];
+    walletAddress = addresses[0]?.address;
+
+    if (!walletAddress) throw new Error('No STX address found');
+    connectedWalletType = 'xverse';
+    updateConnectBtn();
+    showToast(`Connected via Xverse: ${walletAddress.slice(0,8)}...${walletAddress.slice(-4)}`,'success');
+  } catch(e) {
+    console.error(e);
+    showToast('Connection failed — try again','error');
+    document.getElementById('connectBtn').textContent='Connect Wallet';
+    document.getElementById('connectBtn').disabled=false;
+  }
+}
+
+function updateConnectBtn(){
+  const btn=document.getElementById('connectBtn');
+  btn.disabled=false;
+  if(walletAddress){
+    btn.textContent=`${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
+    btn.classList.add('connected');
+  } else {
+    btn.textContent='Connect Wallet';
+    btn.classList.remove('connected');
+  }
+}
+
+// ── Wallet Modal ──────────────────────────────────────────────────────────────
+function connectWallet(){
+  if(walletAddress){
+    // Disconnect
+    walletAddress=null; connectedWalletType=null;
+    updateConnectBtn();
+    showToast('Wallet disconnected','success');
+    return;
+  }
+  openWalletModal();
+}
+
+function openWalletModal(){
+  const overlay=document.getElementById('walletOverlay');
+  overlay.style.display='flex';
+  renderWalletList();
+  requestAnimationFrame(()=>overlay.style.opacity='1');
+}
+
+function closeWalletModal(e){
+  if(e&&e.target!==document.getElementById('walletOverlay'))return;
+  const overlay=document.getElementById('walletOverlay');
+  overlay.style.opacity='0';
+  overlay.style.transition='opacity .15s ease';
+  setTimeout(()=>{overlay.style.display='none';overlay.style.transition='';},150);
+}
+
+function renderWalletList(){
+  const container=document.getElementById('walletListContainer');
+  const available=WALLETS.filter(w=>w.detect());
+  const others=WALLETS.filter(w=>!w.detect());
+
+  let html='';
+
+  if(available.length>0){
+    html+=`<div class="wallet-section-label">Available wallets</div>`;
+    html+=available.map(w=>walletRowHTML(w,true)).join('');
+    if(others.length>0) html+=`<div style="height:8px"></div>`;
+  }
+
+  if(others.length>0){
+    html+=`<div class="wallet-section-label">${available.length>0?'Other wallets':'Available wallets'}</div>`;
+    html+=others.map(w=>walletRowHTML(w,false)).join('');
+  }
+
+  container.innerHTML=html;
+}
+
+function walletRowHTML(w, isAvailable){
+  const btnLabel = w.isOpen ? 'Open →' : isAvailable ? 'Connect' : 'Install →';
+  const btnClass = isAvailable ? 'primary' : 'secondary';
+  return `
+    <div class="wallet-row">
+      <div class="wallet-icon">${w.icon}</div>
+      <div class="wallet-info">
+        <div class="wallet-name">${w.name}</div>
+        <div class="wallet-url">${w.url}</div>
+      </div>
+      <button class="wallet-connect-btn ${btnClass}" onclick="handleWalletClick('${w.id}')">${btnLabel}</button>
+    </div>`;
+}
+
+function handleWalletClick(id){
+  const wallet=WALLETS.find(w=>w.id===id);
+  if(!wallet)return;
+  if(wallet.detect()||wallet.isOpen){
+    wallet.connect();
+  } else {
+    window.open(wallet.installUrl,'_blank');
+    closeWalletModal();
+    showToast(`Installing ${wallet.name}... refresh after install`,'success');
+  }
+}
+
+// Close modal on ESC
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeWalletModal();
+});
+
+// ── Page routing ──────────────────────────────────────────────────────────────
+function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   const map={home:0,verify:1,submit:2,badge:3,deploy:4};
   document.querySelectorAll('.nav-pill')[map[id]]?.classList.add('active');
-  if (id==='home') loadRegistry();
+  if(id==='home')loadRegistry();
   closeNetDrop();
 }
 
-async function connectWallet() {
-  const btn = document.getElementById('connectBtn');
-  if (walletAddress) {
-    walletAddress = null;
-    btn.textContent = 'Connect Wallet';
-    btn.classList.remove('connected');
-    return;
-  }
-  showToast('Install Hiro Wallet from wallet.hiro.so','error');
-  setTimeout(()=>window.open('https://wallet.hiro.so','_blank'),1500);
-}
-
-function loadRegistry() {
-  const loading = document.getElementById('registryLoading');
-  const table   = document.getElementById('registryTable');
-  const empty   = document.getElementById('registryEmpty');
-  loading.style.display='flex'; loading.style.justifyContent='center';
-  table.style.display='none'; empty.style.display='none';
+function loadRegistry(){
+  const loading=document.getElementById('registryLoading');
+  const table=document.getElementById('registryTable');
+  const empty=document.getElementById('registryEmpty');
+  loading.style.display='flex';loading.style.justifyContent='center';
+  table.style.display='none';empty.style.display='none';
   setTimeout(()=>{
     loading.style.display='none';
-    if (registryData.length===0) { empty.style.display='block'; return; }
-    const certified = registryData.filter(r=>r.passed).length;
-    document.getElementById('statTotal').textContent = registryData.length;
-    document.getElementById('statCertified').textContent = certified;
-    const cfg = getNetCfg();
-    const tbody = document.getElementById('registryBody');
-    tbody.innerHTML = registryData.map(r=>{
-      const sc = r.score>=70?'score-safe':r.score>=40?'score-warn':'score-fail';
-      const si = r.score>=70?'✅':r.score>=40?'⚠️':'❌';
-      const explorerUrl = `https://explorer.hiro.so/address/${r.full}${cfg.explorerQuery}`;
-      return `<tr>
-        <td><span class="addr-short" onclick="quickVerify('${r.full}')">${r.address}</span></td>
-        <td><span class="score-pill ${sc}">${si} ${r.score}/100</span></td>
-        <td style="color:var(--red);font-weight:700">${r.critical}</td>
-        <td style="color:var(--yellow)">${r.warning}</td>
-        <td style="color:var(--muted2)">#${r.block.toLocaleString()}</td>
-        <td><span class="score-pill ${r.passed?'score-safe':'score-fail'}">${r.passed?'CERTIFIED':'FAILED'}</span></td>
-        <td><button class="btn btn-outline btn-sm" onclick="quickVerify('${r.full}')">Details →</button></td>
-      </tr>`;
+    if(registryData.length===0){empty.style.display='block';return}
+    const certified=registryData.filter(r=>r.passed).length;
+    document.getElementById('statTotal').textContent=registryData.length;
+    document.getElementById('statCertified').textContent=certified;
+    const cfg=getNetCfg();
+    const tbody=document.getElementById('registryBody');
+    tbody.innerHTML=registryData.map(r=>{
+      const sc=r.score>=70?'score-safe':r.score>=40?'score-warn':'score-fail';
+      const si=r.score>=70?'✅':r.score>=40?'⚠️':'❌';
+      const explorerUrl=`https://explorer.hiro.so/address/${r.full}${cfg.explorerQuery}`;
+      return `<tr><td><span class="addr-short" onclick="quickVerify('${r.full}')">${r.address}</span></td><td><span class="score-pill ${sc}">${si} ${r.score}/100</span></td><td style="color:var(--red);font-weight:700">${r.critical}</td><td style="color:var(--yellow)">${r.warning}</td><td style="color:var(--muted2)">#${r.block.toLocaleString()}</td><td><span class="score-pill ${r.passed?'score-safe':'score-fail'}">${r.passed?'CERTIFIED':'FAILED'}</span></td><td><button class="btn btn-outline btn-sm" onclick="quickVerify('${r.full}')">Details →</button></td></tr>`;
     }).join('');
     table.style.display='table';
   },800);
 }
 
-function quickVerify(addr) { showPage('verify'); document.getElementById('verifyInput').value=addr; verifyContract(); }
+function quickVerify(addr){showPage('verify');document.getElementById('verifyInput').value=addr;verifyContract()}
 
-async function verifyContract() {
-  const addr = document.getElementById('verifyInput').value.trim();
-  const container = document.getElementById('verifyResult');
-  if (!addr) { showToast('Enter a contract address','error'); return; }
+async function verifyContract(){
+  const addr=document.getElementById('verifyInput').value.trim();
+  const container=document.getElementById('verifyResult');
+  if(!addr){showToast('Enter a contract address','error');return}
   container.innerHTML='<div style="padding:20px;text-align:center"><div class="loading"><div class="spin"></div> Querying Stacks blockchain...</div></div>';
   await new Promise(r=>setTimeout(r,800));
-  const mock = registryData.find(r=>r.full===addr||addr.includes(r.full.split('.')[1]));
-  if (mock) { renderVerifyResult(addr,mock); return; }
+  const mock=registryData.find(r=>r.full===addr||addr.includes(r.full.split('.')[1]));
+  if(mock){renderVerifyResult(addr,mock);return}
   renderNotFound(addr,container);
 }
 
-function renderVerifyResult(addr,data) {
-  const container = document.getElementById('verifyResult');
-  const cfg = getNetCfg();
-  const explorerUrl = `https://explorer.hiro.so/address/${addr}${cfg.explorerQuery}`;
-  const c   = data.score>=70?'var(--green)':data.score>=40?'var(--yellow)':'var(--red)';
-  const lbl = data.score>=90?'EXCELLENT':data.score>=70?'SAFE ✅':data.score>=40?'MODERATE RISK ⚠️':'HIGH RISK ❌';
-  container.innerHTML=`
-    <div class="result-card" style="margin-top:16px">
-      <div class="result-header">
-        <div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px">CONTRACT ADDRESS</div>
-          <div class="result-addr">${addr}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <div><div class="score-big" style="color:${c}">${data.score}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">/ 100</div></div>
-          <div><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:${c}">${lbl}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Block #${data.block?.toLocaleString()||'N/A'}</div></div>
-        </div>
-      </div>
-      <div class="result-body">
-        <div class="result-cell"><div class="cell-val" style="color:var(--red)">${data.critical}</div><div class="cell-lbl">Critical</div></div>
-        <div class="result-cell"><div class="cell-val" style="color:var(--yellow)">${data.warning}</div><div class="cell-lbl">Warnings</div></div>
-        <div class="result-cell"><div class="cell-val" style="color:var(--blue)">${data.info||0}</div><div class="cell-lbl">Info</div></div>
-        <div class="result-cell" style="background:${data.passed?'rgba(0,217,126,.05)':'rgba(255,59,92,.05)'}">
-          <div class="cell-val" style="color:${data.passed?'var(--green)':'var(--red)'}">${data.passed?'✅':'❌'}</div>
-          <div class="cell-lbl">${data.passed?'Certified':'Not Certified'}</div>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn btn-green btn-sm" onclick="showPage('badge')">Get Badge →</button>
-      <a class="btn btn-outline btn-sm" href="${explorerUrl}" target="_blank">Explorer ↗</a>
-    </div>`;
+function renderVerifyResult(addr,data){
+  const container=document.getElementById('verifyResult');
+  const cfg=getNetCfg();
+  const explorerUrl=`https://explorer.hiro.so/address/${addr}${cfg.explorerQuery}`;
+  const c=data.score>=70?'var(--green)':data.score>=40?'var(--yellow)':'var(--red)';
+  const lbl=data.score>=90?'EXCELLENT':data.score>=70?'SAFE ✅':data.score>=40?'MODERATE RISK ⚠️':'HIGH RISK ❌';
+  container.innerHTML=`<div class="result-card" style="margin-top:16px"><div class="result-header"><div><div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px">CONTRACT ADDRESS</div><div class="result-addr">${addr}</div></div><div style="display:flex;align-items:center;gap:12px"><div><div class="score-big" style="color:${c}">${data.score}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">/ 100</div></div><div><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:${c}">${lbl}</div><div style="font-family:var(--mono);font-size:10px;color:var(--muted)">Block #${data.block?.toLocaleString()||'N/A'}</div></div></div></div><div class="result-body"><div class="result-cell"><div class="cell-val" style="color:var(--red)">${data.critical}</div><div class="cell-lbl">Critical</div></div><div class="result-cell"><div class="cell-val" style="color:var(--yellow)">${data.warning}</div><div class="cell-lbl">Warnings</div></div><div class="result-cell"><div class="cell-val" style="color:var(--blue)">${data.info||0}</div><div class="cell-lbl">Info</div></div><div class="result-cell" style="background:${data.passed?'rgba(0,217,126,.05)':'rgba(255,59,92,.05)'}"><div class="cell-val" style="color:${data.passed?'var(--green)':'var(--red)'}">${data.passed?'✅':'❌'}</div><div class="cell-lbl">${data.passed?'Certified':'Not Certified'}</div></div></div></div><div style="margin-top:12px;display:flex;gap:8px"><button class="btn btn-green btn-sm" onclick="showPage('badge')">Get Badge →</button><a class="btn btn-outline btn-sm" href="${explorerUrl}" target="_blank">Explorer ↗</a></div>`;
 }
 
-function renderNotFound(addr,container) {
-  container.innerHTML=`
-    <div class="result-card" style="margin-top:16px;padding:32px;text-align:center">
-      <div style="font-size:32px;margin-bottom:12px">🔍</div>
-      <div style="font-family:var(--mono);font-size:13px;color:var(--muted2);margin-bottom:8px">No audit found for this contract</div>
-      <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${addr}</div>
-      <div style="margin-top:16px"><button class="btn btn-primary btn-sm" onclick="showPage('submit')">Submit Audit →</button></div>
-    </div>`;
+function renderNotFound(addr,container){
+  container.innerHTML=`<div class="result-card" style="margin-top:16px;padding:32px;text-align:center"><div style="font-size:32px;margin-bottom:12px">🔍</div><div style="font-family:var(--mono);font-size:13px;color:var(--muted2);margin-bottom:8px">No audit found for this contract</div><div style="font-family:var(--mono);font-size:11px;color:var(--muted)">${addr}</div><div style="margin-top:16px"><button class="btn btn-primary btn-sm" onclick="showPage('submit')">Submit Audit →</button></div></div>`;
 }
 
-async function submitAudit() {
-  if (!walletAddress) { showToast('Connect your Hiro Wallet first','error'); return; }
-  const contract  = document.getElementById('f-contract').value.trim();
-  const score     = parseInt(document.getElementById('f-score').value);
-  const critical  = parseInt(document.getElementById('f-critical').value)||0;
-  const warning   = parseInt(document.getElementById('f-warning').value)||0;
-  const info      = parseInt(document.getElementById('f-info').value)||0;
-  if (!contract)  { showToast('Enter contract address','error'); return; }
-  const btn = document.getElementById('submitBtn');
-  btn.textContent='⏳ Broadcasting...'; btn.disabled=true;
+async function submitAudit(){
+  if(!walletAddress){
+    showToast('Connect your Leather Wallet first','error');
+    setTimeout(()=>openWalletModal(),600);
+    return;
+  }
+  const contract=document.getElementById('f-contract').value.trim();
+  const score=parseInt(document.getElementById('f-score').value);
+  const critical=parseInt(document.getElementById('f-critical').value)||0;
+  const warning=parseInt(document.getElementById('f-warning').value)||0;
+  const info=parseInt(document.getElementById('f-info').value)||0;
+  if(!contract){showToast('Enter contract address','error');return}
+  const btn=document.getElementById('submitBtn');
+  btn.textContent='⏳ Broadcasting...';btn.disabled=true;
   await new Promise(r=>setTimeout(r,1500));
-  const short = contract.length>20?contract.slice(0,12)+'...'+contract.slice(-8):contract;
+  const short=contract.length>20?contract.slice(0,12)+'...'+contract.slice(-8):contract;
   registryData.unshift({address:short,full:contract,score,critical,warning,info,block:187500+Math.floor(Math.random()*100),passed:score>=70});
-  btn.textContent='↑ Submit to Stacks Blockchain'; btn.disabled=false;
+  btn.textContent='↑ Submit to Stacks Blockchain';btn.disabled=false;
   showToast(`Audit submitted! Score: ${score}/100 ${score>=70?'✅':'❌'}`,'success');
   setTimeout(()=>showPage('home'),1500);
 }
 
-function updateScore(val) {
-  val = parseInt(val);
-  const c = val>=70?'var(--green)':val>=40?'var(--yellow)':'var(--red)';
-  document.getElementById('scoreVal').textContent=val; document.getElementById('scoreVal').style.color=c;
-  document.getElementById('scoreDisp').textContent=val; document.getElementById('scoreDisp').style.color=c;
+function updateScore(val){
+  val=parseInt(val);
+  const c=val>=70?'var(--green)':val>=40?'var(--yellow)':'var(--red)';
+  document.getElementById('scoreVal').textContent=val;document.getElementById('scoreVal').style.color=c;
+  document.getElementById('scoreDisp').textContent=val;document.getElementById('scoreDisp').style.color=c;
 }
 
-function updateBadge() {
-  const score = parseInt(document.getElementById('badge-score').value);
-  const c  = score>=70?'#00d97e':score>=40?'#ffd166':'#ff3b5c';
-  const cn = score>=70?'green':score>=40?'yellow':'red';
-  const label = score>=70?'✅ SAFE':score>=40?'⚠️ MODERATE':'❌ HIGH RISK';
-  document.getElementById('badge-score-val').textContent=score; document.getElementById('badge-score-val').style.color=c;
-  document.getElementById('badgeScoreText').textContent=`${score}/100`; document.getElementById('badgeScoreText').style.color=c;
+function updateBadge(){
+  const score=parseInt(document.getElementById('badge-score').value);
+  const c=score>=70?'#00d97e':score>=40?'#ffd166':'#ff3b5c';
+  const cn=score>=70?'green':score>=40?'yellow':'red';
+  document.getElementById('badge-score-val').textContent=score;document.getElementById('badge-score-val').style.color=c;
+  document.getElementById('badgeScoreText').textContent=`${score}/100`;document.getElementById('badgeScoreText').style.color=c;
   document.getElementById('badgeDot').style.background=c;
-  document.getElementById('badgeMarkdown').textContent=
-    `[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${score}%2F100-${cn}?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)`;
+  document.getElementById('badgeMarkdown').textContent=`[![Clarity Audit](https://img.shields.io/badge/clarity--audit-${score}%2F100-${cn}?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)`;
 }
 
-function copyBadge() { navigator.clipboard.writeText(document.getElementById('badgeMarkdown').textContent); showToast('Badge copied!','success'); }
+function copyBadge(){navigator.clipboard.writeText(document.getElementById('badgeMarkdown').textContent);showToast('Badge copied!','success')}
 
-function showToast(msg,type='success') {
+function showToast(msg,type='success'){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className=`toast ${type} show`;
+  t.textContent=msg;t.className=`toast ${type} show`;
   setTimeout(()=>t.classList.remove('show'),3000);
 }
-
-
 
 // Init
 applyNetwork('testnet');
