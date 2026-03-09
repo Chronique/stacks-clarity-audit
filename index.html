@@ -551,12 +551,15 @@ footer{border-top:1px solid var(--border);padding:22px 0;margin-top:64px;backgro
           <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em">PREVIEW</span>
           <div style="display:flex;gap:8px">
             <button class="btn btn-outline btn-sm" onclick="resetTmpl()">&#x2190; Back</button>
-            <button class="btn btn-primary btn-sm" onclick="downloadContract()">&#x2193; Download .clar</button>
+            <button class="btn btn-outline btn-sm" onclick="downloadContract()">&#x2193; Download .clar</button>
+            <button class="btn btn-primary btn-sm" id="deployWalletBtn" onclick="deployViaWallet()">&#x26A1; Deploy via Wallet</button>
           </div>
         </div>
         <div style="background:var(--code-bg);border:1px solid var(--border2);border-radius:8px;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);overflow-x:auto;white-space:pre;line-height:1.7;max-height:480px;overflow-y:auto" id="tmpl-code"></div>
+        <!-- deploy status -->
+        <div id="deploy-status" style="display:none;margin-top:12px;background:var(--code-bg);border:1px solid var(--border2);border-radius:6px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7"></div>
         <div style="margin-top:12px;background:var(--code-bg);border:1px solid var(--border2);border-radius:6px;padding:10px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
-          &#x2705; This contract works on both <strong style="color:var(--text2)">testnet</strong> and <strong style="color:var(--text2)">mainnet</strong> — no changes needed. Deploy via <a href="https://explorer.hiro.so/sandbox/deploy?chain=testnet" target="_blank" style="color:var(--blue)">Hiro Sandbox (testnet)</a>, <a href="https://explorer.hiro.so/sandbox/deploy" target="_blank" style="color:var(--blue)">Hiro Sandbox (mainnet)</a>, or <a href="https://www.hiro.so/platform" target="_blank" style="color:var(--blue)">Hiro Platform</a>.<br>
+          &#x2705; This contract works on both <strong style="color:var(--text2)">testnet</strong> and <strong style="color:var(--text2)">mainnet</strong> — network follows your wallet toggle above. Deploy via <a href="https://explorer.hiro.so/sandbox/deploy?chain=testnet" target="_blank" style="color:var(--blue)">Hiro Sandbox (testnet)</a>, <a href="https://explorer.hiro.so/sandbox/deploy" target="_blank" style="color:var(--blue)">Hiro Sandbox (mainnet)</a>, or <a href="https://www.hiro.so/platform" target="_blank" style="color:var(--blue)">Hiro Platform</a>.<br>
           &#x26A0; After downloading, run <code style="color:var(--orange)">npx stacks-clarity-audit scan ./your-contract.clar</code> before deploying to mainnet.
         </div>
       </div>
@@ -1100,6 +1103,92 @@ function downloadContract() {
   a.download = el.dataset.filename || 'contract.clar';
   a.click();
   showToast('Downloaded ' + a.download, 'success');
+}
+
+async function deployViaWallet() {
+  const el = document.getElementById('tmpl-preview');
+  const code = el.dataset.code;
+  const filename = el.dataset.filename || 'contract.clar';
+  const contractName = filename.replace('.clar','').replace(/[^a-zA-Z0-9-]/g,'-').toLowerCase();
+
+  const statusEl = document.getElementById('deploy-status');
+  const btn = document.getElementById('deployWalletBtn');
+
+  function setStatus(html) {
+    statusEl.style.display = '';
+    statusEl.innerHTML = html;
+  }
+
+  // Check wallet connected
+  if (!connectedAddress) {
+    setStatus('<span style="color:var(--yellow)">⚠ Connect your wallet first (Leather or Xverse) from the header.</span>');
+    showToast('Connect wallet first', 'error');
+    return;
+  }
+
+  const net = currentNet;
+  const networkObj = net === 'mainnet'
+    ? { type: 'mainnet' }
+    : { type: 'testnet', url: 'https://api.testnet.hiro.so' };
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Deploying...';
+  setStatus(`<span style="color:var(--muted)">⏳ Waiting for wallet confirmation on <strong style="color:var(--text)">${net.toUpperCase()}</strong>...</span>`);
+
+  try {
+    // Try Leather (window.btc) first, then Xverse (window.XverseProviders)
+    let response;
+
+    if (window.LeatherProvider) {
+      response = await window.LeatherProvider.request('stx_deployContract', {
+        name: contractName,
+        clarityCode: code,
+        clarityVersion: '3',
+        network: net,
+      });
+    } else if (window.btc) {
+      response = await window.btc.request('stx_deployContract', {
+        name: contractName,
+        clarityCode: code,
+        clarityVersion: '3',
+        network: net,
+      });
+    } else if (window.XverseProviders?.StacksProvider) {
+      response = await window.XverseProviders.StacksProvider.request('stx_deployContract', {
+        name: contractName,
+        clarityCode: code,
+        clarityVersion: '3',
+        network: net,
+      });
+    } else {
+      throw new Error('No wallet detected. Install Leather or Xverse.');
+    }
+
+    const txid = response?.result?.txid || response?.txid;
+    if (!txid) throw new Error('No txid returned from wallet.');
+
+    const explorerBase = net === 'mainnet'
+      ? 'https://explorer.hiro.so/txid/'
+      : 'https://explorer.hiro.so/txid/';
+    const explorerQuery = net === 'mainnet' ? '' : '?chain=testnet';
+    const explorerUrl = `${explorerBase}${txid}${explorerQuery}`;
+
+    setStatus(`
+      <div style="color:var(--green);margin-bottom:8px">✓ Broadcast successful on <strong>${net.toUpperCase()}</strong>!</div>
+      <div style="color:var(--muted);margin-bottom:4px">Contract name: <code style="color:var(--orange)">${contractName}</code></div>
+      <div style="color:var(--muted);margin-bottom:10px">TxID: <code style="color:var(--text2);font-size:10px">${txid}</code></div>
+      <a href="${explorerUrl}" target="_blank" class="btn btn-outline btn-sm">🔍 View on Explorer ↗</a>
+    `);
+    showToast('Contract deployed! Check explorer.', 'success');
+
+  } catch (err) {
+    const msg = err?.message || 'Wallet rejected or unavailable.';
+    setStatus(`<span style="color:var(--red)">✗ Deploy failed: ${msg}</span>`);
+    showToast('Deploy failed', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⚡ Deploy via Wallet';
+  }
 }
 
 function resetTmpl() {
