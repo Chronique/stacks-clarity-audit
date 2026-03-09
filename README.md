@@ -99,7 +99,8 @@ https://clarity-audit-nine.vercel.app → Verify tab
 After submitting to the registry, add a badge to your README:
 
 ```markdown
-[![Clarity Audit](https://img.shields.io/badge/clarity--audit-92%2F100-green?style=flat-square&logo=bitcoin&logoColor=white)](https://clarity-audit-nine.vercel.app)
+
+⚠️ Badge is cosmetic only. Real verification is onchain via the Stacks registry — anyone can check your audit using the Verify tab
 ```
 
 ---
