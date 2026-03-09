@@ -318,7 +318,7 @@ footer{border-top:1px solid var(--border);padding:22px 0;margin-top:64px;backgro
       <button class="nav-pill" onclick="showPage('verify')">Verify</button>
       <button class="nav-pill" onclick="showPage('submit')">Submit Audit</button>
       <button class="nav-pill" onclick="showPage('badge')">Badge</button>
-      <button class="nav-pill" onclick="showPage('deploy')">Deploy Guide</button>
+      <button class="nav-pill" onclick="showPage('deploy')">Deploy</button>
     </nav>
     <div class="header-right">
       <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">&#x1F319;</button>
@@ -500,19 +500,77 @@ footer{border-top:1px solid var(--border);padding:22px 0;margin-top:64px;backgro
 
 <div class="page" id="page-deploy">
   <div class="wrap" style="padding-top:44px;padding-bottom:60px">
-    <div class="sec-head" style="margin-bottom:28px">
-      <div class="sec-title">Deploy Guide &#x2014; Clarity on Stacks</div>
+    <div class="sec-head" style="margin-bottom:24px">
+      <div class="sec-title">Deploy &#x2014; Generate &amp; Deploy Clarity Contracts</div>
       <div style="display:flex;gap:8px">
         <a class="btn btn-outline btn-sm" href="https://docs.stacks.co/" target="_blank">Stacks Docs &#x2197;</a>
         <a class="btn btn-outline btn-sm" href="https://leather.io" target="_blank">Leather Wallet &#x2197;</a>
       </div>
     </div>
-    <div class="stepper" id="stepper"></div>
-    <div id="stepPanels"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid var(--border)">
-      <button class="btn btn-outline" id="prevBtn" onclick="stepNav(-1)">&#x2190; Previous</button>
-      <span id="stepCounter" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)"></span>
-      <button class="btn btn-primary" id="nextBtn" onclick="stepNav(1)">Next &#x2192;</button>
+    <!-- deploy sub-tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:28px;border-bottom:1px solid var(--border);padding-bottom:0">
+      <button id="dtab-gen" onclick="switchDeployTab('gen')" style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 18px;border:none;border-bottom:2px solid var(--orange);background:transparent;color:var(--orange);cursor:pointer;letter-spacing:.05em">&#x26A1; Generate Contract</button>
+      <button id="dtab-guide" onclick="switchDeployTab('guide')" style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 18px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--muted);cursor:pointer;letter-spacing:.05em">&#x1F4D6; Deploy Guide</button>
+    </div>
+
+    <!-- Generator panel -->
+    <div id="dpanel-gen">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:18px;line-height:1.6">Choose a template → fill parameters → preview &amp; download your <code style="color:var(--orange)">.clar</code> contract.</div>
+      <!-- template grid -->
+      <div class="grid2" style="margin-bottom:20px" id="tmpl-grid">
+        <div class="card" onclick="selectTmpl('sip010')" id="tc-sip010" style="cursor:pointer;border:1px solid var(--border);transition:border .15s">
+          <div class="card-icon">&#x1FA99;</div><div class="card-title">SIP-010 Fungible Token</div>
+          <div class="card-body">Standard fungible token — ERC-20 equivalent on Stacks.</div>
+        </div>
+        <div class="card" onclick="selectTmpl('sip009')" id="tc-sip009" style="cursor:pointer;border:1px solid var(--border);transition:border .15s">
+          <div class="card-icon">&#x1F5BC;</div><div class="card-title">SIP-009 NFT Collection</div>
+          <div class="card-body">Non-fungible token with mint, transfer &amp; URI support.</div>
+        </div>
+        <div class="card" onclick="selectTmpl('dao')" id="tc-dao" style="cursor:pointer;border:1px solid var(--border);transition:border .15s">
+          <div class="card-icon">&#x1F3DB;</div><div class="card-title">DAO Voting</div>
+          <div class="card-body">On-chain proposals, voting, and execution with quorum.</div>
+        </div>
+        <div class="card" onclick="selectTmpl('multisig')" id="tc-multisig" style="cursor:pointer;border:1px solid var(--border);transition:border .15s">
+          <div class="card-icon">&#x1F510;</div><div class="card-title">Multisig Wallet</div>
+          <div class="card-body">2-of-3 multi-signature STX wallet with confirm &amp; execute.</div>
+        </div>
+        <div class="card" onclick="selectTmpl('registry')" id="tc-registry" style="cursor:pointer;border:1px solid var(--border);transition:border .15s">
+          <div class="card-icon">&#x1F4CB;</div><div class="card-title">Key-Value Registry</div>
+          <div class="card-body">Generic on-chain data registry with owner-gated writes.</div>
+        </div>
+      </div>
+      <!-- param form -->
+      <div id="tmpl-form" style="display:none">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:12px" id="tmpl-form-label">PARAMETERS</div>
+        <div id="tmpl-fields" class="grid2" style="margin-bottom:16px"></div>
+        <button class="btn btn-primary" onclick="generateContract()" style="margin-bottom:20px">&#x26A1; Generate Contract</button>
+      </div>
+      <!-- preview -->
+      <div id="tmpl-preview" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em">PREVIEW</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-outline btn-sm" onclick="resetTmpl()">&#x2190; Back</button>
+            <button class="btn btn-primary btn-sm" onclick="downloadContract()">&#x2193; Download .clar</button>
+          </div>
+        </div>
+        <div style="background:var(--code-bg);border:1px solid var(--border2);border-radius:8px;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);overflow-x:auto;white-space:pre;line-height:1.7;max-height:480px;overflow-y:auto" id="tmpl-code"></div>
+        <div style="margin-top:12px;background:var(--code-bg);border:1px solid var(--border2);border-radius:6px;padding:10px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6">
+          &#x2705; This contract works on both <strong style="color:var(--text2)">testnet</strong> and <strong style="color:var(--text2)">mainnet</strong> — no changes needed. Deploy via <a href="https://platform.hiro.so" target="_blank" style="color:var(--blue)">Hiro Platform</a> or <a href="https://docs.stacks.co/tools/clarinet" target="_blank" style="color:var(--blue)">Clarinet CLI</a>.<br>
+          &#x26A0; After downloading, run <code style="color:var(--orange)">npx stacks-clarity-audit scan ./your-contract.clar</code> before deploying to mainnet.
+        </div>
+      </div>
+    </div>
+
+    <!-- Guide panel -->
+    <div id="dpanel-guide" style="display:none">
+      <div class="stepper" id="stepper"></div>
+      <div id="stepPanels"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:22px;border-top:1px solid var(--border)">
+        <button class="btn btn-outline" id="prevBtn" onclick="stepNav(-1)">&#x2190; Previous</button>
+        <span id="stepCounter" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted)"></span>
+        <button class="btn btn-primary" id="nextBtn" onclick="stepNav(1)">Next &#x2192;</button>
+      </div>
     </div>
   </div>
 </div>
@@ -719,6 +777,338 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeWalletModal();
 
 applyNet("testnet");
 renderNetOptions();
+
+// ── Deploy tab switcher ───────────────────────────────────────────────────────
+function switchDeployTab(tab){
+  document.getElementById('dpanel-gen').style.display   = tab==='gen'   ? '' : 'none';
+  document.getElementById('dpanel-guide').style.display = tab==='guide' ? '' : 'none';
+  const on='border-bottom:2px solid var(--orange);color:var(--orange)';
+  const off='border-bottom:2px solid transparent;color:var(--muted)';
+  document.getElementById('dtab-gen').style.cssText   += tab==='gen'   ? on : off;
+  document.getElementById('dtab-guide').style.cssText += tab==='guide' ? on : off;
+  if(tab==='guide') initDeploy();
+}
+
+// ── Contract templates ────────────────────────────────────────────────────────
+const TMPL_DEFS = {
+  sip010: {
+    label: 'SIP-010 Fungible Token',
+    filename: p => `${(p['token-symbol']||'token').toLowerCase()}-ft.clar`,
+    fields: [
+      {id:'token-name',   label:'Token Name',     ph:'e.g. My Token'},
+      {id:'token-symbol', label:'Symbol',          ph:'e.g. MTK'},
+      {id:'decimals',     label:'Decimals',        ph:'6'},
+      {id:'initial-supply',label:'Initial Supply', ph:'1000000'},
+    ],
+    generate(p){
+      const name=p['token-name']||'MyToken', sym=(p['token-symbol']||'MTK').toLowerCase();
+      const dec=parseInt(p['decimals'])||6, sup=parseInt(p['initial-supply'])||1000000;
+      return `;; ${name} (${sym.toUpperCase()}) — SIP-010 Fungible Token
+;; Generated by stacks-clarity-audit
+
+(define-fungible-token ${sym})
+
+(define-constant CONTRACT-OWNER tx-sender)
+(define-constant ERR-NOT-OWNER        (err u100))
+(define-constant ERR-INSUFFICIENT-BAL (err u101))
+
+(define-read-only (get-name)         (ok "${name}"))
+(define-read-only (get-symbol)       (ok "${sym.toUpperCase()}"))
+(define-read-only (get-decimals)     (ok u${dec}))
+(define-read-only (get-token-uri)    (ok none))
+(define-read-only (get-total-supply) (ok (ft-get-supply ${sym})))
+(define-read-only (get-balance (account principal))
+  (ok (ft-get-balance ${sym} account)))
+
+(define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
+  (begin
+    (asserts! (is-eq tx-sender sender) ERR-NOT-OWNER)
+    (try! (ft-transfer? ${sym} amount sender recipient))
+    (match memo m (print m) 0x)
+    (ok true)))
+
+(define-public (mint (amount uint) (recipient principal))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (ft-mint? ${sym} amount recipient)))
+
+;; Mint initial supply to deployer
+(ft-mint? ${sym} u${sup} CONTRACT-OWNER)
+`;
+    }
+  },
+  sip009: {
+    label: 'SIP-009 NFT Collection',
+    filename: p => `${(p['collection-symbol']||'nft').toLowerCase()}-nft.clar`,
+    fields: [
+      {id:'collection-name',   label:'Collection Name', ph:'e.g. Cool Cats'},
+      {id:'collection-symbol', label:'Symbol',          ph:'e.g. CCAT'},
+      {id:'max-supply',        label:'Max Supply',      ph:'10000'},
+    ],
+    generate(p){
+      const name=p['collection-name']||'MyNFT', sym=(p['collection-symbol']||'NFT').toLowerCase();
+      const max=parseInt(p['max-supply'])||10000;
+      return `;; ${name} (${sym.toUpperCase()}) — SIP-009 NFT Collection
+;; Generated by stacks-clarity-audit
+
+(define-non-fungible-token ${sym} uint)
+
+(define-constant CONTRACT-OWNER tx-sender)
+(define-constant ERR-NOT-OWNER  (err u100))
+(define-constant ERR-NOT-FOUND  (err u101))
+(define-constant ERR-MAX-SUPPLY (err u102))
+(define-constant MAX-SUPPLY u${max})
+
+(define-data-var last-token-id uint u0)
+(define-map token-uris uint (string-ascii 256))
+
+(define-read-only (get-last-token-id) (ok (var-get last-token-id)))
+(define-read-only (get-token-uri (token-id uint))
+  (ok (map-get? token-uris token-id)))
+(define-read-only (get-owner (token-id uint))
+  (ok (nft-get-owner? ${sym} token-id)))
+
+(define-public (transfer (token-id uint) (sender principal) (recipient principal))
+  (begin
+    (asserts! (is-eq tx-sender sender) ERR-NOT-OWNER)
+    (asserts! (is-some (nft-get-owner? ${sym} token-id)) ERR-NOT-FOUND)
+    (nft-transfer? ${sym} token-id sender recipient)))
+
+(define-public (mint (recipient principal) (uri (string-ascii 256)))
+  (let ((token-id (+ (var-get last-token-id) u1)))
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (asserts! (<= token-id MAX-SUPPLY) ERR-MAX-SUPPLY)
+    (try! (nft-mint? ${sym} token-id recipient))
+    (map-set token-uris token-id uri)
+    (var-set last-token-id token-id)
+    (ok token-id)))
+`;
+    }
+  },
+  dao: {
+    label: 'DAO Voting',
+    filename: p => `${(p['dao-name']||'dao').toLowerCase().replace(/\s+/g,'-')}-voting.clar`,
+    fields: [
+      {id:'dao-name',             label:'DAO Name',              ph:'e.g. My DAO'},
+      {id:'voting-period-blocks', label:'Voting Period (blocks)',ph:'144'},
+      {id:'quorum-votes',         label:'Quorum (min votes)',    ph:'10'},
+    ],
+    generate(p){
+      const name=p['dao-name']||'MyDAO', period=parseInt(p['voting-period-blocks'])||144, quorum=parseInt(p['quorum-votes'])||10;
+      return `;; ${name} — DAO Voting Contract
+;; Generated by stacks-clarity-audit
+
+(define-constant CONTRACT-OWNER   tx-sender)
+(define-constant ERR-NOT-OWNER    (err u100))
+(define-constant ERR-NOT-FOUND    (err u101))
+(define-constant ERR-ALREADY-VOTED (err u102))
+(define-constant ERR-VOTING-CLOSED (err u103))
+(define-constant ERR-QUORUM-NOT-MET (err u104))
+(define-constant VOTING-PERIOD u${period})
+(define-constant QUORUM u${quorum})
+
+(define-data-var proposal-count uint u0)
+
+(define-map proposals uint {
+  title: (string-ascii 100), description: (string-ascii 500),
+  proposer: principal, votes-for: uint, votes-against: uint,
+  start-block: uint, executed: bool })
+
+(define-map votes { proposal-id: uint, voter: principal } bool)
+
+(define-read-only (get-proposal (id uint)) (map-get? proposals id))
+(define-read-only (get-proposal-count) (ok (var-get proposal-count)))
+(define-read-only (has-voted (id uint) (voter principal))
+  (is-some (map-get? votes { proposal-id: id, voter: voter })))
+
+(define-public (propose (title (string-ascii 100)) (description (string-ascii 500)))
+  (let ((id (+ (var-get proposal-count) u1)))
+    (map-set proposals id {
+      title: title, description: description, proposer: tx-sender,
+      votes-for: u0, votes-against: u0,
+      start-block: stacks-block-height, executed: false })
+    (var-set proposal-count id)
+    (ok id)))
+
+(define-public (vote (id uint) (in-favor bool))
+  (let ((proposal (unwrap! (map-get? proposals id) ERR-NOT-FOUND)))
+    (asserts! (< stacks-block-height (+ (get start-block proposal) VOTING-PERIOD)) ERR-VOTING-CLOSED)
+    (asserts! (not (has-voted id tx-sender)) ERR-ALREADY-VOTED)
+    (map-set votes { proposal-id: id, voter: tx-sender } in-favor)
+    (map-set proposals id (merge proposal {
+      votes-for:     (if in-favor (+ (get votes-for proposal) u1) (get votes-for proposal)),
+      votes-against: (if in-favor (get votes-against proposal) (+ (get votes-against proposal) u1)) }))
+    (ok true)))
+
+(define-public (execute (id uint))
+  (let ((proposal (unwrap! (map-get? proposals id) ERR-NOT-FOUND)))
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (asserts! (>= (get votes-for proposal) QUORUM) ERR-QUORUM-NOT-MET)
+    (map-set proposals id (merge proposal { executed: true }))
+    (ok true)))
+`;
+    }
+  },
+  multisig: {
+    label: 'Multisig Wallet',
+    filename: p => `${(p['wallet-name']||'multisig').toLowerCase().replace(/\s+/g,'-')}.clar`,
+    fields: [
+      {id:'wallet-name',         label:'Wallet Name',          ph:'e.g. Team Wallet'},
+      {id:'required-signatures', label:'Required Signatures',  ph:'2'},
+      {id:'owner-1',             label:'Owner 1 (SP address)', ph:'SP...'},
+      {id:'owner-2',             label:'Owner 2 (SP address)', ph:'SP...'},
+      {id:'owner-3',             label:'Owner 3 (SP address)', ph:'SP...'},
+    ],
+    generate(p){
+      const name=p['wallet-name']||'Multisig', req=parseInt(p['required-signatures'])||2;
+      const o1=p['owner-1']||'SP000000000000000000002Q6VF78', o2=p['owner-2']||'SP000000000000000000002Q6VF78', o3=p['owner-3']||'SP000000000000000000002Q6VF78';
+      return `;; ${name} — Multisig Wallet (${req}-of-3)
+;; Generated by stacks-clarity-audit
+
+(define-constant ERR-NOT-OWNER      (err u100))
+(define-constant ERR-ALREADY-SIGNED (err u101))
+(define-constant ERR-NOT-FOUND      (err u102))
+(define-constant ERR-ALREADY-EXEC   (err u103))
+(define-constant REQUIRED-SIGS u${req})
+
+(define-read-only (is-owner (addr principal))
+  (or (is-eq addr '${o1}) (is-eq addr '${o2}) (is-eq addr '${o3})))
+
+(define-data-var tx-count uint u0)
+
+(define-map transactions uint {
+  recipient: principal, amount: uint, memo: (string-ascii 100),
+  sigs: uint, executed: bool })
+
+(define-map signatures { tx-id: uint, signer: principal } bool)
+
+(define-read-only (get-transaction (id uint)) (map-get? transactions id))
+
+(define-public (submit (recipient principal) (amount uint) (memo (string-ascii 100)))
+  (let ((id (+ (var-get tx-count) u1)))
+    (asserts! (is-owner tx-sender) ERR-NOT-OWNER)
+    (map-set transactions id { recipient: recipient, amount: amount, memo: memo, sigs: u1, executed: false })
+    (map-set signatures { tx-id: id, signer: tx-sender } true)
+    (var-set tx-count id)
+    (ok id)))
+
+(define-public (confirm (id uint))
+  (let ((tx (unwrap! (map-get? transactions id) ERR-NOT-FOUND)))
+    (asserts! (is-owner tx-sender) ERR-NOT-OWNER)
+    (asserts! (not (default-to false (map-get? signatures { tx-id: id, signer: tx-sender }))) ERR-ALREADY-SIGNED)
+    (map-set signatures { tx-id: id, signer: tx-sender } true)
+    (map-set transactions id (merge tx { sigs: (+ (get sigs tx) u1) }))
+    (ok true)))
+
+(define-public (execute-tx (id uint))
+  (let ((tx (unwrap! (map-get? transactions id) ERR-NOT-FOUND)))
+    (asserts! (is-owner tx-sender) ERR-NOT-OWNER)
+    (asserts! (not (get executed tx)) ERR-ALREADY-EXEC)
+    (asserts! (>= (get sigs tx) REQUIRED-SIGS) ERR-NOT-OWNER)
+    (try! (stx-transfer? (get amount tx) (as-contract tx-sender) (get recipient tx)))
+    (map-set transactions id (merge tx { executed: true }))
+    (ok true)))
+`;
+    }
+  },
+  registry: {
+    label: 'Key-Value Registry',
+    filename: p => `${(p['registry-name']||'registry').toLowerCase().replace(/\s+/g,'-')}.clar`,
+    fields: [
+      {id:'registry-name', label:'Registry Name', ph:'e.g. Domain Registry'},
+    ],
+    generate(p){
+      const name=p['registry-name']||'MyRegistry';
+      return `;; ${name} — Key-Value Registry
+;; Generated by stacks-clarity-audit
+
+(define-constant CONTRACT-OWNER tx-sender)
+(define-constant ERR-NOT-OWNER (err u100))
+(define-constant ERR-NOT-FOUND (err u101))
+
+(define-map registry (string-ascii 100) {
+  value: (string-ascii 500), owner: principal, timestamp: uint })
+
+(define-read-only (get-entry (key (string-ascii 100)))
+  (map-get? registry key))
+(define-read-only (has-entry (key (string-ascii 100)))
+  (is-some (map-get? registry key)))
+
+(define-public (set-entry (key (string-ascii 100)) (value (string-ascii 500)))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (map-set registry key { value: value, owner: tx-sender, timestamp: stacks-block-height })
+    (ok true)))
+
+(define-public (delete-entry (key (string-ascii 100)))
+  (begin
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-OWNER)
+    (asserts! (is-some (map-get? registry key)) ERR-NOT-FOUND)
+    (map-delete registry key)
+    (ok true)))
+`;
+    }
+  }
+};
+
+let activeTmpl = null;
+
+function selectTmpl(id) {
+  activeTmpl = id;
+  // highlight selected card
+  document.querySelectorAll('[id^="tc-"]').forEach(c => c.style.borderColor='var(--border)');
+  document.getElementById('tc-'+id).style.borderColor='var(--orange)';
+  // build form fields
+  const tmpl = TMPL_DEFS[id];
+  const fields = tmpl.fields;
+  document.getElementById('tmpl-form-label').textContent = tmpl.label.toUpperCase() + ' — PARAMETERS';
+  document.getElementById('tmpl-fields').innerHTML = fields.map(f =>
+    `<div><div class="form-label" style="margin-bottom:6px">${f.label}</div>
+     <input class="form-input" id="tf-${f.id}" placeholder="${f.ph}" style="width:100%"/></div>`
+  ).join('');
+  document.getElementById('tmpl-form').style.display = '';
+  document.getElementById('tmpl-preview').style.display = 'none';
+  setTimeout(()=>document.getElementById('tf-'+fields[0].id)?.focus(), 50);
+}
+
+function generateContract() {
+  const tmpl = TMPL_DEFS[activeTmpl];
+  if (!tmpl) return;
+  const params = {};
+  for (const f of tmpl.fields) {
+    params[f.id] = document.getElementById('tf-'+f.id)?.value.trim() || '';
+  }
+  // validate required
+  const missing = tmpl.fields.find(f => !params[f.id]);
+  if (missing) { showToast('Fill in: ' + missing.label, 'error'); return; }
+  const code = tmpl.generate(params);
+  document.getElementById('tmpl-code').textContent = code;
+  document.getElementById('tmpl-form').style.display = 'none';
+  document.getElementById('tmpl-grid').style.display = 'none';
+  document.getElementById('tmpl-preview').style.display = '';
+  // store for download
+  document.getElementById('tmpl-preview').dataset.filename = tmpl.filename(params);
+  document.getElementById('tmpl-preview').dataset.code = code;
+  showToast('Contract generated! Review & download.', 'success');
+}
+
+function downloadContract() {
+  const el = document.getElementById('tmpl-preview');
+  const blob = new Blob([el.dataset.code], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = el.dataset.filename || 'contract.clar';
+  a.click();
+  showToast('Downloaded ' + a.download, 'success');
+}
+
+function resetTmpl() {
+  activeTmpl = null;
+  document.querySelectorAll('[id^="tc-"]').forEach(c => c.style.borderColor='var(--border)');
+  document.getElementById('tmpl-form').style.display = 'none';
+  document.getElementById('tmpl-preview').style.display = 'none';
+  document.getElementById('tmpl-grid').style.display = '';
+}
 </script>
 </body>
 </html>
