@@ -115,10 +115,10 @@ After scanning, publish your audit result to the Stacks blockchain:
 4. Enter contract address + score from CLI output
 5. Confirm transaction → result stored permanently onchain
 
-Anyone can then verify your contract at:
-```
-https://clarity-audit-nine.vercel.app → Verify tab
-```
+Or deploy directly via:
+- **Hiro Sandbox (testnet)**: https://explorer.hiro.so/sandbox/deploy?chain=testnet
+- **Hiro Sandbox (mainnet)**: https://explorer.hiro.so/sandbox/deploy
+- **Hiro Platform**: https://www.hiro.so/platform
 
 > **Mainnet note:** `audit-registry2` uses an auditor whitelist. Contact the deployer to be approved before submitting on mainnet.
 
@@ -232,6 +232,7 @@ MIT — Built for the Stacks ecosystem 🟠
 ### v0.1.6
 - **New command**: `deploy` — interactive contract generator with 5 templates (SIP-010 FT, SIP-009 NFT, DAO Voting, Multisig, Registry)
 - **Fix**: Mainnet registry address updated to `SP3CM...audit-registry2`
+- **Fix**: Updated deploy links — Hiro Sandbox testnet/mainnet & Hiro Platform
 - **CLI**: `deploy` auto-scans generated contracts before deployment
 
 ### v0.1.5
