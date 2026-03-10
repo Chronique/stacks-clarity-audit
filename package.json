@@ -1,6 +1,6 @@
 {
   "name": "stacks-clarity-audit",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Security audit CLI for Clarity smart contracts on Stacks/Bitcoin L2",
   "main": "src/index.js",
   "bin": {
@@ -34,7 +34,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "dependencies": {
+  "optionalDependencies": {
     "@stacks/transactions": "^7.3.1"
   }
 }
