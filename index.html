@@ -1120,7 +1120,7 @@ async function deployViaWallet() {
   }
 
   // Check wallet connected
-  if (!connectedAddress) {
+  if (!walletAddr) {
     setStatus('<span style="color:var(--yellow)">⚠ Connect your wallet first (Leather or Xverse) from the header.</span>');
     showToast('Connect wallet first', 'error');
     return;
@@ -1136,25 +1136,34 @@ async function deployViaWallet() {
   setStatus(`<span style="color:var(--muted)">⏳ Waiting for wallet confirmation on <strong style="color:var(--text)">${net.toUpperCase()}</strong>...</span>`);
 
   try {
-    // Try Leather (window.btc) first, then Xverse (window.XverseProviders)
+    // Use walletType to pick correct provider
     let response;
+    const leatherP = window.LeatherProvider || window.HiroWalletProvider;
+    const xverseP  = window.XverseProviders?.StacksProvider || window.StacksProvider;
 
-    if (window.LeatherProvider) {
-      response = await window.LeatherProvider.request('stx_deployContract', {
+    if (walletType === 'leather' && leatherP) {
+      response = await leatherP.request('stx_deployContract', {
         name: contractName,
         clarityCode: code,
         clarityVersion: '3',
         network: net,
       });
-    } else if (window.btc) {
-      response = await window.btc.request('stx_deployContract', {
+    } else if (walletType === 'xverse' && xverseP) {
+      response = await xverseP.request('stx_deployContract', {
         name: contractName,
         clarityCode: code,
         clarityVersion: '3',
         network: net,
       });
-    } else if (window.XverseProviders?.StacksProvider) {
-      response = await window.XverseProviders.StacksProvider.request('stx_deployContract', {
+    } else if (leatherP) {
+      response = await leatherP.request('stx_deployContract', {
+        name: contractName,
+        clarityCode: code,
+        clarityVersion: '3',
+        network: net,
+      });
+    } else if (xverseP) {
+      response = await xverseP.request('stx_deployContract', {
         name: contractName,
         clarityCode: code,
         clarityVersion: '3',
